@@ -34,7 +34,6 @@ export function Navbar() {
   }, []);
 
   const navItems = [
-    { label: 'Shop', sub: ['Marble Bracelets', 'Marble Rings', 'Marble Necklaces', 'New Arrivals'] },
     { label: 'Collections', sub: ['Stone Jewelry', 'Marble Decor', 'Cristallo Quartzite Slabs'] },
     { label: 'Custom Studio', sub: [] },
     { label: 'About', sub: [] },
@@ -1014,13 +1013,7 @@ export function Footer() {
                 </a>
               </div>
             </div>
-            {/* Shop */}
-            <div className="footer__col">
-              <h4 className="footer__col-title">Shop</h4>
-              {['Stone Jewelry', 'Marble Decor', 'Limited Edition', 'New Arrivals'].map(l => (
-                <a key={l} href="#" className="footer__link">{l}</a>
-              ))}
-            </div>
+
             {/* About */}
             <div className="footer__col">
               <h4 className="footer__col-title">About</h4>
