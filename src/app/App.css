@@ -1534,7 +1534,7 @@
 .collection-card__overlay {
   position: absolute;
   inset: 0;
-  background: transparent;
+  background: linear-gradient(to top, rgba(10, 8, 6, 0.92) 0%, rgba(10, 8, 6, 0.3) 60%, transparent 100%);
   z-index: 1;
 }
 .collection-card__tag {
@@ -1564,8 +1564,11 @@
   border-color: var(--gold); 
 }
 .collection-card__body {
-  position: relative;
-  padding: 20px 12px 8px;
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  padding: 32px 24px;
   z-index: 3;
 }
 .collection-card__subtitle {
@@ -1580,13 +1583,13 @@
   font-family: var(--font-serif);
   font-size: 1.75rem;
   font-weight: 300;
-  color: var(--cream);
+  color: #FAF8F5;
   margin-bottom: 10px;
 }
 .collection-card__desc {
   font-family: var(--font-sans);
   font-size: 0.8rem;
-  color: var(--charcoal-soft);
+  color: rgba(250, 248, 245, 0.75);
   line-height: 1.6;
   margin-bottom: 20px;
   max-height: 0;
