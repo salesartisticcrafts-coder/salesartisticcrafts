@@ -19,7 +19,7 @@ export default function AboutPage() {
         <header style={{ paddingTop: '180px', paddingBottom: '60px', textAlign: 'center', backgroundColor: '#faf9f8' }}>
           <div className="container reveal">
             <h1 className="hero__title" style={{ fontSize: 'clamp(3rem, 6vw, 4.5rem)', marginBottom: '24px', color: '#1a1a1a', fontWeight: '400', letterSpacing: '0.02em' }}>
-              The House of Marbleux
+              The House of Artistic Crafts
             </h1>
             <p style={{ fontSize: '1.15rem', maxWidth: '650px', margin: '0 auto', color: '#555', lineHeight: '1.8', letterSpacing: '0.02em' }}>
               For over three generations, our atelier has been sourcing the world's rarest natural stone, sculpting it into timeless masterpieces that blend heritage with avant-garde design.
@@ -68,7 +68,7 @@ export default function AboutPage() {
               "Perfection is not created, it is uncovered."
             </h2>
             <p style={{ color: '#aaa', fontSize: '0.9rem', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
-              The Marbleux Philosophy
+              The Artistic Crafts Philosophy
             </p>
           </div>
         </section>

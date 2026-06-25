@@ -62,7 +62,7 @@ export default function ContactPage() {
                   <div>
                     <h3 style={{ fontSize: '1.2rem', fontWeight: '500', marginBottom: '8px', color: '#1a1a1a' }}>Digital Inquiries</h3>
                     <p style={{ color: '#666', lineHeight: 1.6, margin: 0 }}>For press, collaborations, and general customer service.</p>
-                    <a href="mailto:atelier@marbleux.com" style={{ display: 'inline-block', marginTop: '8px', color: '#1a1a1a', textDecoration: 'none', fontWeight: '500' }}>atelier@marbleux.com</a>
+                    <a href="mailto:atelier@artisticcrafts.com" style={{ display: 'inline-block', marginTop: '8px', color: '#1a1a1a', textDecoration: 'none', fontWeight: '500' }}>atelier@artisticcrafts.com</a>
                   </div>
                 </div>
               </div>

@@ -52,7 +52,7 @@ export function Navbar() {
         <div className="navbar__logo">
           <span className="navbar__logo-icon">◈</span>
           <div>
-            <div className="navbar__logo-name">MARBLEUX</div>
+            <div className="navbar__logo-name">ARTISTIC CRAFTS</div>
             <div className="navbar__logo-tagline">Luxury Atelier</div>
           </div>
         </div>
@@ -442,7 +442,7 @@ function BrandStory() {
               <em className="shimmer-text"> Rare Stone.</em>
             </h2>
             <p className="brand-story__text drop-cap">
-              Born in the historic marble quarries of Rajasthan, MARBLEUX was founded on one uncompromising belief: that the earth's most extraordinary geological materials deserve to be worn, displayed, and cherished — not hidden in museums.
+              Born in the historic marble quarries of Rajasthan, Artistic Crafts was founded on one uncompromising belief: that the earth's most extraordinary geological materials deserve to be worn, displayed, and cherished — not hidden in museums.
             </p>
             <p className="brand-story__text">
               Our founder traveled to over 12 countries sourcing the world's rarest marble varieties — from Italian Calacatta Gold to translucent Turkish Onyx. Each stone is hand-selected for its unique veining, translucency, and individual character before our master artisans begin the meticulous process of hand-carving.
@@ -540,7 +540,7 @@ function CraftsmanshipTimeline() {
     { num: '02', title: 'Hand Carving', desc: 'Master artisans with decades of inherited heritage shape each piece using traditional hand-chisels and diamond-edged saws.', img: '/images/founder.png' },
     { num: '03', title: 'Refined Polishing', desc: 'Seven stages of mechanical and hand polishing bring out the stone\'s natural translucency and mirror-like mirror finish.', img: '/images/decor.png' },
     { num: '04', title: '18K Gold Inlays', desc: 'Certified goldsmiths apply liquid 18k gold detailing, fusing metal into the marble\'s natural gray veins.', img: '/images/jewelry.png' },
-    { num: '05', title: 'Final Inspection', desc: 'Each artifact undergoes a rigorous 47-point quality test to receive the MARBLEUX atelier seal of authenticity.', img: '/images/custom.png' },
+    { num: '05', title: 'Final Inspection', desc: 'Each artifact undergoes a rigorous 47-point quality test to receive the Artistic Crafts atelier seal of authenticity.', img: '/images/custom.png' },
   ];
 
   return (
@@ -794,7 +794,7 @@ export function CustomDesignStudio() {
           <div className="quote-preview-receipt">
             <div className="receipt-border-decor" />
             <div className="receipt-header">
-              <span className="receipt-brand">MARBLEUX ATELIER</span>
+              <span className="receipt-brand">ARTISTIC CRAFTS ATELIER</span>
               <span className="receipt-serial">INV-2025-BESPOKE</span>
             </div>
             
@@ -865,7 +865,7 @@ function InspirationGallery() {
           <div className="section-label">Style Inspirations</div>
           <h2 className="section-title">Interior Harmony</h2>
           <div className="gold-line center" />
-          <p className="section-desc">See how MARBLEUX pieces transform living spaces into galleries of natural beauty</p>
+          <p className="section-desc">See how Artistic Crafts pieces transform living spaces into galleries of natural beauty</p>
         </div>
         <div className="inspiration__grid">
           {images.map((img, i) => (
@@ -895,7 +895,7 @@ function Testimonials() {
   const [active, setActive] = useState(0);
   const testimonials = [
     { name: 'Priya Sharma', title: 'Interior Designer, Mumbai', text: 'The Calacatta marble vase I commissioned for my client\'s penthouse is now the centerpiece of the entire space. The craftsmanship is absolutely unparalleled — it stopped three international guests in their tracks.', stars: 5, img: '/images/founder.png' },
-    { name: 'Arjun Mehta', title: 'CEO, Delhi', text: 'I gifted my wife the Carrara Signet Ring for our anniversary. She still gets asked about it everywhere she goes. MARBLEUX has created something genuinely extraordinary — jewelry that tells a geological story.', stars: 5, img: '/images/founder.png' },
+    { name: 'Arjun Mehta', title: 'CEO, Delhi', text: 'I gifted my wife the Carrara Signet Ring for our anniversary. She still gets asked about it everywhere she goes. Artistic Crafts has created something genuinely extraordinary — jewelry that tells a geological story.', stars: 5, img: '/images/founder.png' },
     { name: 'Sofia Laurent', title: 'Luxury Hotel Director, Goa', text: 'We ordered a custom marble sculpture for our hotel lobby. The attention to detail, the communication throughout the process, and the final result exceeded every expectation. Worth every rupee.', stars: 5, img: '/images/founder.png' },
   ];
 
@@ -956,7 +956,7 @@ function InstagramGallery() {
     <section className="instagram" id="instagram">
       <div className="container">
         <div className="section-header reveal">
-          <div className="section-label">@marbleux.atelier</div>
+          <div className="section-label">@artisticcrafts.atelier</div>
           <h2 className="section-title">Follow Our World</h2>
           <div className="gold-line center" />
           <p className="section-desc">Step into our visual diary — where marble meets light, and craft becomes art</p>
@@ -976,7 +976,7 @@ function InstagramGallery() {
         <div className="instagram__cta reveal">
           <a href="#" className="btn-ghost" style={{ color: 'var(--charcoal)', borderColor: 'var(--gold)' }}>
             <Instagram size={16} />
-            <span>Follow @marbleux.atelier</span>
+            <span>Follow @artisticcrafts.atelier</span>
           </a>
         </div>
       </div>
@@ -997,7 +997,7 @@ export function Footer() {
               <div className="footer__logo">
                 <span className="footer__logo-icon shimmer-text">◈</span>
                 <div>
-                  <div className="footer__logo-name">MARBLEUX</div>
+                  <div className="footer__logo-name">ARTISTIC CRAFTS</div>
                   <div className="footer__logo-tagline">Luxury Atelier</div>
                 </div>
               </div>
@@ -1036,7 +1036,7 @@ export function Footer() {
               </div>
               <div className="footer__contact-item">
                 <Mail size={14} />
-                <span>hello@marbleux.in</span>
+                <span>hello@artisticcrafts.in</span>
               </div>
               <div className="footer__contact-item">
                 <MapPin size={14} />
@@ -1050,7 +1050,7 @@ export function Footer() {
       <div className="footer__bottom">
         <div className="container">
           <div className="footer__bottom-inner">
-            <p className="footer__copy">© 2025 MARBLEUX Luxury Atelier. All rights reserved.</p>
+            <p className="footer__copy">© 2025 ARTISTIC CRAFTS Luxury Atelier. All rights reserved.</p>
             <div className="footer__legal">
               <a href="#">Privacy Policy</a>
               <a href="#">Terms of Service</a>
