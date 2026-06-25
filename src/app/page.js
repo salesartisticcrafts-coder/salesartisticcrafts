@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { ChevronDown, ChevronLeft, ChevronRight, ArrowRight, Star, Heart, ShoppingBag, Menu, X, Phone, Mail, MapPin, Share2 } from 'lucide-react';
 
 // Custom social icons as inline SVGs
@@ -49,13 +50,13 @@ export function Navbar() {
         <button className="navbar__mobile-btn" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
           {menuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
-        <div className="navbar__logo">
+        <Link href="/" className="navbar__logo">
           <span className="navbar__logo-icon">◈</span>
           <div>
             <div className="navbar__logo-name">ARTISTIC CRAFTS</div>
             <div className="navbar__logo-tagline">Luxury Atelier</div>
           </div>
-        </div>
+        </Link>
         <ul className="navbar__links">
           {navItems.map((item) => (
             <li key={item.label}
@@ -994,13 +995,13 @@ export function Footer() {
           <div className="footer__grid">
             {/* Brand */}
             <div className="footer__brand">
-              <div className="footer__logo">
+              <Link href="/" className="footer__logo" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <span className="footer__logo-icon shimmer-text">◈</span>
                 <div>
                   <div className="footer__logo-name">ARTISTIC CRAFTS</div>
                   <div className="footer__logo-tagline">Luxury Atelier</div>
                 </div>
-              </div>
+              </Link>
               <p className="footer__brand-desc">Every piece begins with a rare stone, shaped by master hands, and designed to endure through generations.</p>
               <div className="footer__social">
                 {[Instagram, Facebook, Twitter].map((Icon, i) => (
