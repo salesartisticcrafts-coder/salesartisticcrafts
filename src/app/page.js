@@ -374,7 +374,7 @@ function FeaturedCollections() {
   const collections = [
     { title: 'Stone Jewelry', subtitle: 'Wearable Stone', desc: 'Rings, pendants, earrings & bracelets carved from rare stone', img: '/images/jewelry.png', tag: '48 Pieces', class: 'col-left' },
     { title: 'Marble Decor', subtitle: 'Living in Stone', desc: 'Vases, sculptures & candle holders for discerning interiors', img: '/images/decor.png', tag: '64 Pieces', class: 'col-center' },
-    { title: 'Limited Edition', subtitle: 'Rare & Exclusive', desc: 'Ultra-rare marble varieties in highly limited quantities', img: '/images/black_marble.png', tag: '12 Left', class: 'col-right' },
+    { title: 'Cristallo Quartzite Slabs', subtitle: 'Rare & Exclusive', desc: 'Ultra-rare quartzite varieties in highly limited quantities', img: '/images/black_marble.png', tag: '12 Left', class: 'col-right' },
   ];
 
   return (
