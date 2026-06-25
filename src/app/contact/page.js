@@ -92,7 +92,7 @@ export default function ContactPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#555' }}>Area of Interest</label>
                   <select style={{ padding: '16px', border: '1px solid #eae5df', background: '#fff', outline: 'none', fontFamily: 'inherit', color: '#1a1a1a', appearance: 'none', cursor: 'pointer' }}>
-                    <option>Marble Jewelry</option>
+                    <option>Stone Jewelry</option>
                     <option>Marble Decor</option>
                     <option>Cristallo Quartzite Slabs</option>
                     <option>Custom Commission</option>

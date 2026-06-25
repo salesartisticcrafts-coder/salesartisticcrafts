@@ -35,7 +35,7 @@ export function Navbar() {
 
   const navItems = [
     { label: 'Shop', sub: ['Marble Bracelets', 'Marble Rings', 'Marble Necklaces', 'New Arrivals'] },
-    { label: 'Collections', sub: ['Marble Jewelry', 'Marble Decor', 'Cristallo Quartzite Slabs'] },
+    { label: 'Collections', sub: ['Stone Jewelry', 'Marble Decor', 'Cristallo Quartzite Slabs'] },
     { label: 'Custom Studio', sub: [] },
     { label: 'About', sub: [] },
     { label: 'Contact', sub: [] },
@@ -122,7 +122,7 @@ function Hero() {
       titleItalic1: " Rare Earth.",
       titleLine2: "Designed For",
       titleItalic2: " Eternity.",
-      subtitle: "Indulge in handcrafted marble jewelry and timeless objects, carved from Rajasthan and Carrara quarries and finished with 18k gold detailing.",
+      subtitle: "Indulge in handcrafted stone jewelry and timeless objects, carved from Rajasthan and Carrara quarries and finished with 18k gold detailing.",
       img: "/images/jewelry.png",
       ctaText: "Shop Jewelry",
       ctaLink: "#shop",
@@ -373,7 +373,7 @@ function Hero() {
 /* ─── Featured Collections ─── */
 function FeaturedCollections() {
   const collections = [
-    { title: 'Marble Jewelry', subtitle: 'Wearable Stone', desc: 'Rings, pendants, earrings & bracelets carved from rare marble', img: '/images/jewelry.png', tag: '48 Pieces', class: 'col-left' },
+    { title: 'Stone Jewelry', subtitle: 'Wearable Stone', desc: 'Rings, pendants, earrings & bracelets carved from rare stone', img: '/images/jewelry.png', tag: '48 Pieces', class: 'col-left' },
     { title: 'Marble Decor', subtitle: 'Living in Stone', desc: 'Vases, sculptures & candle holders for discerning interiors', img: '/images/decor.png', tag: '64 Pieces', class: 'col-center' },
     { title: 'Limited Edition', subtitle: 'Rare & Exclusive', desc: 'Ultra-rare marble varieties in highly limited quantities', img: '/images/black_marble.png', tag: '12 Left', class: 'col-right' },
   ];
@@ -1017,7 +1017,7 @@ export function Footer() {
             {/* Shop */}
             <div className="footer__col">
               <h4 className="footer__col-title">Shop</h4>
-              {['Marble Jewelry', 'Marble Decor', 'Limited Edition', 'New Arrivals'].map(l => (
+              {['Stone Jewelry', 'Marble Decor', 'Limited Edition', 'New Arrivals'].map(l => (
                 <a key={l} href="#" className="footer__link">{l}</a>
               ))}
             </div>
