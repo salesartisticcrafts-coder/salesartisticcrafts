@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ChevronRight, MapPin, Phone, Mail } from 'lucide-react';
+import { ChevronRight, MapPin, Phone, Mail, Instagram, Facebook, Twitter } from 'lucide-react';
 import '../App.css'; 
 import { Navbar, Footer, useScrollReveal } from '../page';
 
@@ -52,6 +52,43 @@ export default function ContactPage() {
                     <p style={{ color: '#888', fontSize: '0.85rem', marginTop: '8px', margin: 0 }}>
                       <span style={{ color: 'var(--gold)', fontWeight: 500 }}>GSTIN:</span> 08CPEPJ3517C1Z9
                     </p>
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+                      {[
+                        { Icon: Instagram, href: '#' },
+                        { Icon: Facebook, href: '#' },
+                        { Icon: Twitter, href: '#' },
+                        { Icon: Phone, href: 'https://wa.me/' }
+                      ].map(({ Icon, href }, i) => (
+                        <a 
+                          key={i} 
+                          href={href} 
+                          style={{
+                            width: '36px',
+                            height: '36px',
+                            border: '1px solid rgba(201, 169, 110, 0.3)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#1a1a1a',
+                            textDecoration: 'none',
+                            transition: 'all 0.3s ease',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--gold)';
+                            e.currentTarget.style.color = 'var(--gold)';
+                            e.currentTarget.style.background = 'rgba(201, 169, 110, 0.08)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = 'rgba(201, 169, 110, 0.3)';
+                            e.currentTarget.style.color = '#1a1a1a';
+                            e.currentTarget.style.background = 'transparent';
+                          }}
+                          aria-label="Social Link"
+                        >
+                          <Icon size={16} />
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 </div>
 

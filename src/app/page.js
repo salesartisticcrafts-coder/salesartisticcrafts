@@ -1044,6 +1044,16 @@ export function Footer() {
                 <span style={{ color: 'var(--gold)', fontWeight: 500 }}>GSTIN:</span>
                 <span>08CPEPJ3517C1Z9 (Rajasthan, Code: 08)</span>
               </div>
+              <div className="footer__social" style={{ marginTop: '16px', marginBottom: '8px' }}>
+                {[Instagram, Facebook, Twitter].map((Icon, i) => (
+                  <a key={i} href="#" className="footer__social-link" aria-label="Social">
+                    <Icon size={16} />
+                  </a>
+                ))}
+                <a href="https://wa.me/" className="footer__social-link whatsapp" aria-label="WhatsApp">
+                  <Phone size={16} />
+                </a>
+              </div>
               <a href="#" className="btn-primary footer__appt-btn"><span>Book Showroom Visit</span></a>
             </div>
           </div>
