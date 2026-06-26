@@ -41,8 +41,8 @@ export function Navbar() {
     // Restore session from localStorage on mount
     const storedEmail = localStorage.getItem('userEmail');
     const storedLoggedIn = localStorage.getItem('loggedIn') === 'true';
-    if (storedLoggedIn && storedEmail) {
-      setUserEmail(storedEmail);
+    if (storedLoggedIn) {
+      setUserEmail(storedEmail || 'mark@example.com');
       setLoggedIn(true);
     }
     
@@ -51,9 +51,12 @@ export function Navbar() {
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
+    // Retrieve value directly from form element to handle browser autofill
+    const emailVal = e.target.elements.email?.value || userEmail || 'mark@example.com';
+    setUserEmail(emailVal);
     setLoggedIn(true);
     localStorage.setItem('loggedIn', 'true');
-    localStorage.setItem('userEmail', userEmail);
+    localStorage.setItem('userEmail', emailVal);
   };
 
   const handleLogout = () => {
@@ -120,8 +123,25 @@ export function Navbar() {
           <button className="navbar__icon-btn" aria-label="Search" onClick={() => setSearchOpen(true)}>
             <Search size={18} />
           </button>
-          <button className="navbar__icon-btn" aria-label="Account" onClick={() => setLoginOpen(true)}>
+          <button 
+            className="navbar__icon-btn" 
+            aria-label="Account" 
+            onClick={() => setLoginOpen(true)}
+            style={{ position: 'relative', color: loggedIn ? 'var(--gold)' : 'inherit' }}
+          >
             <User size={18} />
+            {loggedIn && (
+              <span style={{
+                position: 'absolute',
+                top: '-2px',
+                right: '-2px',
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                backgroundColor: '#2ecc71',
+                border: '1px solid rgba(255,255,255,0.8)'
+              }} />
+            )}
           </button>
           <button className="navbar__icon-btn" aria-label="Wishlist" onClick={() => alert('Wishlist updated. Items saved to your private dashboard.')}><Heart size={18} /></button>
           <button className="navbar__icon-btn navbar__cart-btn" aria-label="Cart" onClick={() => setCartOpen(true)}>
@@ -303,11 +323,11 @@ export function Navbar() {
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <label style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#666' }}>Email Address</label>
-                  <input type="email" required placeholder="mark@example.com" value={userEmail} onChange={e => setUserEmail(e.target.value)} style={{ padding: '12px', border: '1px solid #eae5df', outline: 'none', background: 'transparent', color: 'var(--charcoal)', fontFamily: 'inherit' }} />
+                  <input type="email" name="email" required placeholder="mark@example.com" value={userEmail} onChange={e => setUserEmail(e.target.value)} style={{ padding: '12px', border: '1px solid #eae5df', outline: 'none', background: 'transparent', color: 'var(--charcoal)', fontFamily: 'inherit' }} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <label style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#666' }}>Password</label>
-                  <input type="password" required placeholder="••••••••" style={{ padding: '12px', border: '1px solid #eae5df', outline: 'none', background: 'transparent', color: 'var(--charcoal)', fontFamily: 'inherit' }} />
+                  <input type="password" name="password" required placeholder="••••••••" style={{ padding: '12px', border: '1px solid #eae5df', outline: 'none', background: 'transparent', color: 'var(--charcoal)', fontFamily: 'inherit' }} />
                 </div>
                 <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '10px' }}>
                   <span>{isLogin ? 'Sign In' : 'Register'}</span>
