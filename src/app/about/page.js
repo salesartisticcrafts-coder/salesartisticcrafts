@@ -93,7 +93,7 @@ export default function AboutPage() {
                 <div className="section-line" style={{ marginBottom: '32px' }}></div>
                 <h2 className="section-title" style={{ fontSize: '2.2rem', marginBottom: '24px' }}>Mastery in Every Detail</h2>
                 <p style={{ color: '#666', lineHeight: 1.8, marginBottom: '24px', fontSize: '1.05rem' }}>
-                  At our central Atelier in New Delhi, master sculptors use techniques passed down through generations alongside cutting-edge precision waterjet technology. This harmony of heritage and modern innovation allows us to create both monumental slabs and intricate wearable jewelry with zero compromise.
+                  At our central Atelier in Udaipur, Rajasthan, master sculptors use techniques passed down through generations alongside cutting-edge precision waterjet technology. This harmony of heritage and modern innovation allows us to create both monumental slabs and intricate wearable jewelry with zero compromise.
                 </p>
                 <p style={{ color: '#666', lineHeight: 1.8, fontSize: '1.05rem' }}>
                   A commitment to sustainability drives our operations. We utilize a closed-loop water system and transform our precious offcuts into beautiful terrazzo objects, ensuring zero waste in our pursuit of perfection.

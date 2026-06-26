@@ -1038,7 +1038,11 @@ export function Footer() {
               </div>
               <div className="footer__contact-item">
                 <MapPin size={14} />
-                <span>Atelier No. 7, Lodhi Art District, New Delhi</span>
+                <span>Shop No.4, 6 Block, A Central Area Extension, Udaipur</span>
+              </div>
+              <div className="footer__contact-item" style={{ fontSize: '0.78rem' }}>
+                <span style={{ color: 'var(--gold)', fontWeight: 500 }}>GSTIN:</span>
+                <span>08CPEPJ3517C1Z9 (Rajasthan, Code: 08)</span>
               </div>
               <a href="#" className="btn-primary footer__appt-btn"><span>Book Showroom Visit</span></a>
             </div>

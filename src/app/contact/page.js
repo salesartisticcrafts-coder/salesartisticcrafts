@@ -44,7 +44,14 @@ export default function ContactPage() {
                   <MapPin size={24} strokeWidth={1.5} style={{ color: 'var(--gold)', flexShrink: 0, marginTop: '4px' }} />
                   <div>
                     <h3 style={{ fontSize: '1.2rem', fontWeight: '500', marginBottom: '8px', color: '#1a1a1a' }}>The Showroom</h3>
-                    <p style={{ color: '#666', lineHeight: 1.6, margin: 0 }}>Atelier No. 7<br/>Lodhi Art District<br/>New Delhi, 110003</p>
+                    <p style={{ color: '#666', lineHeight: 1.6, margin: 0 }}>
+                      Shop No.4, 6 Block<br />
+                      A Central Area Extension<br />
+                      Udaipur, Rajasthan (Code: 08)
+                    </p>
+                    <p style={{ color: '#888', fontSize: '0.85rem', marginTop: '8px', margin: 0 }}>
+                      <span style={{ color: 'var(--gold)', fontWeight: 500 }}>GSTIN:</span> 08CPEPJ3517C1Z9
+                    </p>
                   </div>
                 </div>
 
