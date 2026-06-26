@@ -62,10 +62,15 @@ export function Navbar() {
               className="navbar__item"
               onMouseEnter={() => setActiveDropdown(item.label)}
               onMouseLeave={() => setActiveDropdown(null)}>
-              <a href={item.sub.length > 0 ? "#" : `/${item.label.toLowerCase().replace(/ /g, '-')}`} className="navbar__link">
-                {item.label}
-                {item.sub.length > 0 && <ChevronDown size={12} />}
-              </a>
+              {item.sub.length > 0 ? (
+                <span className="navbar__link" style={{ cursor: 'pointer' }}>
+                  {item.label} <ChevronDown size={12} />
+                </span>
+              ) : (
+                <Link href={`/${item.label.toLowerCase().replace(/ /g, '-')}`} className="navbar__link">
+                  {item.label}
+                </Link>
+              )}
               {item.sub.length > 0 && activeDropdown === item.label && (
                 <div className="navbar__dropdown">
                   {item.sub.map(s => {
@@ -73,7 +78,7 @@ export function Navbar() {
                     const categorySlug = item.label.toLowerCase().replace(/ /g, '-');
                     const linkPath = `/${categorySlug}/${slug}`;
                     return (
-                      <a key={s} href={linkPath} className="navbar__dropdown-item">{s}</a>
+                      <Link key={s} href={linkPath} className="navbar__dropdown-item">{s}</Link>
                     );
                   })}
                 </div>
@@ -95,8 +100,40 @@ export function Navbar() {
       {/* Mobile Menu */}
       <div className={`navbar__mobile-menu ${menuOpen ? 'open' : ''}`}>
         {navItems.map(item => (
-          <div key={item.label} className="navbar__mobile-item">
-            <a href="#" className="navbar__mobile-link">{item.label}</a>
+          <div key={item.label} className="navbar__mobile-item" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {item.sub.length > 0 ? (
+              <>
+                <span className="navbar__mobile-link" style={{ fontWeight: '600', color: 'var(--gold)', cursor: 'default' }}>
+                  {item.label}
+                </span>
+                <div style={{ paddingLeft: '16px', display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '4px' }}>
+                  {item.sub.map(s => {
+                    const slug = s.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-');
+                    const categorySlug = item.label.toLowerCase().replace(/ /g, '-');
+                    const linkPath = `/${categorySlug}/${slug}`;
+                    return (
+                      <Link 
+                        key={s} 
+                        href={linkPath} 
+                        className="navbar__mobile-sublink" 
+                        style={{ color: 'rgba(255, 255, 255, 0.8)', textDecoration: 'none', fontSize: '0.9rem' }}
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {s}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </>
+            ) : (
+              <Link 
+                href={`/${item.label.toLowerCase().replace(/ /g, '-')}`} 
+                className="navbar__mobile-link"
+                onClick={() => setMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            )}
           </div>
         ))}
       </div>
@@ -462,7 +499,7 @@ function BrandStory() {
                 </div>
               ))}
             </div>
-            <a href="#" className="btn-primary"><span>Read Our Full Story</span> <ArrowRight size={16} /></a>
+            <Link href="/about" className="btn-primary"><span>Read Our Full Story</span> <ArrowRight size={16} /></Link>
           </div>
         </div>
       </div>
@@ -529,7 +566,7 @@ function BestSellers() {
         </div>
       </div>
       <div className="best-sellers__cta reveal">
-        <a href="#" className="btn-primary"><span>View All Products</span> <ArrowRight size={16} /></a>
+        <Link href="/collections/stone-jewelry" className="btn-primary"><span>View All Products</span> <ArrowRight size={16} /></Link>
       </div>
     </section>
   );
@@ -1021,9 +1058,11 @@ export function Footer() {
             {/* About */}
             <div className="footer__col">
               <h4 className="footer__col-title">About</h4>
-              {['Our Story', 'Our Materials', 'Sustainability', 'Workshop', 'Careers'].map(l => (
-                <a key={l} href="#" className="footer__link">{l}</a>
-              ))}
+              <Link href="/about" className="footer__link">Our Story</Link>
+              <Link href="/collections/stone-jewelry" className="footer__link">Our Materials</Link>
+              <Link href="/about" className="footer__link">Sustainability</Link>
+              <Link href="/about" className="footer__link">Workshop</Link>
+              <Link href="/contact" className="footer__link">Careers</Link>
             </div>
             {/* Contact */}
             <div className="footer__col">
@@ -1054,7 +1093,7 @@ export function Footer() {
                   <Phone size={16} />
                 </a>
               </div>
-              <a href="#" className="btn-primary footer__appt-btn"><span>Book Showroom Visit</span></a>
+              <Link href="/contact" className="btn-primary footer__appt-btn"><span>Book Showroom Visit</span></Link>
             </div>
           </div>
         </div>
