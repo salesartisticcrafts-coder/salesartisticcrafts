@@ -3782,9 +3782,12 @@
   flex-shrink: 0;
   position: sticky;
   top: 120px;
+  /* Desktop: always visible */
+  display: block;
 }
 .collections-main {
   flex: 1;
+  min-width: 0;
 }
 .collections-toolbar {
   display: flex;
@@ -3800,6 +3803,32 @@
   gap: 30px;
 }
 
+/* Mobile filter toggle - hidden on desktop */
+.mobile-filter-toggle {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border: 1px solid #eae5df;
+  background: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.mobile-filter-toggle:hover {
+  background: #faf9f8;
+}
+
+/* Mobile filter drawer - hidden by default on mobile */
+.mobile-filter-drawer {
+  display: none;
+}
+
 @media (max-width: 992px) {
   .collections-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -3810,28 +3839,56 @@
 @media (max-width: 768px) {
   .collections-layout {
     flex-direction: column;
-    gap: 30px;
+    gap: 0;
   }
+  /* Hide the left sidebar completely on mobile */
   .collections-sidebar {
+    display: none !important;
+  }
+  /* Show mobile filter toggle button */
+  .mobile-filter-toggle {
+    display: flex;
+  }
+  /* Mobile filter drawer - shown when open */
+  .mobile-filter-drawer {
+    display: block;
     width: 100%;
-    position: static;
-    margin-bottom: 10px;
+    background: #faf9f8;
+    border: 1px solid #eae5df;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    animation: slideDown 0.2s ease;
+  }
+  .mobile-filter-drawer.hidden {
+    display: none;
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .collections-main {
+    width: 100%;
   }
   .collections-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
   }
+  .collections-toolbar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+  }
 }
 
 @media (max-width: 480px) {
   .collections-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  .collections-toolbar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 }
 

@@ -14,6 +14,8 @@ export default function CollectionPage({ params }) {
   const [selectedPrices, setSelectedPrices] = useState([]);
   const [selectedAvailabilities, setSelectedAvailabilities] = useState([]);
   const [sortBy, setSortBy] = useState('Recommended');
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
 
   useEffect(() => {
     const loadWishlist = () => {
@@ -210,7 +212,7 @@ export default function CollectionPage({ params }) {
         <div className="container" style={{ paddingBottom: '100px' }}>
           <div className="collections-layout">
             
-            {/* Left Sidebar (Filters) */}
+            {/* Left Sidebar - Desktop Only (hidden on mobile via CSS) */}
             <aside className="shop-sidebar collections-sidebar">
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingBottom: '20px', borderBottom: '1px solid #eae5df', marginBottom: '24px' }}>
                 <SlidersHorizontal size={18} />
@@ -226,12 +228,7 @@ export default function CollectionPage({ params }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {['Carrara Marble', 'Nero Marquina', 'Agate Stone', 'Quartzite', 'Rose Quartz'].map(mat => (
                     <label key={mat} style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
-                      <input 
-                        type="checkbox" 
-                        checked={selectedMaterials.includes(mat)}
-                        onChange={() => toggleMaterial(mat)}
-                        style={{ accentColor: 'var(--gold)', width: '16px', height: '16px' }} 
-                      />
+                      <input type="checkbox" checked={selectedMaterials.includes(mat)} onChange={() => toggleMaterial(mat)} style={{ accentColor: 'var(--gold)', width: '16px', height: '16px' }} />
                       <span style={{ fontSize: '0.9rem', color: '#555' }}>{mat}</span>
                     </label>
                   ))}
@@ -247,12 +244,7 @@ export default function CollectionPage({ params }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {['Under ₹10,000', '₹10,000 - ₹20,000', '₹20,000 - ₹50,000', 'Above ₹50,000'].map(price => (
                     <label key={price} style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
-                      <input 
-                        type="checkbox" 
-                        checked={selectedPrices.includes(price)}
-                        onChange={() => togglePrice(price)}
-                        style={{ accentColor: 'var(--gold)', width: '16px', height: '16px' }} 
-                      />
+                      <input type="checkbox" checked={selectedPrices.includes(price)} onChange={() => togglePrice(price)} style={{ accentColor: 'var(--gold)', width: '16px', height: '16px' }} />
                       <span style={{ fontSize: '0.9rem', color: '#555' }}>{price}</span>
                     </label>
                   ))}
@@ -268,18 +260,12 @@ export default function CollectionPage({ params }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {['In Stock', 'Made to Order', 'Limited Edition'].map(av => (
                     <label key={av} style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
-                      <input 
-                        type="checkbox" 
-                        checked={selectedAvailabilities.includes(av)}
-                        onChange={() => toggleAvailability(av)}
-                        style={{ accentColor: 'var(--gold)', width: '16px', height: '16px' }} 
-                      />
+                      <input type="checkbox" checked={selectedAvailabilities.includes(av)} onChange={() => toggleAvailability(av)} style={{ accentColor: 'var(--gold)', width: '16px', height: '16px' }} />
                       <span style={{ fontSize: '0.9rem', color: '#555' }}>{av}</span>
                     </label>
                   ))}
                 </div>
               </div>
-
             </aside>
 
             {/* Right Main Content */}
@@ -287,7 +273,18 @@ export default function CollectionPage({ params }) {
               
               {/* Toolbar */}
               <div className="collections-toolbar">
-                <span style={{ fontSize: '0.9rem', color: '#666' }}>Showing {sortedProducts.length} Products</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  {/* Mobile Filter Toggle Button - visible only on mobile via CSS */}
+                  <button
+                    className="mobile-filter-toggle"
+                    onClick={() => setMobileFilterOpen(prev => !prev)}
+                    aria-label="Toggle Filters"
+                  >
+                    <SlidersHorizontal size={15} />
+                    <span>{mobileFilterOpen ? 'Hide Filters' : 'Filters'}</span>
+                  </button>
+                  <span style={{ fontSize: '0.9rem', color: '#666' }}>Showing {sortedProducts.length} Products</span>
+                </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <span style={{ fontSize: '0.85rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Sort By</span>
                   <select 
@@ -300,6 +297,46 @@ export default function CollectionPage({ params }) {
                     <option value="Price: High to Low">Price: High to Low</option>
                     <option value="Newest Arrivals">Newest Arrivals</option>
                   </select>
+                </div>
+              </div>
+
+              {/* Mobile Filter Drawer - shown below toolbar only on mobile when open */}
+              <div className={`mobile-filter-drawer${mobileFilterOpen ? '' : ' hidden'}`}>
+                {/* Filter Group: Material */}
+                <div style={{ marginBottom: '24px' }}>
+                  <h4 style={{ fontSize: '0.85rem', fontWeight: '600', margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#1a1a1a' }}>Material</h4>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {['Carrara Marble', 'Nero Marquina', 'Agate Stone', 'Quartzite', 'Rose Quartz'].map(mat => (
+                      <label key={mat} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', background: selectedMaterials.includes(mat) ? '#f5efe6' : '#fff', border: `1px solid ${selectedMaterials.includes(mat) ? 'var(--gold)' : '#eae5df'}`, borderRadius: '4px', padding: '6px 12px' }}>
+                        <input type="checkbox" checked={selectedMaterials.includes(mat)} onChange={() => toggleMaterial(mat)} style={{ accentColor: 'var(--gold)', width: '14px', height: '14px' }} />
+                        <span style={{ fontSize: '0.82rem', color: '#555' }}>{mat}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                {/* Filter Group: Price */}
+                <div style={{ marginBottom: '24px' }}>
+                  <h4 style={{ fontSize: '0.85rem', fontWeight: '600', margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#1a1a1a' }}>Price</h4>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {['Under ₹10,000', '₹10,000 - ₹20,000', '₹20,000 - ₹50,000', 'Above ₹50,000'].map(price => (
+                      <label key={price} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', background: selectedPrices.includes(price) ? '#f5efe6' : '#fff', border: `1px solid ${selectedPrices.includes(price) ? 'var(--gold)' : '#eae5df'}`, borderRadius: '4px', padding: '6px 12px' }}>
+                        <input type="checkbox" checked={selectedPrices.includes(price)} onChange={() => togglePrice(price)} style={{ accentColor: 'var(--gold)', width: '14px', height: '14px' }} />
+                        <span style={{ fontSize: '0.82rem', color: '#555' }}>{price}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                {/* Filter Group: Availability */}
+                <div>
+                  <h4 style={{ fontSize: '0.85rem', fontWeight: '600', margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#1a1a1a' }}>Availability</h4>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {['In Stock', 'Made to Order', 'Limited Edition'].map(av => (
+                      <label key={av} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', background: selectedAvailabilities.includes(av) ? '#f5efe6' : '#fff', border: `1px solid ${selectedAvailabilities.includes(av) ? 'var(--gold)' : '#eae5df'}`, borderRadius: '4px', padding: '6px 12px' }}>
+                        <input type="checkbox" checked={selectedAvailabilities.includes(av)} onChange={() => toggleAvailability(av)} style={{ accentColor: 'var(--gold)', width: '14px', height: '14px' }} />
+                        <span style={{ fontSize: '0.82rem', color: '#555' }}>{av}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -333,14 +370,14 @@ export default function CollectionPage({ params }) {
                           </button>
                         </div>
                       </div>
-                      <div style={{ padding: '20px 0' }}>
+                      <div style={{ padding: '16px 0' }}>
                         <div style={{ fontSize: '0.75rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>{product.material}</div>
-                        <h3 style={{ fontSize: '1.1rem', fontWeight: '400', margin: '0 0 8px', color: '#1a1a1a' }}>
+                        <h3 style={{ fontSize: '1rem', fontWeight: '400', margin: '0 0 6px', color: '#1a1a1a' }}>
                           <Link href={`/shop/${productSlug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                             {product.name}
                           </Link>
                         </h3>
-                        <div style={{ fontSize: '0.95rem', color: '#666' }}>{product.price}</div>
+                        <div style={{ fontSize: '0.9rem', color: '#666' }}>{product.price}</div>
                       </div>
                     </div>
                   );
