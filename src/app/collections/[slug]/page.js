@@ -1,14 +1,56 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ChevronRight, SlidersHorizontal, ChevronDown } from 'lucide-react';
+import { ChevronRight, SlidersHorizontal, ChevronDown, Heart, ShoppingBag } from 'lucide-react';
 import '../../App.css'; 
 import { Navbar, Footer, useScrollReveal } from '../../page';
 
 export default function CollectionPage({ params }) {
   const { slug } = React.use(params);
   useScrollReveal();
+  const [wishlist, setWishlist] = useState([]);
+  const [selectedMaterials, setSelectedMaterials] = useState([]);
+  const [selectedPrices, setSelectedPrices] = useState([]);
+  const [selectedAvailabilities, setSelectedAvailabilities] = useState([]);
+  const [sortBy, setSortBy] = useState('Recommended');
+
+  useEffect(() => {
+    const loadWishlist = () => {
+      const stored = localStorage.getItem('wishlist');
+      if (stored) {
+        try {
+          setWishlist(JSON.parse(stored));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+    loadWishlist();
+    window.addEventListener('wishlistUpdated', loadWishlist);
+    return () => window.removeEventListener('wishlistUpdated', loadWishlist);
+  }, []);
+
+  const toggleWishlist = (id) => {
+    setWishlist(prev => {
+      const next = prev.includes(id) ? prev.filter(w => w !== id) : [...prev, id];
+      localStorage.setItem('wishlist', JSON.stringify(next));
+      window.dispatchEvent(new Event('wishlistUpdated'));
+      return next;
+    });
+  };
+
+  const toggleMaterial = (mat) => {
+    setSelectedMaterials(prev => prev.includes(mat) ? prev.filter(m => m !== mat) : [...prev, mat]);
+  };
+
+  const togglePrice = (pr) => {
+    setSelectedPrices(prev => prev.includes(pr) ? prev.filter(p => p !== pr) : [...prev, pr]);
+  };
+
+  const toggleAvailability = (av) => {
+    setSelectedAvailabilities(prev => prev.includes(av) ? prev.filter(a => a !== av) : [...prev, av]);
+  };
 
   const title = slug
     .split('-')
@@ -81,6 +123,66 @@ export default function CollectionPage({ params }) {
   else if (slug === 'marble-decor') products = decorProducts;
   else if (slug === 'cristallo-quartzite-slabs') products = cristalloProducts;
 
+  // Filter products dynamically
+  const filteredProducts = products.filter(product => {
+    // 1. Material filter
+    if (selectedMaterials.length > 0) {
+      const matchesMat = selectedMaterials.some(mat => 
+        product.material.toLowerCase().includes(mat.toLowerCase())
+      );
+      if (!matchesMat) return false;
+    }
+
+    // 2. Price filter
+    if (selectedPrices.length > 0) {
+      const priceNum = parseInt(product.price.replace(/[^0-9]/g, ''), 10);
+      const matchesPrice = selectedPrices.some(range => {
+        if (range === 'Under ₹10,000') return priceNum < 10000;
+        if (range === '₹10,000 - ₹20,000') return priceNum >= 10000 && priceNum <= 20000;
+        if (range === '₹20,000 - ₹50,000') return priceNum >= 20000 && priceNum <= 50000;
+        if (range === 'Above ₹50,000') return priceNum > 50000;
+        return false;
+      });
+      if (!matchesPrice) return false;
+    }
+
+    // 3. Availability filter
+    if (selectedAvailabilities.length > 0) {
+      const isLimited = product.tag === 'Limited' || product.tag === 'Exclusive' || product.tag === 'Masterpiece';
+      const isMadeToOrder = product.tag === 'Bespoke' || product.tag === 'Custom' || product.tag === 'Artisan';
+      const isInStock = !isMadeToOrder;
+      
+      const matchesAv = selectedAvailabilities.some(av => {
+        if (av === 'In Stock') return isInStock;
+        if (av === 'Made to Order') return isMadeToOrder;
+        if (av === 'Limited Edition') return isLimited;
+        return false;
+      });
+      if (!matchesAv) return false;
+    }
+
+    return true;
+  });
+
+  // Sort products dynamically
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    const priceA = parseInt(a.price.replace(/[^0-9]/g, ''), 10);
+    const priceB = parseInt(b.price.replace(/[^0-9]/g, ''), 10);
+
+    if (sortBy === 'Price: Low to High') {
+      return priceA - priceB;
+    }
+    if (sortBy === 'Price: High to Low') {
+      return priceB - priceA;
+    }
+    if (sortBy === 'Newest Arrivals') {
+      const scoreA = (a.tag === 'New' ? 100 : 0) + a.id;
+      const scoreB = (b.tag === 'New' ? 100 : 0) + b.id;
+      return scoreB - scoreA;
+    }
+    return 0;
+  });
+
   return (
     <>
       <Navbar />
@@ -124,7 +226,12 @@ export default function CollectionPage({ params }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {['Carrara Marble', 'Nero Marquina', 'Agate Stone', 'Quartzite', 'Rose Quartz'].map(mat => (
                     <label key={mat} style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
-                      <input type="checkbox" style={{ accentColor: 'var(--gold)', width: '16px', height: '16px' }} />
+                      <input 
+                        type="checkbox" 
+                        checked={selectedMaterials.includes(mat)}
+                        onChange={() => toggleMaterial(mat)}
+                        style={{ accentColor: 'var(--gold)', width: '16px', height: '16px' }} 
+                      />
                       <span style={{ fontSize: '0.9rem', color: '#555' }}>{mat}</span>
                     </label>
                   ))}
@@ -140,7 +247,12 @@ export default function CollectionPage({ params }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {['Under ₹10,000', '₹10,000 - ₹20,000', '₹20,000 - ₹50,000', 'Above ₹50,000'].map(price => (
                     <label key={price} style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
-                      <input type="checkbox" style={{ accentColor: 'var(--gold)', width: '16px', height: '16px' }} />
+                      <input 
+                        type="checkbox" 
+                        checked={selectedPrices.includes(price)}
+                        onChange={() => togglePrice(price)}
+                        style={{ accentColor: 'var(--gold)', width: '16px', height: '16px' }} 
+                      />
                       <span style={{ fontSize: '0.9rem', color: '#555' }}>{price}</span>
                     </label>
                   ))}
@@ -156,7 +268,12 @@ export default function CollectionPage({ params }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {['In Stock', 'Made to Order', 'Limited Edition'].map(av => (
                     <label key={av} style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
-                      <input type="checkbox" style={{ accentColor: 'var(--gold)', width: '16px', height: '16px' }} />
+                      <input 
+                        type="checkbox" 
+                        checked={selectedAvailabilities.includes(av)}
+                        onChange={() => toggleAvailability(av)}
+                        style={{ accentColor: 'var(--gold)', width: '16px', height: '16px' }} 
+                      />
                       <span style={{ fontSize: '0.9rem', color: '#555' }}>{av}</span>
                     </label>
                   ))}
@@ -170,31 +287,50 @@ export default function CollectionPage({ params }) {
               
               {/* Toolbar */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '24px', marginBottom: '24px', borderBottom: '1px solid #eae5df' }}>
-                <span style={{ fontSize: '0.9rem', color: '#666' }}>Showing {products.length} Products</span>
+                <span style={{ fontSize: '0.9rem', color: '#666' }}>Showing {sortedProducts.length} Products</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <span style={{ fontSize: '0.85rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Sort By</span>
-                  <select style={{ padding: '8px 16px', border: '1px solid #eae5df', background: '#faf9f8', outline: 'none', fontFamily: 'inherit', fontSize: '0.9rem', cursor: 'pointer' }}>
-                    <option>Recommended</option>
-                    <option>Price: Low to High</option>
-                    <option>Price: High to Low</option>
-                    <option>Newest Arrivals</option>
+                  <select 
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    style={{ padding: '8px 16px', border: '1px solid #eae5df', background: '#faf9f8', outline: 'none', fontFamily: 'inherit', fontSize: '0.9rem', cursor: 'pointer' }}
+                  >
+                    <option value="Recommended">Recommended</option>
+                    <option value="Price: Low to High">Price: Low to High</option>
+                    <option value="Price: High to Low">Price: High to Low</option>
+                    <option value="Newest Arrivals">Newest Arrivals</option>
                   </select>
                 </div>
               </div>
 
               {/* Grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '30px' }}>
-                {products.map((product, i) => {
+                {sortedProducts.map((product, i) => {
                   const productSlug = product.name.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-');
                   return (
                     <div key={product.id} className="product-card reveal" style={{ transitionDelay: `${(i % 3) * 0.1}s`, margin: 0 }}>
-                      <div className="product-card__image-wrap" style={{ aspectRatio: '4/5', background: '#faf9f8' }}>
+                      <div className="product-card__img-wrap" style={{ aspectRatio: '4/5', background: '#faf9f8' }}>
                         {product.tag && <span className="product-card__tag" style={{ zIndex: 2 }}>{product.tag}</span>}
                         <Link href={`/shop/${productSlug}`} style={{ display: 'block', width: '100%', height: '100%' }}>
-                          <img src={product.img} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <img src={product.img} alt={product.name} className="product-card__img" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         </Link>
                         <div className="product-card__actions">
-                          <button className="btn-icon" onClick={() => alert(`${product.name} has been added to your wishlist.`)}>♥</button>
+                          <button className={`product-card__wish ${wishlist.includes(product.id) ? 'active' : ''}`}
+                            onClick={() => toggleWishlist(product.id)} aria-label="Add to wishlist">
+                            <Heart size={16} fill={wishlist.includes(product.id) ? '#C9A96E' : 'none'} />
+                          </button>
+                          <button 
+                            className="product-card__add" 
+                            aria-label="Add to cart"
+                            onClick={() => {
+                              if (typeof window !== 'undefined' && window.addToCart) {
+                                window.addToCart(product);
+                              }
+                            }}
+                          >
+                            <ShoppingBag size={16} />
+                            <span>Quick Add</span>
+                          </button>
                         </div>
                       </div>
                       <div style={{ padding: '20px 0' }}>

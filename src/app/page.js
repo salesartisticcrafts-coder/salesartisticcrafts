@@ -846,8 +846,29 @@ function BestSellers() {
     { id: 6, name: 'Rainbow Marble Bracelet', price: '₹16,800', img: 'https://i.pinimg.com/736x/b5/42/89/b54289333d78d91ef9e1a32d264ad1e6.jpg', tag: 'Exclusive', rating: 5 },
   ];
 
+  useEffect(() => {
+    const loadWishlist = () => {
+      const stored = localStorage.getItem('wishlist');
+      if (stored) {
+        try {
+          setWishlist(JSON.parse(stored));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+    loadWishlist();
+    window.addEventListener('wishlistUpdated', loadWishlist);
+    return () => window.removeEventListener('wishlistUpdated', loadWishlist);
+  }, []);
+
   const toggleWishlist = (id) => {
-    setWishlist(prev => prev.includes(id) ? prev.filter(w => w !== id) : [...prev, id]);
+    setWishlist(prev => {
+      const next = prev.includes(id) ? prev.filter(w => w !== id) : [...prev, id];
+      localStorage.setItem('wishlist', JSON.stringify(next));
+      window.dispatchEvent(new Event('wishlistUpdated'));
+      return next;
+    });
   };
 
   return (
@@ -987,6 +1008,28 @@ export function CustomDesignStudio() {
   const [userName, setUserName] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [quoteRequested, setQuoteRequested] = useState(false);
+
+  const getMarbleTexture = (name) => {
+    switch(name) {
+      case 'Carrara White': return 'https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=600';
+      case 'Nero Marquina': return 'https://images.unsplash.com/photo-1618220136852-87a41ec591ee?q=80&w=600';
+      case 'Calacatta Gold': return 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=600';
+      case 'Turkish Onyx': return 'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?q=80&w=600';
+      case 'Breccia Viola': return 'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?q=80&w=600';
+      case 'Verde Alpi': return 'https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?q=80&w=600';
+      default: return 'https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=600';
+    }
+  };
+
+  const getFontFamily = (style) => {
+    switch(style) {
+      case 'Serif': return 'var(--font-serif), Georgia, serif';
+      case 'Script': return 'cursive';
+      case 'Modern': return 'var(--font-sans), system-ui, sans-serif';
+      case 'Classic': return 'Times New Roman, Times, serif';
+      default: return 'inherit';
+    }
+  };
 
   const steps = ['Upload Reference', 'Choose Marble', 'Add Engraving', 'Confirm details'];
   const marbles = [
@@ -1174,6 +1217,69 @@ export function CustomDesignStudio() {
               <span className="receipt-serial">INV-2025-BESPOKE</span>
             </div>
             
+            {/* Live Configurator Preview */}
+            <div style={{ 
+              width: '100%', 
+              height: '140px', 
+              borderRadius: '4px', 
+              position: 'relative', 
+              overflow: 'hidden', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              border: '1px solid rgba(201, 169, 110, 0.2)',
+              backgroundImage: `url(${getMarbleTexture(selectedMarble)})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              boxShadow: 'inset 0 0 20px rgba(0,0,0,0.5)'
+            }}>
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.2) 100%)',
+                pointerEvents: 'none'
+              }} />
+              
+              {engraving ? (
+                <div style={{
+                  color: 'var(--gold)',
+                  fontSize: '1.2rem',
+                  letterSpacing: '0.15em',
+                  fontWeight: '600',
+                  textShadow: '1px 1px 0px rgba(0,0,0,0.7), -1px -1px 0px rgba(0,0,0,0.7), 2px 2px 8px rgba(0,0,0,0.5)',
+                  fontFamily: getFontFamily(fontStyle),
+                  padding: '6px 12px',
+                  border: '1px solid rgba(201,169,110,0.4)',
+                  borderRadius: '2px',
+                  backgroundColor: 'rgba(0,0,0,0.2)',
+                  backdropFilter: 'blur(1px)',
+                  textTransform: 'uppercase',
+                  maxWidth: '90%',
+                  textAlign: 'center',
+                  wordBreak: 'break-all'
+                }}>
+                  {engraving}
+                </div>
+              ) : (
+                <span style={{ color: '#fff', fontSize: '0.8rem', letterSpacing: '0.05em', backgroundColor: 'rgba(0,0,0,0.4)', padding: '4px 10px', borderRadius: '2px' }}>
+                  Awaiting Engraving Text
+                </span>
+              )}
+              <div style={{
+                position: 'absolute',
+                bottom: '8px',
+                right: '8px',
+                fontSize: '0.55rem',
+                color: '#fff',
+                backgroundColor: 'rgba(0,0,0,0.7)',
+                padding: '2px 6px',
+                borderRadius: '2px',
+                letterSpacing: '0.05em'
+              }}>
+                LIVE PREVIEW
+              </div>
+            </div>
+
             <div className="receipt-divider" />
             
             <h4 className="receipt-title">Commission Summary</h4>
