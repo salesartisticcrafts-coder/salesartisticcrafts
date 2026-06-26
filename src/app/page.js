@@ -796,14 +796,14 @@ function FeaturedCollections() {
 /* ─── Shop By Crystals ─── */
 function ShopByCrystals() {
   const crystals = [
-    { name: 'Pyrite', tag: 'wealth & energy', img: 'https://i.pinimg.com/736x/8f/30/4b/8f304bc044a19a9db4e0ff66e7b16cc8.jpg' },
-    { name: 'Garnet', tag: 'passion & strength', img: 'https://i.pinimg.com/736x/95/cb/a8/95cba897e9d72496a5a0890bf70d89bf.jpg' },
-    { name: 'Citrine', tag: 'abundance & joy', img: 'https://i.pinimg.com/736x/cb/fe/b4/cbfeb486256950293ec2f1f0a1c1d683.jpg' },
-    { name: 'Tiger Eye', tag: 'courage & luck', img: 'https://i.pinimg.com/736x/01/a3/95/01a3952cc2b82650cdb15f9b48c6f663.jpg' },
-    { name: 'Rose Quartz', tag: 'love & harmony', img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg' },
-    { name: 'Lapis Lazuli', tag: 'wisdom & truth', img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg' },
-    { name: 'Amethyst', tag: 'clarity & peace', img: 'https://i.pinimg.com/736x/87/4d/7c/874d7ca0a362d0ddc5246f32ab4bd28d.jpg' },
-    { name: 'Selenite', tag: 'purification', img: 'https://i.pinimg.com/736x/b3/c8/34/b3c83472c84405efdd073a7a1b000fee.jpg' },
+    { name: 'Pyrite', tag: 'wealth & energy', img: '/images/Pyrite.webp' },
+    { name: 'Garnet', tag: 'passion & strength', img: '/images/Garnet_434e07a9-af72-4158-8527-01f7b7cec3ca.webp' },
+    { name: 'Citrine', tag: 'abundance & joy', img: '/images/Citrine_1_001c9a19-d145-474e-b3ed-d8363d92c978.webp' },
+    { name: 'Tiger Eye', tag: 'courage & luck', img: '/images/Tiger_Eye_76ccab7b-fa31-4a0b-a81d-31f198b2f09a (1).webp' },
+    { name: 'Rose Quartz', tag: 'love & harmony', img: '/images/Rose_Quartz_0b3ccc91-1368-48de-a332-599375982e4d (1).webp' },
+    { name: 'Lapis Lazuli', tag: 'wisdom & truth', img: '/images/Lapis_Lazuli_5b5ff163-b2ab-4923-a2dd-1c1598e91687.webp' },
+    { name: 'Amethyst', tag: 'clarity & peace', img: '/images/Amethyst.webp' },
+    { name: 'Selenite', tag: 'purification', img: '/images/Selenite.webp' },
   ];
 
   return (
