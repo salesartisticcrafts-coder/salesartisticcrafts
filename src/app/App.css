@@ -3132,7 +3132,7 @@
 
 /* ─── FOOTER ─── */
 .footer {
-  background: var(--black-deep);
+  background: #241711; /* Premium luxury dark brown */
 }
 .footer__top {
   padding: 80px 0 60px;
@@ -3229,7 +3229,7 @@
 }
 .footer__bottom {
   padding: 24px 0;
-  background: rgba(0,0,0,0.03);
+  background: rgba(0, 0, 0, 0.2); /* Darker overlay for bottom footer bar */
 }
 .footer__bottom-inner {
   display: flex;
@@ -3339,26 +3339,28 @@
   color: var(--charcoal-soft) !important;
 }
 .footer__logo-name {
-  color: var(--charcoal) !important;
+  color: #FAF8F5 !important;
 }
 .footer__col-title {
-  color: var(--charcoal) !important;
+  color: #FAF8F5 !important;
 }
 .footer__copy {
-  color: var(--charcoal-soft) !important;
+  color: rgba(250, 248, 245, 0.5) !important;
 }
 .footer__brand-desc, .footer__link, .footer__contact-item {
-  color: var(--charcoal-soft) !important;
+  color: rgba(250, 248, 245, 0.75) !important;
 }
 .footer__legal a {
-  color: var(--charcoal-soft) !important;
+  color: rgba(250, 248, 245, 0.5) !important;
 }
 .footer__social-link {
   border-color: rgba(201, 169, 110, 0.3) !important;
-  color: var(--charcoal) !important;
+  color: rgba(250, 248, 245, 0.8) !important;
 }
 .footer__social-link:hover {
   color: var(--gold) !important;
+  border-color: var(--gold) !important;
+  background: rgba(201, 169, 110, 0.12) !important;
 }
 .instagram-post__likes {
   color: var(--charcoal) !important;
