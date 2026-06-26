@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { ChevronDown, ChevronLeft, ChevronRight, ArrowRight, Star, Heart, ShoppingBag, Menu, X, Phone, Mail, MapPin, Share2 } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, ArrowRight, Star, Heart, ShoppingBag, Menu, X, Phone, Mail, MapPin, Share2, User, Search } from 'lucide-react';
 
 // Custom social icons as inline SVGs
 const Instagram = ({ size = 16 }) => (
@@ -27,6 +27,12 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isLogin, setIsLogin] = useState(true);
+  const [userEmail, setUserEmail] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -88,8 +94,11 @@ export function Navbar() {
           ))}
         </ul>
         <div className="navbar__actions">
-          <button className="navbar__icon-btn" aria-label="Search" onClick={() => alert('Search functionality initialized. Type to search curations.')}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <button className="navbar__icon-btn" aria-label="Search" onClick={() => setSearchOpen(true)}>
+            <Search size={18} />
+          </button>
+          <button className="navbar__icon-btn" aria-label="Account" onClick={() => setLoginOpen(true)}>
+            <User size={18} />
           </button>
           <button className="navbar__icon-btn" aria-label="Wishlist" onClick={() => alert('Wishlist updated. Items saved to your private dashboard.')}><Heart size={18} /></button>
           <button className="navbar__icon-btn navbar__cart-btn" aria-label="Cart" onClick={() => setCartOpen(true)}>
@@ -197,6 +206,97 @@ export function Navbar() {
                 <span>Proceed to Checkout</span>
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Search Overlay */}
+      {searchOpen && (
+        <div className="search-overlay">
+          <div className="search-overlay__header">
+            <span style={{ fontFamily: 'var(--font-serif)', color: 'var(--gold)', letterSpacing: '0.1em', fontSize: '1.2rem' }}>◈ ARTISTIC CRAFTS SEARCH</span>
+            <button onClick={() => setSearchOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#fff' }}>
+              <X size={28} />
+            </button>
+          </div>
+          <div className="search-overlay__input-wrap">
+            <input 
+              type="text" 
+              className="search-overlay__input" 
+              placeholder="Search curations, stone jewelry, slabs..." 
+              autoFocus 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <div className="search-overlay__results">
+            {searchQuery.trim().length > 0 ? (
+              [
+                { name: 'Pink Crystal Beaded Bracelet', category: 'stone-jewelry', img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg' },
+                { name: 'Black & White Marble Bracelet', category: 'stone-jewelry', img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg' },
+                { name: 'Hand-crafted Coasters Set', category: 'marble-decor', img: 'https://i.pinimg.com/736x/7b/26/39/7b263947af5bd40437e1d77abf879878.jpg' },
+                { name: 'Cristallo Pink Quartzite Slab', category: 'cristallo-quartzite-slabs', img: 'https://i.pinimg.com/736x/92/a7/c5/92a7c5e96bc731477d866887ddab0efe.jpg' }
+              ]
+                .filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                .map((item, idx) => {
+                  const productSlug = item.name.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-');
+                  return (
+                    <Link key={idx} href={`/shop/${productSlug}`} className="search-result-item" onClick={() => setSearchOpen(false)}>
+                      <img src={item.img} alt={item.name} style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} />
+                      <div>
+                        <div style={{ color: '#fff', fontSize: '1rem', fontWeight: '500' }}>{item.name}</div>
+                        <div style={{ color: 'var(--gold)', fontSize: '0.75rem', textTransform: 'uppercase', marginTop: '2px' }}>{item.category.replace('-', ' ')}</div>
+                      </div>
+                    </Link>
+                  );
+                })
+            ) : (
+              <p style={{ color: '#666', textAlign: 'center', marginTop: '20px' }}>Type to search our signature collections...</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Login Modal */}
+      {loginOpen && (
+        <div className="login-modal-overlay" onClick={() => setLoginOpen(false)}>
+          <div className="login-modal-card" onClick={(e) => e.stopPropagation()}>
+            <button onClick={() => setLoginOpen(false)} style={{ position: 'absolute', top: '20px', right: '20px', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--charcoal)' }}>
+              <X size={20} />
+            </button>
+            {loggedIn ? (
+              <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center' }}>
+                <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(201, 169, 110, 0.1)', color: 'var(--gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', border: '1px solid var(--gold)' }}>◈</div>
+                <h3 style={{ fontSize: '1.4rem', fontFamily: 'var(--font-serif)', color: 'var(--charcoal)', margin: 0 }}>Welcome Back</h3>
+                <p style={{ color: '#666', fontSize: '0.9rem', margin: 0 }}>Logged in as: <strong>{userEmail || 'mark@example.com'}</strong></p>
+                <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => { setLoggedIn(false); setUserEmail(''); }}>
+                  <span>Logout</span>
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={(e) => { e.preventDefault(); setLoggedIn(true); }} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <h3 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-serif)', color: 'var(--charcoal)', marginBottom: '10px', textAlign: 'center' }}>
+                  {isLogin ? 'Atelier Login' : 'Create Account'}
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#666' }}>Email Address</label>
+                  <input type="email" required placeholder="mark@example.com" value={userEmail} onChange={e => setUserEmail(e.target.value)} style={{ padding: '12px', border: '1px solid #eae5df', outline: 'none', background: 'transparent', color: 'var(--charcoal)', fontFamily: 'inherit' }} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#666' }}>Password</label>
+                  <input type="password" required placeholder="••••••••" style={{ padding: '12px', border: '1px solid #eae5df', outline: 'none', background: 'transparent', color: 'var(--charcoal)', fontFamily: 'inherit' }} />
+                </div>
+                <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '10px' }}>
+                  <span>{isLogin ? 'Sign In' : 'Register'}</span>
+                </button>
+                <p style={{ fontSize: '0.85rem', color: '#666', textAlign: 'center', margin: 0 }}>
+                  {isLogin ? "Don't have an account? " : "Already have an account? "}
+                  <button type="button" onClick={() => setIsLogin(!isLogin)} style={{ background: 'none', border: 'none', color: 'var(--gold)', textDecoration: 'underline', cursor: 'pointer', padding: 0, fontWeight: '500' }}>
+                    {isLogin ? 'Register' : 'Login'}
+                  </button>
+                </p>
+              </form>
+            )}
           </div>
         </div>
       )}
