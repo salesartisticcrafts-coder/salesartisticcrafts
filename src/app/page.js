@@ -372,9 +372,9 @@ function Hero() {
 /* ─── Featured Collections ─── */
 function FeaturedCollections() {
   const collections = [
-    { title: 'Stone Jewelry', subtitle: 'Wearable Stone', desc: 'Rings, pendants, earrings & bracelets carved from rare stone', img: '/images/jewelry.png', tag: '48 Pieces', class: 'col-left' },
-    { title: 'Marble Decor', subtitle: 'Living in Stone', desc: 'Vases, sculptures & candle holders for discerning interiors', img: '/images/decor.png', tag: '64 Pieces', class: 'col-center' },
-    { title: 'Cristallo Quartzite Slabs', subtitle: 'Rare & Exclusive', desc: 'Ultra-rare quartzite varieties in highly limited quantities', img: '/images/black_marble.png', tag: '12 Left', class: 'col-right' },
+    { title: 'Stone Jewelry', subtitle: 'Wearable Stone', desc: 'Rings, pendants, earrings & bracelets carved from rare stone', img: '/images/jewelry.png', tag: '48 Pieces', class: 'col-left', link: '/collections/stone-jewelry' },
+    { title: 'Marble Decor', subtitle: 'Living in Stone', desc: 'Vases, sculptures & candle holders for discerning interiors', img: '/images/decor.png', tag: '64 Pieces', class: 'col-center', link: '/collections/marble-decor' },
+    { title: 'Cristallo Quartzite Slabs', subtitle: 'Rare & Exclusive', desc: 'Ultra-rare quartzite varieties in highly limited quantities', img: '/images/black_marble.png', tag: '12 Left', class: 'col-right', link: '/collections/cristallo-quartzite-slabs' },
   ];
 
   return (
@@ -391,19 +391,23 @@ function FeaturedCollections() {
         <div className="collections__grid collections__grid--asymmetrical">
           {collections.map((c, i) => (
             <div key={c.title} className={`collection-card collection-card--${c.class} reveal reveal-delay-${i + 1}`}>
-              <div className="collection-card__img-wrap">
+              <Link href={c.link} className="collection-card__img-wrap">
                 <img src={c.img} alt={c.title} className="collection-card__img" />
                 <div className="collection-card__overlay" />
                 <div className="collection-card__tag">{c.tag}</div>
                 <div className="collection-card__border" />
-              </div>
+              </Link>
               <div className="collection-card__body">
                 <div className="collection-card__subtitle">{c.subtitle}</div>
-                <h3 className="collection-card__title">{c.title}</h3>
+                <h3 className="collection-card__title">
+                  <Link href={c.link} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    {c.title}
+                  </Link>
+                </h3>
                 <p className="collection-card__desc">{c.desc}</p>
-                <a href="#" className="collection-card__cta">
+                <Link href={c.link} className="collection-card__cta">
                   Explore <ArrowRight size={14} />
-                </a>
+                </Link>
               </div>
             </div>
           ))}

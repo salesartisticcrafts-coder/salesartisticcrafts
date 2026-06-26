@@ -1517,6 +1517,7 @@
 }
 
 .collection-card__img-wrap {
+  display: block;
   position: relative;
   aspect-ratio: 3/4.2;
   overflow: hidden;

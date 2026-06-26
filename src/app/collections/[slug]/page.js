@@ -24,7 +24,15 @@ export default function CollectionPage({ params }) {
     { id: 6, name: `${title} Artisan Core`, price: '₹16,400', img: 'https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=800&auto=format&fit=crop', material: 'Carrara Marble', tag: '', rating: 5 },
     { id: 7, name: `${title} Limited Set`, price: '₹34,500', img: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800&auto=format&fit=crop', material: 'Nero Marquina', tag: 'Limited', rating: 5 },
     { id: 8, name: `${title} Bespoke Core`, price: '₹21,800', img: 'https://images.unsplash.com/photo-1573408301145-b98c4af05b8b?q=80&w=800&auto=format&fit=crop', material: 'Onyx Stone', tag: '', rating: 5 },
-    { id: 9, name: `${title} Grand Slab`, price: '₹55,000', img: 'https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=800&auto=format&fit=crop', material: 'Rose Quartz', tag: 'Bestseller', rating: 4 },
+  ];
+
+  const jewelryProducts = [
+    { id: 1, name: 'Pink Crystal Beaded Bracelet', material: 'Pink Crystal', price: '₹14,500', img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', tag: 'Best Seller', rating: 5 },
+    { id: 2, name: 'Black & White Marble Bracelet', material: 'Marble', price: '₹12,800', img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', tag: 'New', rating: 5 },
+    { id: 3, name: 'Boho Marble Stone Bracelet', material: 'Stone', price: '₹13,200', img: 'https://i.pinimg.com/736x/87/4d/7c/874d7ca0a362d0ddc5246f32ab4bd28d.jpg', tag: 'Trending', rating: 4 },
+    { id: 4, name: 'Rose Quartz Connemara Bracelet', material: 'Rose Quartz', price: '₹11,500', img: 'https://i.pinimg.com/736x/b3/c8/34/b3c83472c84405efdd073a7a1b000fee.jpg', tag: 'Classic', rating: 5 },
+    { id: 5, name: 'Gray & Tan Watercolor Bracelet', material: 'Watercolor Stone', price: '₹15,400', img: 'https://i.pinimg.com/736x/50/52/02/5052028ef58a458f0a312ed6a3c4381c.jpg', tag: 'Staff Pick', rating: 5 },
+    { id: 6, name: 'Rainbow Marble Bracelet', material: 'Rainbow Marble', price: '₹16,800', img: 'https://i.pinimg.com/736x/b5/42/89/b54289333d78d91ef9e1a32d264ad1e6.jpg', tag: 'Exclusive', rating: 5 }
   ];
 
   const decorProducts = [
@@ -69,7 +77,7 @@ export default function CollectionPage({ params }) {
   ];
 
   let products = defaultProducts;
-  if (slug === 'marble-jewelry') products = jewelryProducts;
+  if (slug === 'marble-jewelry' || slug === 'stone-jewelry') products = jewelryProducts;
   else if (slug === 'marble-decor') products = decorProducts;
   else if (slug === 'cristallo-quartzite-slabs') products = cristalloProducts;
 
