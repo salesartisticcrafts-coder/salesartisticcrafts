@@ -1472,7 +1472,7 @@
 }
 /* ─── COLLECTIONS ─── */
 .collections {
-  padding: 70px 0;
+  padding: 40px 0;
   background: var(--black-deep); /* Consistent deep black background */
   position: relative;
 }
@@ -1778,7 +1778,7 @@
 
 /* ─── BEST SELLERS ─── */
 .best-sellers {
-  padding: 70px 0;
+  padding: 40px 0;
   background: var(--black-deep); /* Luxury deep charcoal-black */
   overflow: hidden;
   position: relative;
@@ -1951,7 +1951,7 @@
 /* ─── CRAFTSMANSHIP ─── */
 .craftsmanship {
   background: var(--black-deep); /* Luxury deep warm black */
-  padding: 80px 0;
+  padding: 45px 0;
   position: relative;
   overflow: visible;
   border-top: 1px solid rgba(201, 169, 110, 0.1);
@@ -2223,7 +2223,7 @@
 
 /* ─── CUSTOM STUDIO ─── */
 .custom-studio {
-  padding: 80px 0;
+  padding: 45px 0;
   background: var(--black-deep); /* Unified deep black background */
   position: relative;
 }
@@ -2712,7 +2712,7 @@
 
 /* ─── INSPIRATION GALLERY ─── */
 .inspiration {
-  padding: 80px 0;
+  padding: 45px 0;
   background: var(--black-deep); /* Luxury dark warm black */
   position: relative;
   overflow: hidden;
@@ -2913,7 +2913,7 @@
 
 
 /* ─── TESTIMONIALS ─── */
-.testimonials { padding: 70px 0; background: var(--marble-grey);
+.testimonials { padding: 40px 0; background: var(--marble-grey);
   position: relative;
   overflow: hidden;
 }
@@ -3005,7 +3005,7 @@
 
 /* ─── INSTAGRAM ─── */
 .instagram {
-  padding: 60px 0;
+  padding: 35px 0;
   background: var(--ivory);
 }
 .instagram__grid {
