@@ -940,6 +940,100 @@ function BestSellers() {
   );
 }
 
+/* ─── New Arrivals ─── */
+function NewArrivals() {
+  const [wishlist, setWishlist] = useState([]);
+  const products = [
+    { id: 101, name: 'Resin Coaster Set White & Gold', price: '₹12,400', img: 'https://i.pinimg.com/736x/0a/31/b0/0a31b0ce9c2fadd9b9e044540c593801.jpg', tag: 'New', rating: 5 },
+    { id: 102, name: 'Cristallo Pink Quartzite Slab', price: '₹1,45,000', img: 'https://i.pinimg.com/736x/92/a7/c5/92a7c5e96bc731477d866887ddab0efe.jpg', tag: 'Luxury', rating: 5 },
+    { id: 103, name: 'Concrete Resin Art Dish', price: '₹11,000', img: 'https://i.pinimg.com/736x/ec/04/84/ec04843094fd1fc9821d5092d4c0402b.jpg', tag: 'Artisan', rating: 5 },
+    { id: 104, name: 'Terrazzo Ceramic Holder Set', price: '₹6,800', img: 'https://i.pinimg.com/736x/3f/84/02/3f84023138a190c8b5e06d8cfc4444f8.jpg', tag: 'Modern', rating: 4 },
+    { id: 105, name: 'Gray & Tan Watercolor Bracelet', price: '₹15,400', img: 'https://i.pinimg.com/736x/50/52/02/5052028ef58a458f0a312ed6a3c4381c.jpg', tag: 'Popular', rating: 5 },
+    { id: 106, name: 'Cristallo Rose Soft Touch Slab', price: '₹1,65,000', img: 'https://i.pinimg.com/736x/6b/50/ca/6b50cae255f42bdd1cc4ec34038d8594.jpg', tag: 'Exclusive', rating: 5 },
+  ];
+
+  useEffect(() => {
+    const loadWishlist = () => {
+      const stored = localStorage.getItem('wishlist');
+      if (stored) {
+        try {
+          setWishlist(JSON.parse(stored));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+    loadWishlist();
+    window.addEventListener('wishlistUpdated', loadWishlist);
+    return () => window.removeEventListener('wishlistUpdated', loadWishlist);
+  }, []);
+
+  const toggleWishlist = (id) => {
+    setWishlist(prev => {
+      const next = prev.includes(id) ? prev.filter(w => w !== id) : [...prev, id];
+      localStorage.setItem('wishlist', JSON.stringify(next));
+      window.dispatchEvent(new Event('wishlistUpdated'));
+      return next;
+    });
+  };
+
+  return (
+    <section className="best-sellers" id="new-arrivals" style={{ paddingTop: '80px', borderTop: '1px solid rgba(201, 169, 110, 0.15)' }}>
+      <div className="gold-glow-orb" style={{ bottom: '25%', left: '5%' }} />
+      <div className="container">
+        <div className="section-header reveal">
+          <div className="section-label">Latest Concept Launches</div>
+          <h2 className="section-title">New Arrivals</h2>
+          <div className="gold-line center" />
+        </div>
+      </div>
+      <div className="best-sellers__scroll-wrap">
+        <div className="best-sellers__track">
+          {products.map(p => (
+            <div key={p.id} className="product-card">
+              <div className="product-card__img-wrap">
+                <img src={p.img} alt={p.name} className="product-card__img" />
+                <div className="product-card__tag">{p.tag}</div>
+                <div className="product-card__actions">
+                  <button className={`product-card__wish ${wishlist.includes(p.id) ? 'active' : ''}`}
+                    onClick={() => toggleWishlist(p.id)} aria-label="Add to wishlist">
+                    <Heart size={16} fill={wishlist.includes(p.id) ? '#C9A96E' : 'none'} />
+                  </button>
+                  <button 
+                    className="product-card__add" 
+                    aria-label="Add to cart"
+                    onClick={() => {
+                      if (typeof window !== 'undefined' && window.addToCart) {
+                        window.addToCart(p);
+                      }
+                    }}
+                  >
+                    <ShoppingBag size={16} />
+                    <span>Quick Add</span>
+                  </button>
+                </div>
+                <div className="product-card__360">360°</div>
+              </div>
+              <div className="product-card__info">
+                <div className="product-card__stars">
+                  {Array.from({ length: p.rating }).map((_, i) => (
+                    <Star key={i} size={10} fill="#C9A96E" stroke="none" />
+                  ))}
+                </div>
+                <h4 className="product-card__name">{p.name}</h4>
+                <div className="product-card__price">{p.price}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="best-sellers__cta reveal">
+        <Link href="/collections/stone-jewelry" className="btn-primary"><span>Explore All Collections</span> <ArrowRight size={16} /></Link>
+      </div>
+    </section>
+  );
+}
+
 /* ─── Craftsmanship Accordion Gallery (Interactive Vertical Accordion) ─── */
 function CraftsmanshipTimeline() {
   const [activeStep, setActiveStep] = useState(0);
@@ -1618,6 +1712,7 @@ export default function Home() {
         <Hero />
         <FeaturedCollections />
         <BestSellers />
+        <NewArrivals />
         <CraftsmanshipTimeline />
         <CustomDesignStudio />
         <InspirationGallery />
