@@ -62,7 +62,7 @@ export default function ContactPage() {
             <div className="reveal" style={{ position: 'sticky', top: '100px' }}>
               <h2 className="section-title" style={{ fontSize: '2.5rem', marginBottom: '24px' }}>Get in Touch</h2>
               <p style={{ color: '#666', lineHeight: 1.6, marginBottom: '40px', maxWidth: '400px' }}>
-                Whether you're looking for a bespoke marble commission, interested in our slabs, or need help with a current order, our atelier concierge is here to assist.
+                Whether you&apos;re looking for a bespoke marble commission, interested in our slabs, or need help with a current order, our atelier concierge is here to assist.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>

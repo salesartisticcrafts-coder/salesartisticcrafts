@@ -24,13 +24,16 @@ export default function CartPage() {
   useEffect(() => {
     const loadCart = () => {
       const storedCart = localStorage.getItem('cartItems');
+      const initialized = localStorage.getItem('cartInitialized');
       if (storedCart) {
         try {
-          setCartItems(JSON.parse(storedCart));
+          const parsed = JSON.parse(storedCart);
+          setCartItems(Array.isArray(parsed) ? parsed : []);
         } catch (e) {
           console.error(e);
+          setCartItems([]);
         }
-      } else {
+      } else if (!initialized) {
         const defaultCart = [
           { id: 1, name: 'Pink Crystal Beaded Bracelet', price: 14500, img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', size: 'Medium', qty: 1 },
           { id: 2, name: 'Black & White Marble Bracelet', price: 12800, img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', size: 'Medium', qty: 1 },
@@ -38,25 +41,35 @@ export default function CartPage() {
         ];
         setCartItems(defaultCart);
         localStorage.setItem('cartItems', JSON.stringify(defaultCart));
+        localStorage.setItem('cartInitialized', 'true');
+      } else {
+        setCartItems([]);
       }
     };
 
     loadCart();
 
-    const storedEmail = localStorage.getItem('userEmail');
-    const storedLoggedIn = localStorage.getItem('loggedIn') === 'true';
-    if (storedLoggedIn && storedEmail) {
-      setEmailAddress(storedEmail);
-    }
+    // Restore session email asynchronously to prevent cascading render warnings
+    setTimeout(() => {
+      const storedEmail = localStorage.getItem('userEmail');
+      const storedLoggedIn = localStorage.getItem('loggedIn') === 'true';
+      if (storedLoggedIn && storedEmail) {
+        setEmailAddress(storedEmail);
+      }
+    }, 0);
 
     const handleCartUpdate = () => {
       const storedCart = localStorage.getItem('cartItems');
       if (storedCart) {
         try {
-          setCartItems(JSON.parse(storedCart));
+          const parsed = JSON.parse(storedCart);
+          setCartItems(Array.isArray(parsed) ? parsed : []);
         } catch (e) {
           console.error(e);
+          setCartItems([]);
         }
+      } else {
+        setCartItems([]);
       }
     };
     
@@ -64,9 +77,9 @@ export default function CartPage() {
     return () => window.removeEventListener('cartUpdated', handleCartUpdate);
   }, []);
 
-  const updateQty = (id, amount) => {
+  const updateQty = (id, size, amount) => {
     const updated = cartItems.map(item => {
-      if (item.id === id) {
+      if (item.id === id && item.size === size) {
         const newQty = Math.max(1, item.qty + amount);
         return { ...item, qty: newQty };
       }
@@ -77,8 +90,8 @@ export default function CartPage() {
     window.dispatchEvent(new Event('cartUpdated'));
   };
 
-  const removeItem = (id) => {
-    const updated = cartItems.filter(item => item.id !== id);
+  const removeItem = (id, size) => {
+    const updated = cartItems.filter(item => !(item.id === id && item.size === size));
     setCartItems(updated);
     localStorage.setItem('cartItems', JSON.stringify(updated));
     window.dispatchEvent(new Event('cartUpdated'));
@@ -239,7 +252,7 @@ export default function CartPage() {
 
                   <div>
                     {cartItems.map(item => (
-                      <div key={item.id} className="cart-table-item">
+                      <div key={`${item.id}-${item.size}`} className="cart-table-item">
                         <img src={item.img} alt={item.name} style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '4px', border: '1px solid rgba(201, 169, 110, 0.15)' }} />
                         
                         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
@@ -248,7 +261,7 @@ export default function CartPage() {
                             <span style={{ fontSize: '0.85rem', color: '#888' }}>Size: {item.size}</span>
                           </div>
                           <button 
-                            onClick={() => removeItem(item.id)} 
+                            onClick={() => removeItem(item.id, item.size)} 
                             style={{ background: 'none', border: 'none', color: '#999', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', padding: 0, width: 'fit-content' }}
                             onMouseEnter={(e) => e.currentTarget.style.color = '#c93b2b'}
                             onMouseLeave={(e) => e.currentTarget.style.color = '#999'}
@@ -259,9 +272,9 @@ export default function CartPage() {
 
                         <div style={{ display: 'grid', gridTemplateColumns: '100px 100px', gap: '40px', alignItems: 'center', textAlign: 'right' }}>
                           <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #eae5df', height: '40px', justifyContent: 'space-between' }}>
-                            <button onClick={() => updateQty(item.id, -1)} style={{ width: '28px', background: 'none', border: 'none', cursor: 'pointer', height: '100%' }}>-</button>
+                            <button onClick={() => updateQty(item.id, item.size, -1)} style={{ width: '28px', background: 'none', border: 'none', cursor: 'pointer', height: '100%' }}>-</button>
                             <span style={{ fontSize: '0.9rem', color: '#1a1a1a', fontWeight: '500' }}>{item.qty}</span>
-                            <button onClick={() => updateQty(item.id, 1)} style={{ width: '28px', background: 'none', border: 'none', cursor: 'pointer', height: '100%' }}>+</button>
+                            <button onClick={() => updateQty(item.id, item.size, 1)} style={{ width: '28px', background: 'none', border: 'none', cursor: 'pointer', height: '100%' }}>+</button>
                           </div>
                           <span style={{ fontWeight: '500', color: '#1a1a1a' }}>
                             ₹{(item.price * item.qty).toLocaleString('en-IN')}

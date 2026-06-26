@@ -22,7 +22,7 @@ export default function AboutPage() {
               The House of Artistic Crafts
             </h1>
             <p style={{ fontSize: '1.15rem', maxWidth: '650px', margin: '0 auto', color: '#555', lineHeight: '1.8', letterSpacing: '0.02em' }}>
-              For over three generations, our atelier has been sourcing the world's rarest natural stone, sculpting it into timeless masterpieces that blend heritage with avant-garde design.
+              For over three generations, our atelier has been sourcing the world&apos;s rarest natural stone, sculpting it into timeless masterpieces that blend heritage with avant-garde design.
             </p>
           </div>
         </header>
@@ -65,7 +65,7 @@ export default function AboutPage() {
           <div className="gold-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.3 }}></div>
           <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '300', fontStyle: 'italic', marginBottom: '32px', color: 'var(--gold)' }}>
-              "Perfection is not created, it is uncovered."
+              &ldquo;Perfection is not created, it is uncovered.&rdquo;
             </h2>
             <p style={{ color: '#aaa', fontSize: '0.9rem', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
               The Artistic Crafts Philosophy

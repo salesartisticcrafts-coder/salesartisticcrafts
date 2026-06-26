@@ -38,42 +38,54 @@ export function Navbar() {
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     
-    // Restore session from localStorage on mount
-    const storedEmail = localStorage.getItem('userEmail');
-    const storedLoggedIn = localStorage.getItem('loggedIn') === 'true';
-    if (storedLoggedIn) {
-      setUserEmail(storedEmail || 'mark@example.com');
-      setLoggedIn(true);
-    }
-
-    // Load cart items on mount
-    const storedCart = localStorage.getItem('cartItems');
-    if (storedCart) {
-      try {
-        setCartItems(JSON.parse(storedCart));
-      } catch (e) {
-        console.error(e);
+    // Restore session and cart from localStorage asynchronously on mount
+    setTimeout(() => {
+      const storedEmail = localStorage.getItem('userEmail');
+      const storedLoggedIn = localStorage.getItem('loggedIn') === 'true';
+      if (storedLoggedIn) {
+        setUserEmail(storedEmail || 'mark@example.com');
+        setLoggedIn(true);
       }
-    } else {
-      // Default placeholder cart items
-      const defaultCart = [
-        { id: 1, name: 'Pink Crystal Beaded Bracelet', price: 14500, img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', size: 'Medium', qty: 1 },
-        { id: 2, name: 'Black & White Marble Bracelet', price: 12800, img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', size: 'Medium', qty: 1 },
-        { id: 3, name: 'Marble Vase', price: 14000, img: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?q=80&w=800', size: 'Standard', qty: 1 }
-      ];
-      setCartItems(defaultCart);
-      localStorage.setItem('cartItems', JSON.stringify(defaultCart));
-    }
+
+      // Load cart items on mount
+      const storedCart = localStorage.getItem('cartItems');
+      const initialized = localStorage.getItem('cartInitialized');
+      if (storedCart) {
+        try {
+          const parsed = JSON.parse(storedCart);
+          setCartItems(Array.isArray(parsed) ? parsed : []);
+        } catch (e) {
+          console.error(e);
+          setCartItems([]);
+        }
+      } else if (!initialized) {
+        // Default placeholder cart items (only run if first time visiting)
+        const defaultCart = [
+          { id: 1, name: 'Pink Crystal Beaded Bracelet', price: 14500, img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', size: 'Medium', qty: 1 },
+          { id: 2, name: 'Black & White Marble Bracelet', price: 12800, img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', size: 'Medium', qty: 1 },
+          { id: 3, name: 'Marble Vase', price: 14000, img: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?q=80&w=800', size: 'Standard', qty: 1 }
+        ];
+        setCartItems(defaultCart);
+        localStorage.setItem('cartItems', JSON.stringify(defaultCart));
+        localStorage.setItem('cartInitialized', 'true');
+      } else {
+        setCartItems([]);
+      }
+    }, 0);
 
     // Event listeners for cart updates and drawer state
     const handleCartUpdate = () => {
       const stored = localStorage.getItem('cartItems');
       if (stored) {
         try {
-          setCartItems(JSON.parse(stored));
+          const parsed = JSON.parse(stored);
+          setCartItems(Array.isArray(parsed) ? parsed : []);
         } catch (e) {
           console.error(e);
+          setCartItems([]);
         }
+      } else {
+        setCartItems([]);
       }
     };
     
@@ -131,9 +143,9 @@ export function Navbar() {
     }
   }, [userEmail]);
 
-  const updateCartQty = (id, amount) => {
+  const updateCartQty = (id, size, amount) => {
     const updated = cartItems.map(item => {
-      if (item.id === id) {
+      if (item.id === id && item.size === size) {
         return { ...item, qty: Math.max(1, item.qty + amount) };
       }
       return item;
@@ -143,8 +155,8 @@ export function Navbar() {
     window.dispatchEvent(new Event('cartUpdated'));
   };
 
-  const removeCartItem = (id) => {
-    const updated = cartItems.filter(item => item.id !== id);
+  const removeCartItem = (id, size) => {
+    const updated = cartItems.filter(item => !(item.id === id && item.size === size));
     setCartItems(updated);
     localStorage.setItem('cartItems', JSON.stringify(updated));
     window.dispatchEvent(new Event('cartUpdated'));
@@ -343,11 +355,11 @@ export function Navbar() {
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #eae5df', height: '28px' }}>
-                          <button onClick={() => updateCartQty(item.id, -1)} style={{ width: '22px', background: 'none', border: 'none', cursor: 'pointer', height: '100%', fontSize: '0.8rem', padding: 0 }}>-</button>
+                          <button onClick={() => updateCartQty(item.id, item.size, -1)} style={{ width: '22px', background: 'none', border: 'none', cursor: 'pointer', height: '100%', fontSize: '0.8rem', padding: 0 }}>-</button>
                           <span style={{ fontSize: '0.8rem', padding: '0 4px', fontWeight: '500' }}>{item.qty}</span>
-                          <button onClick={() => updateCartQty(item.id, 1)} style={{ width: '22px', background: 'none', border: 'none', cursor: 'pointer', height: '100%', fontSize: '0.8rem', padding: 0 }}>+</button>
+                          <button onClick={() => updateCartQty(item.id, item.size, 1)} style={{ width: '22px', background: 'none', border: 'none', cursor: 'pointer', height: '100%', fontSize: '0.8rem', padding: 0 }}>+</button>
                         </div>
-                        <button onClick={() => removeCartItem(item.id)} style={{ background: 'none', border: 'none', color: '#999', fontSize: '0.75rem', cursor: 'pointer', textDecoration: 'underline', padding: 0 }}>Remove</button>
+                        <button onClick={() => removeCartItem(item.id, item.size)} style={{ background: 'none', border: 'none', color: '#999', fontSize: '0.75rem', cursor: 'pointer', textDecoration: 'underline', padding: 0 }}>Remove</button>
                       </div>
                     </div>
                   </div>
@@ -613,14 +625,14 @@ function Hero() {
     setMagnifier(prev => ({ ...prev, show: false }));
   };
 
-  const particles = Array.from({ length: 15 }, (_, i) => ({
+  const [particles] = useState(() => Array.from({ length: 15 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
     y: Math.random() * 100,
     size: Math.random() * 3 + 1,
     delay: Math.random() * 5,
     duration: Math.random() * 8 + 6,
-  }));
+  })));
 
   return (
     <section
@@ -810,10 +822,10 @@ function BrandStory() {
               <em className="shimmer-text"> Rare Stone.</em>
             </h2>
             <p className="brand-story__text drop-cap">
-              Born in the historic marble quarries of Rajasthan, Artistic Crafts was founded on one uncompromising belief: that the earth's most extraordinary geological materials deserve to be worn, displayed, and cherished — not hidden in museums.
+              Born in the historic marble quarries of Rajasthan, Artistic Crafts was founded on one uncompromising belief: that the earth&apos;s most extraordinary geological materials deserve to be worn, displayed, and cherished — not hidden in museums.
             </p>
             <p className="brand-story__text">
-              Our founder traveled to over 12 countries sourcing the world's rarest marble varieties — from Italian Calacatta Gold to translucent Turkish Onyx. Each stone is hand-selected for its unique veining, translucency, and individual character before our master artisans begin the meticulous process of hand-carving.
+              Our founder traveled to over 12 countries sourcing the world&apos;s rarest marble varieties — from Italian Calacatta Gold to translucent Turkish Onyx. Each stone is hand-selected for its unique veining, translucency, and individual character before our master artisans begin the meticulous process of hand-carving.
             </p>
             <div className="brand-story__pillars">
               {[['Handcrafted Signature', 'Every piece individually chiseled by hand'], ['Ethically Quarried', 'Responsibility to the earth and our communities'], ['Designed for Eternity', 'Crafted to endure through generations']].map(([t, d]) => (
@@ -1403,7 +1415,7 @@ function Testimonials() {
                   <Star key={j} size={16} fill="#C9A96E" stroke="none" />
                 ))}
               </div>
-              <div className="testimonial-card__quote">"</div>
+              <div className="testimonial-card__quote">&ldquo;</div>
               <p className="testimonial-card__text">{t.text}</p>
               <div className="testimonial-card__author">
                 <div className="testimonial-card__author-img">
@@ -1565,8 +1577,34 @@ export function useScrollReveal() {
         }
       });
     }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    return () => observer.disconnect();
+    
+    const observeNewElements = () => {
+      document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+        observer.observe(el);
+      });
+    };
+
+    observeNewElements();
+
+    const mutationObserver = new MutationObserver((mutations) => {
+      let needsObserve = false;
+      for (const mutation of mutations) {
+        if (mutation.addedNodes.length > 0) {
+          needsObserve = true;
+          break;
+        }
+      }
+      if (needsObserve) {
+        observeNewElements();
+      }
+    });
+
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      observer.disconnect();
+      mutationObserver.disconnect();
+    };
   }, []);
 }
 
