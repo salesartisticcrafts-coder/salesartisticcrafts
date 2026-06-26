@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronRight, Trash2, ShieldCheck, ArrowRight } from 'lucide-react';
 import '../App.css'; 
@@ -9,27 +9,65 @@ import { Navbar, Footer, useScrollReveal } from '../page';
 export default function CartPage() {
   useScrollReveal();
 
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: 'Pink Crystal Beaded Bracelet', price: 14500, img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', size: 'Medium', qty: 1 },
-    { id: 2, name: 'Black & White Marble Bracelet', price: 12800, img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', size: 'Medium', qty: 1 },
-    { id: 3, name: 'Marble Vase', price: 14000, img: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?q=80&w=800', size: 'Standard', qty: 1 }
-  ]);
-
+  const [cartItems, setCartItems] = useState([]);
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
 
+  useEffect(() => {
+    const loadCart = () => {
+      const storedCart = localStorage.getItem('cartItems');
+      if (storedCart) {
+        try {
+          setCartItems(JSON.parse(storedCart));
+        } catch (e) {
+          console.error(e);
+        }
+      } else {
+        const defaultCart = [
+          { id: 1, name: 'Pink Crystal Beaded Bracelet', price: 14500, img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', size: 'Medium', qty: 1 },
+          { id: 2, name: 'Black & White Marble Bracelet', price: 12800, img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', size: 'Medium', qty: 1 },
+          { id: 3, name: 'Marble Vase', price: 14000, img: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?q=80&w=800', size: 'Standard', qty: 1 }
+        ];
+        setCartItems(defaultCart);
+        localStorage.setItem('cartItems', JSON.stringify(defaultCart));
+      }
+    };
+
+    loadCart();
+
+    const handleCartUpdate = () => {
+      const storedCart = localStorage.getItem('cartItems');
+      if (storedCart) {
+        try {
+          setCartItems(JSON.parse(storedCart));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+    
+    window.addEventListener('cartUpdated', handleCartUpdate);
+    return () => window.removeEventListener('cartUpdated', handleCartUpdate);
+  }, []);
+
   const updateQty = (id, amount) => {
-    setCartItems(prev => prev.map(item => {
+    const updated = cartItems.map(item => {
       if (item.id === id) {
         const newQty = Math.max(1, item.qty + amount);
         return { ...item, qty: newQty };
       }
       return item;
-    }));
+    });
+    setCartItems(updated);
+    localStorage.setItem('cartItems', JSON.stringify(updated));
+    window.dispatchEvent(new Event('cartUpdated'));
   };
 
   const removeItem = (id) => {
-    setCartItems(prev => prev.filter(item => item.id !== id));
+    const updated = cartItems.filter(item => item.id !== id);
+    setCartItems(updated);
+    localStorage.setItem('cartItems', JSON.stringify(updated));
+    window.dispatchEvent(new Event('cartUpdated'));
   };
 
   const handleApplyPromo = (e) => {

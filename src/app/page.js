@@ -33,10 +33,10 @@ export function Navbar() {
   const [isLogin, setIsLogin] = useState(true);
   const [userEmail, setUserEmail] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', onScroll);
     
     // Restore session from localStorage on mount
     const storedEmail = localStorage.getItem('userEmail');
@@ -45,9 +45,110 @@ export function Navbar() {
       setUserEmail(storedEmail || 'mark@example.com');
       setLoggedIn(true);
     }
+
+    // Load cart items on mount
+    const storedCart = localStorage.getItem('cartItems');
+    if (storedCart) {
+      try {
+        setCartItems(JSON.parse(storedCart));
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      // Default placeholder cart items
+      const defaultCart = [
+        { id: 1, name: 'Pink Crystal Beaded Bracelet', price: 14500, img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', size: 'Medium', qty: 1 },
+        { id: 2, name: 'Black & White Marble Bracelet', price: 12800, img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', size: 'Medium', qty: 1 },
+        { id: 3, name: 'Marble Vase', price: 14000, img: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?q=80&w=800', size: 'Standard', qty: 1 }
+      ];
+      setCartItems(defaultCart);
+      localStorage.setItem('cartItems', JSON.stringify(defaultCart));
+    }
+
+    // Event listeners for cart updates and drawer state
+    const handleCartUpdate = () => {
+      const stored = localStorage.getItem('cartItems');
+      if (stored) {
+        try {
+          setCartItems(JSON.parse(stored));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
     
-    return () => window.removeEventListener('scroll', onScroll);
+    const handleOpenDrawer = () => {
+      setCartOpen(true);
+    };
+
+    window.addEventListener('scroll', onScroll);
+    window.addEventListener('cartUpdated', handleCartUpdate);
+    window.addEventListener('openCartDrawer', handleOpenDrawer);
+    
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('cartUpdated', handleCartUpdate);
+      window.removeEventListener('openCartDrawer', handleOpenDrawer);
+    };
   }, []);
+
+  // Global addToCart action helper
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.addToCart = (product, qty = 1, size = 'Medium') => {
+        const storedCart = localStorage.getItem('cartItems');
+        let cart = [];
+        if (storedCart) {
+          try {
+            cart = JSON.parse(storedCart);
+          } catch (e) {
+            console.error(e);
+          }
+        }
+        
+        const priceNum = typeof product.price === 'string' 
+          ? parseInt(product.price.replace(/[^0-9]/g, ''), 10) 
+          : product.price;
+          
+        const existingItem = cart.find(item => item.id === product.id && item.size === size);
+        if (existingItem) {
+          existingItem.qty += qty;
+        } else {
+          cart.push({
+            id: product.id,
+            name: product.name,
+            price: priceNum,
+            img: product.img,
+            size: size,
+            qty: qty
+          });
+        }
+        
+        localStorage.setItem('cartItems', JSON.stringify(cart));
+        window.dispatchEvent(new Event('cartUpdated'));
+        window.dispatchEvent(new CustomEvent('openCartDrawer'));
+      };
+    }
+  }, [userEmail]);
+
+  const updateCartQty = (id, amount) => {
+    const updated = cartItems.map(item => {
+      if (item.id === id) {
+        return { ...item, qty: Math.max(1, item.qty + amount) };
+      }
+      return item;
+    });
+    setCartItems(updated);
+    localStorage.setItem('cartItems', JSON.stringify(updated));
+    window.dispatchEvent(new Event('cartUpdated'));
+  };
+
+  const removeCartItem = (id) => {
+    const updated = cartItems.filter(item => item.id !== id);
+    setCartItems(updated);
+    localStorage.setItem('cartItems', JSON.stringify(updated));
+    window.dispatchEvent(new Event('cartUpdated'));
+  };
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
@@ -65,6 +166,9 @@ export function Navbar() {
     localStorage.removeItem('loggedIn');
     localStorage.removeItem('userEmail');
   };
+
+  const cartSubtotal = cartItems.reduce((acc, item) => acc + (item.price * item.qty), 0);
+  const cartCount = cartItems.reduce((acc, item) => acc + item.qty, 0);
 
   const navItems = [
     { label: 'Collections', sub: ['Stone Jewelry', 'Marble Decor', 'Cristallo Quartzite Slabs'] },
@@ -146,7 +250,7 @@ export function Navbar() {
           <button className="navbar__icon-btn" aria-label="Wishlist" onClick={() => alert('Wishlist updated. Items saved to your private dashboard.')}><Heart size={18} /></button>
           <button className="navbar__icon-btn navbar__cart-btn" aria-label="Cart" onClick={() => setCartOpen(true)}>
             <ShoppingBag size={18} />
-            <span className="navbar__cart-count">3</span>
+            <span className="navbar__cart-count">{cartCount}</span>
           </button>
         </div>
       </div>
@@ -214,40 +318,57 @@ export function Navbar() {
             boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.1)',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-              <h3 style={{ fontSize: '1.4rem', fontWeight: '400', margin: 0, color: 'var(--charcoal)', letterSpacing: '0.05em', fontFamily: 'var(--font-serif)' }}>Shopping Bag (3)</h3>
+              <h3 style={{ fontSize: '1.4rem', fontWeight: '400', margin: 0, color: 'var(--charcoal)', letterSpacing: '0.05em', fontFamily: 'var(--font-serif)' }}>Shopping Bag ({cartCount})</h3>
               <button onClick={() => setCartOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--charcoal)' }}>
                 <X size={24} />
               </button>
             </div>
             
             <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              {[
-                { id: 1, name: 'Pink Crystal Beaded Bracelet', price: '₹14,500', img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg' },
-                { id: 2, name: 'Black & White Marble Bracelet', price: '₹12,800', img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg' },
-                { id: 3, name: 'Marble Vase', price: '₹14,000', img: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?q=80&w=800' }
-              ].map(item => (
-                <div key={item.id} style={{ display: 'flex', gap: '16px', borderBottom: '1px solid rgba(201, 169, 110, 0.1)', paddingBottom: '16px' }}>
-                  <img src={item.img} alt={item.name} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px', border: '1px solid rgba(201, 169, 110, 0.1)' }} />
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                    <div>
-                      <h4 style={{ fontSize: '0.95rem', fontWeight: '500', color: 'var(--charcoal)', margin: '0 0 4px' }}>{item.name}</h4>
-                      <span style={{ fontSize: '0.85rem', color: 'var(--gold)', fontWeight: '500' }}>{item.price}</span>
-                    </div>
-                    <button style={{ alignSelf: 'flex-start', background: 'none', border: 'none', color: '#999', fontSize: '0.75rem', cursor: 'pointer', textDecoration: 'underline' }}>Remove</button>
-                  </div>
+              {cartItems.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--warm-grey)', fontSize: '0.95rem' }}>
+                  Your bag is empty
                 </div>
-              ))}
+              ) : (
+                cartItems.map(item => (
+                  <div key={`${item.id}-${item.size}`} style={{ display: 'flex', gap: '16px', borderBottom: '1px solid rgba(201, 169, 110, 0.1)', paddingBottom: '16px' }}>
+                    <img src={item.img} alt={item.name} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px', border: '1px solid rgba(201, 169, 110, 0.1)' }} />
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <h4 style={{ fontSize: '0.95rem', fontWeight: '500', color: 'var(--charcoal)', margin: '0 0 4px' }}>{item.name}</h4>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <span style={{ fontSize: '0.85rem', color: 'var(--gold)', fontWeight: '500' }}>₹{item.price.toLocaleString('en-IN')}</span>
+                          <span style={{ fontSize: '0.7rem', color: 'var(--warm-grey)', textTransform: 'uppercase' }}>Size: {item.size}</span>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #eae5df', height: '28px' }}>
+                          <button onClick={() => updateCartQty(item.id, -1)} style={{ width: '22px', background: 'none', border: 'none', cursor: 'pointer', height: '100%', fontSize: '0.8rem', padding: 0 }}>-</button>
+                          <span style={{ fontSize: '0.8rem', padding: '0 4px', fontWeight: '500' }}>{item.qty}</span>
+                          <button onClick={() => updateCartQty(item.id, 1)} style={{ width: '22px', background: 'none', border: 'none', cursor: 'pointer', height: '100%', fontSize: '0.8rem', padding: 0 }}>+</button>
+                        </div>
+                        <button onClick={() => removeCartItem(item.id)} style={{ background: 'none', border: 'none', color: '#999', fontSize: '0.75rem', cursor: 'pointer', textDecoration: 'underline', padding: 0 }}>Remove</button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
-
+            
             <div style={{ marginTop: '30px', borderTop: '1px solid rgba(201, 169, 110, 0.2)', paddingTop: '20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', fontSize: '1.1rem', fontWeight: '500' }}>
                 <span>Subtotal</span>
-                <span>₹41,300</span>
+                <span>₹{cartSubtotal.toLocaleString('en-IN')}</span>
               </div>
               <p style={{ fontSize: '0.75rem', color: 'var(--warm-grey)', marginBottom: '20px', lineHeight: 1.5 }}>Taxes and shipping calculated at checkout.</p>
-              <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => alert('Proceeding to secure checkout payment gateway...')}>
-                <span>Proceed to Checkout</span>
-              </button>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <Link href="/cart" className="btn-primary" style={{ width: '100%', justifyContent: 'center', textDecoration: 'none', height: '48px' }} onClick={() => setCartOpen(false)}>
+                  <span>View Bag & Checkout</span>
+                </Link>
+                <button className="btn-primary" style={{ width: '100%', justifyContent: 'center', height: '48px', background: 'transparent', border: '1px solid var(--charcoal)', color: 'var(--charcoal)' }} onClick={() => setCartOpen(false)}>
+                  <span>Continue Shopping</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -751,7 +872,15 @@ function BestSellers() {
                     onClick={() => toggleWishlist(p.id)} aria-label="Add to wishlist">
                     <Heart size={16} fill={wishlist.includes(p.id) ? '#C9A96E' : 'none'} />
                   </button>
-                  <button className="product-card__add" aria-label="Add to cart">
+                  <button 
+                    className="product-card__add" 
+                    aria-label="Add to cart"
+                    onClick={() => {
+                      if (typeof window !== 'undefined' && window.addToCart) {
+                        window.addToCart(p);
+                      }
+                    }}
+                  >
                     <ShoppingBag size={16} />
                     <span>Quick Add</span>
                   </button>

@@ -28,7 +28,18 @@ export default function ProductDetailPage({ params }) {
   const [activeTab, setActiveTab] = useState('desc');
 
   const handleAddToCart = () => {
-    alert(`${product.name} (${selectedSize}, Qty: ${quantity}) has been added to your shopping bag!`);
+    if (typeof window !== 'undefined' && window.addToCart) {
+      const productId = allProducts.findIndex(p => p.name === product.name) + 1;
+      const productObj = {
+        id: productId,
+        name: product.name,
+        price: product.price,
+        img: product.img
+      };
+      window.addToCart(productObj, quantity, selectedSize);
+    } else {
+      alert(`${product.name} (${selectedSize}, Qty: ${quantity}) has been added to your shopping bag!`);
+    }
   };
 
   return (
