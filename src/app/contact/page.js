@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { ChevronRight, MapPin, Phone, Mail } from 'lucide-react';
 import '../App.css'; 
@@ -26,6 +26,15 @@ const Twitter = ({ size = 16 }) => (
 export default function ContactPage() {
   useScrollReveal();
   const title = "Contact Us";
+  const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', interest: 'Stone Jewelry', message: '' });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (formData.firstName && formData.email) {
+      setSubmitted(true);
+    }
+  };
 
   return (
     <>
@@ -130,44 +139,57 @@ export default function ContactPage() {
             </div>
 
             {/* Right Side: Contact Form */}
-            <div className="reveal" style={{ transitionDelay: '0.2s', background: '#faf9f8', padding: '40px' }}>
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '24px', fontWeight: '400', color: '#1a1a1a' }}>Send an Inquiry</h3>
-              <form style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#555' }}>First Name</label>
-                    <input type="text" placeholder="Jane" style={{ padding: '16px', border: '1px solid #eae5df', background: '#fff', outline: 'none', fontFamily: 'inherit' }} />
+            <div className="reveal" style={{ transitionDelay: '0.2s', background: '#faf9f8', padding: '40px', minHeight: '420px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              {submitted ? (
+                <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center' }}>
+                  <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(201, 169, 110, 0.1)', color: 'var(--gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', border: '1px solid var(--gold)' }}>◈</div>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: '450', color: '#1a1a1a', margin: 0, fontFamily: 'var(--font-serif)' }}>Inquiry Submitted</h3>
+                  <p style={{ color: '#666', lineHeight: 1.6, margin: 0, fontSize: '0.95rem', maxWidth: '320px' }}>
+                    Thank you for contacting the Artistic Crafts Atelier. A dedicated concierge consultant will review your request and contact you within 24 hours.
+                  </p>
+                  <button onClick={() => { setSubmitted(false); setFormData({ firstName: '', lastName: '', email: '', interest: 'Stone Jewelry', message: '' }); }} style={{ background: 'none', border: '1px solid var(--gold)', color: 'var(--gold)', padding: '12px 28px', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', cursor: 'pointer', transition: 'all 0.3s ease', marginTop: '10px' }}>
+                    Send Another Message
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  <h3 style={{ fontSize: '1.5rem', marginBottom: '8px', fontWeight: '400', color: '#1a1a1a', margin: 0, fontFamily: 'var(--font-serif)' }}>Send an Inquiry</h3>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#555' }}>First Name</label>
+                      <input type="text" required placeholder="Jane" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} style={{ padding: '16px', border: '1px solid #eae5df', background: '#fff', outline: 'none', fontFamily: 'inherit' }} />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#555' }}>Last Name</label>
+                      <input type="text" placeholder="Doe" value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} style={{ padding: '16px', border: '1px solid #eae5df', background: '#fff', outline: 'none', fontFamily: 'inherit' }} />
+                    </div>
                   </div>
+                  
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#555' }}>Last Name</label>
-                    <input type="text" placeholder="Doe" style={{ padding: '16px', border: '1px solid #eae5df', background: '#fff', outline: 'none', fontFamily: 'inherit' }} />
+                    <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#555' }}>Email Address</label>
+                    <input type="email" required placeholder="jane@example.com" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} style={{ padding: '16px', border: '1px solid #eae5df', background: '#fff', outline: 'none', fontFamily: 'inherit' }} />
                   </div>
-                </div>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#555' }}>Email Address</label>
-                  <input type="email" placeholder="jane@example.com" style={{ padding: '16px', border: '1px solid #eae5df', background: '#fff', outline: 'none', fontFamily: 'inherit' }} />
-                </div>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#555' }}>Area of Interest</label>
-                  <select style={{ padding: '16px', border: '1px solid #eae5df', background: '#fff', outline: 'none', fontFamily: 'inherit', color: '#1a1a1a', appearance: 'none', cursor: 'pointer' }}>
-                    <option>Stone Jewelry</option>
-                    <option>Marble Decor</option>
-                    <option>Cristallo Quartzite Slabs</option>
-                    <option>Custom Commission</option>
-                    <option>Press / Collaboration</option>
-                  </select>
-                </div>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#555' }}>Area of Interest</label>
+                    <select value={formData.interest} onChange={e => setFormData({...formData, interest: e.target.value})} style={{ padding: '16px', border: '1px solid #eae5df', background: '#fff', outline: 'none', fontFamily: 'inherit', color: '#1a1a1a', appearance: 'none', cursor: 'pointer' }}>
+                      <option>Stone Jewelry</option>
+                      <option>Marble Decor</option>
+                      <option>Cristallo Quartzite Slabs</option>
+                      <option>Custom Commission</option>
+                      <option>Press / Collaboration</option>
+                    </select>
+                  </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#555' }}>Message</label>
-                  <textarea rows="5" placeholder="How can we help you?" style={{ padding: '16px', border: '1px solid #eae5df', background: '#fff', outline: 'none', fontFamily: 'inherit', resize: 'vertical' }}></textarea>
-                </div>
-                
-                <button type="button" className="btn-primary" style={{ padding: '20px', fontSize: '1rem', marginTop: '8px', width: '100%', borderRadius: 0, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Submit Inquiry</button>
-              </form>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#555' }}>Message</label>
+                    <textarea rows="5" placeholder="How can we help you?" value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} style={{ padding: '16px', border: '1px solid #eae5df', background: '#fff', outline: 'none', fontFamily: 'inherit', resize: 'vertical' }}></textarea>
+                  </div>
+                  
+                  <button type="submit" className="btn-primary" style={{ padding: '20px', fontSize: '1rem', marginTop: '8px', width: '100%', borderRadius: 0, textTransform: 'uppercase', letterSpacing: '0.1em', justifyContent: 'center' }}>Submit Inquiry</button>
+                </form>
+              )}
             </div>
 
           </div>

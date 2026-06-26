@@ -136,7 +136,7 @@ export default function CollectionPage({ params }) {
                       {product.tag && <span className="product-card__tag" style={{ zIndex: 2 }}>{product.tag}</span>}
                       <img src={product.img} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       <div className="product-card__actions">
-                        <button className="btn-icon">♥</button>
+                        <button className="btn-icon" onClick={() => alert(`${product.name} has been added to your wishlist.`)}>♥</button>
                       </div>
                     </div>
                     <div style={{ padding: '20px 0' }}>

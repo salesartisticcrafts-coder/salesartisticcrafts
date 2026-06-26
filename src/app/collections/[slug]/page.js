@@ -184,22 +184,31 @@ export default function CollectionPage({ params }) {
 
               {/* Grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '30px' }}>
-                {products.map((product, i) => (
-                  <div key={product.id} className="product-card reveal" style={{ transitionDelay: `${(i % 3) * 0.1}s`, margin: 0 }}>
-                    <div className="product-card__image-wrap" style={{ aspectRatio: '4/5', background: '#faf9f8' }}>
-                      {product.tag && <span className="product-card__tag" style={{ zIndex: 2 }}>{product.tag}</span>}
-                      <img src={product.img} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      <div className="product-card__actions">
-                        <button className="btn-icon">♥</button>
+                {products.map((product, i) => {
+                  const productSlug = product.name.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-');
+                  return (
+                    <div key={product.id} className="product-card reveal" style={{ transitionDelay: `${(i % 3) * 0.1}s`, margin: 0 }}>
+                      <div className="product-card__image-wrap" style={{ aspectRatio: '4/5', background: '#faf9f8' }}>
+                        {product.tag && <span className="product-card__tag" style={{ zIndex: 2 }}>{product.tag}</span>}
+                        <Link href={`/shop/${productSlug}`} style={{ display: 'block', width: '100%', height: '100%' }}>
+                          <img src={product.img} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </Link>
+                        <div className="product-card__actions">
+                          <button className="btn-icon" onClick={() => alert(`${product.name} has been added to your wishlist.`)}>♥</button>
+                        </div>
+                      </div>
+                      <div style={{ padding: '20px 0' }}>
+                        <div style={{ fontSize: '0.75rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>{product.material}</div>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: '400', margin: '0 0 8px', color: '#1a1a1a' }}>
+                          <Link href={`/shop/${productSlug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            {product.name}
+                          </Link>
+                        </h3>
+                        <div style={{ fontSize: '0.95rem', color: '#666' }}>{product.price}</div>
                       </div>
                     </div>
-                    <div style={{ padding: '20px 0' }}>
-                      <div style={{ fontSize: '0.75rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>{product.material}</div>
-                      <h3 style={{ fontSize: '1.1rem', fontWeight: '400', margin: '0 0 8px', color: '#1a1a1a' }}>{product.name}</h3>
-                      <div style={{ fontSize: '0.95rem', color: '#666' }}>{product.price}</div>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
             </div>

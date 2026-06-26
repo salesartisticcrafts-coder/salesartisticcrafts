@@ -26,6 +26,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [cartOpen, setCartOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -87,11 +88,11 @@ export function Navbar() {
           ))}
         </ul>
         <div className="navbar__actions">
-          <button className="navbar__icon-btn" aria-label="Search">
+          <button className="navbar__icon-btn" aria-label="Search" onClick={() => alert('Search functionality initialized. Type to search curations.')}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           </button>
-          <button className="navbar__icon-btn" aria-label="Wishlist"><Heart size={18} /></button>
-          <button className="navbar__icon-btn navbar__cart-btn" aria-label="Cart">
+          <button className="navbar__icon-btn" aria-label="Wishlist" onClick={() => alert('Wishlist updated. Items saved to your private dashboard.')}><Heart size={18} /></button>
+          <button className="navbar__icon-btn navbar__cart-btn" aria-label="Cart" onClick={() => setCartOpen(true)}>
             <ShoppingBag size={18} />
             <span className="navbar__cart-count">3</span>
           </button>
@@ -137,6 +138,68 @@ export function Navbar() {
           </div>
         ))}
       </div>
+
+      {/* Cart Drawer */}
+      {cartOpen && (
+        <div className="cart-drawer-overlay" onClick={() => setCartOpen(false)} style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(0, 0, 0, 0.4)',
+          backdropFilter: 'blur(4px)',
+          zIndex: 1000,
+          display: 'flex',
+          justifyContent: 'flex-end',
+        }}>
+          <div className="cart-drawer" onClick={(e) => e.stopPropagation()} style={{
+            width: '100%',
+            maxWidth: '420px',
+            height: '100%',
+            background: 'var(--marble-white)',
+            borderLeft: '1px solid rgba(201, 169, 110, 0.2)',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '30px',
+            boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.1)',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+              <h3 style={{ fontSize: '1.4rem', fontWeight: '400', margin: 0, color: 'var(--charcoal)', letterSpacing: '0.05em', fontFamily: 'var(--font-serif)' }}>Shopping Bag (3)</h3>
+              <button onClick={() => setCartOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--charcoal)' }}>
+                <X size={24} />
+              </button>
+            </div>
+            
+            <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {[
+                { id: 1, name: 'Pink Crystal Beaded Bracelet', price: '₹14,500', img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg' },
+                { id: 2, name: 'Black & White Marble Bracelet', price: '₹12,800', img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg' },
+                { id: 3, name: 'Marble Vase', price: '₹14,000', img: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?q=80&w=800' }
+              ].map(item => (
+                <div key={item.id} style={{ display: 'flex', gap: '16px', borderBottom: '1px solid rgba(201, 169, 110, 0.1)', paddingBottom: '16px' }}>
+                  <img src={item.img} alt={item.name} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px', border: '1px solid rgba(201, 169, 110, 0.1)' }} />
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <h4 style={{ fontSize: '0.95rem', fontWeight: '500', color: 'var(--charcoal)', margin: '0 0 4px' }}>{item.name}</h4>
+                      <span style={{ fontSize: '0.85rem', color: 'var(--gold)', fontWeight: '500' }}>{item.price}</span>
+                    </div>
+                    <button style={{ alignSelf: 'flex-start', background: 'none', border: 'none', color: '#999', fontSize: '0.75rem', cursor: 'pointer', textDecoration: 'underline' }}>Remove</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ marginTop: '30px', borderTop: '1px solid rgba(201, 169, 110, 0.2)', paddingTop: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', fontSize: '1.1rem', fontWeight: '500' }}>
+                <span>Subtotal</span>
+                <span>₹41,300</span>
+              </div>
+              <p style={{ fontSize: '0.75rem', color: 'var(--warm-grey)', marginBottom: '20px', lineHeight: 1.5 }}>Taxes and shipping calculated at checkout.</p>
+              <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => alert('Proceeding to secure checkout payment gateway...')}>
+                <span>Proceed to Checkout</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
