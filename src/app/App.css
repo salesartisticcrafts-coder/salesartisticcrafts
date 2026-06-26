@@ -3536,3 +3536,143 @@
     gap: 40px;
   }
 }
+
+/* ─── Shop By Crystals ─── */
+.shop-crystals {
+  background: #faf9f8;
+  padding: 40px 0;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(201, 169, 110, 0.15);
+  border-bottom: 1px solid rgba(201, 169, 110, 0.15);
+}
+.crystals__scroll-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  margin: 0 -40px;
+  padding: 30px 40px;
+  position: relative;
+  z-index: 2;
+}
+.crystals__scroll-wrap::-webkit-scrollbar {
+  display: none;
+}
+.crystals__track {
+  display: flex;
+  gap: 20px;
+  min-width: max-content;
+  justify-content: center;
+}
+.crystal-card {
+  width: 150px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  border-radius: 8px;
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  position: relative;
+  overflow: hidden;
+}
+.crystal-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--gold);
+  box-shadow: 0 12px 30px rgba(201, 169, 110, 0.12);
+  background: rgba(255, 255, 255, 0.95);
+}
+.crystal-pedestal {
+  width: 80px;
+  height: 20px;
+  background: radial-gradient(ellipse at center, rgba(201, 169, 110, 0.25) 0%, transparent 70%);
+  border-radius: 50%;
+  margin-top: -10px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.crystal-card:hover .crystal-pedestal {
+  background: radial-gradient(ellipse at center, rgba(201, 169, 110, 0.5) 0%, transparent 70%);
+  transform: scale(1.2);
+}
+.crystal-img-container {
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.crystal-stone-img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+}
+.crystal-card:hover .crystal-stone-img {
+  transform: translateY(-12px) scale(1.1);
+  filter: drop-shadow(0 15px 20px rgba(0,0,0,0.15));
+}
+.crystal-halo {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border: 1px dashed rgba(201, 169, 110, 0);
+  border-radius: 50%;
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+.crystal-card:hover .crystal-halo {
+  border-color: rgba(201, 169, 110, 0.35);
+  animation: spinHalo 10s linear infinite;
+}
+@keyframes spinHalo {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.crystal-name {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--charcoal);
+  margin: 15px 0 2px 0;
+  transition: color 0.3s ease;
+}
+.crystal-card:hover .crystal-name {
+  color: var(--gold);
+}
+.crystal-meta-tag {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--warm-grey);
+  transition: color 0.3s ease;
+}
+.crystal-card:hover .crystal-meta-tag {
+  color: var(--charcoal);
+}
+
+@media (max-width: 992px) {
+  .crystals__track {
+    justify-content: flex-start;
+  }
+}
+@media (max-width: 768px) {
+  .crystals__scroll-wrap {
+    margin: 0 -20px;
+    padding: 20px;
+  }
+  .crystals__track {
+    gap: 15px;
+  }
+  .crystal-card {
+    width: 130px;
+    padding: 15px 8px;
+  }
+}
+

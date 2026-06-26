@@ -793,6 +793,53 @@ function FeaturedCollections() {
   );
 }
 
+/* ─── Shop By Crystals ─── */
+function ShopByCrystals() {
+  const crystals = [
+    { name: 'Pyrite', tag: 'wealth & energy', img: 'https://i.pinimg.com/736x/8f/30/4b/8f304bc044a19a9db4e0ff66e7b16cc8.jpg' },
+    { name: 'Garnet', tag: 'passion & strength', img: 'https://i.pinimg.com/736x/95/cb/a8/95cba897e9d72496a5a0890bf70d89bf.jpg' },
+    { name: 'Citrine', tag: 'abundance & joy', img: 'https://i.pinimg.com/736x/cb/fe/b4/cbfeb486256950293ec2f1f0a1c1d683.jpg' },
+    { name: 'Tiger Eye', tag: 'courage & luck', img: 'https://i.pinimg.com/736x/01/a3/95/01a3952cc2b82650cdb15f9b48c6f663.jpg' },
+    { name: 'Rose Quartz', tag: 'love & harmony', img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg' },
+    { name: 'Lapis Lazuli', tag: 'wisdom & truth', img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg' },
+    { name: 'Amethyst', tag: 'clarity & peace', img: 'https://i.pinimg.com/736x/87/4d/7c/874d7ca0a362d0ddc5246f32ab4bd28d.jpg' },
+    { name: 'Selenite', tag: 'purification', img: 'https://i.pinimg.com/736x/b3/c8/34/b3c83472c84405efdd073a7a1b000fee.jpg' },
+  ];
+
+  return (
+    <section className="shop-crystals" id="crystals">
+      <div className="container">
+        <div className="section-header reveal" style={{ marginBottom: '30px' }}>
+          <div className="section-label">Browse by Material</div>
+          <h2 className="section-title" style={{ color: 'var(--charcoal)' }}>Shop by Crystals</h2>
+          <div className="gold-line center" />
+        </div>
+        
+        <div className="crystals__scroll-wrap reveal">
+          <div className="crystals__track">
+            {crystals.map((c, i) => (
+              <Link
+                key={c.name}
+                href={`/collections/stone-jewelry?material=${encodeURIComponent(c.name)}`}
+                className="crystal-card"
+                style={{ transitionDelay: `${i * 0.08}s` }}
+              >
+                <div className="crystal-img-container">
+                  <div className="crystal-halo" />
+                  <img src={c.img} alt={c.name} className="crystal-stone-img" />
+                </div>
+                <div className="crystal-pedestal" />
+                <h3 className="crystal-name">{c.name}</h3>
+                <span className="crystal-meta-tag">{c.tag}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─── Brand Story ─── */
 function BrandStory() {
   return (
@@ -1711,6 +1758,7 @@ export default function Home() {
       <main>
         <Hero />
         <FeaturedCollections />
+        <ShopByCrystals />
         <BestSellers />
         <NewArrivals />
         <CraftsmanshipTimeline />
