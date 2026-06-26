@@ -884,7 +884,7 @@ function BestSellers() {
   };
 
   return (
-    <section className="best-sellers" id="shop">
+    <section className="best-sellers" id="shop" style={{ paddingBottom: '30px' }}>
       <div className="gold-glow-orb" style={{ top: '25%', right: '5%' }} />
       <div className="container">
         <div className="section-header reveal">
@@ -978,7 +978,7 @@ function NewArrivals() {
   };
 
   return (
-    <section className="best-sellers" id="new-arrivals" style={{ paddingTop: '80px', borderTop: '1px solid rgba(201, 169, 110, 0.15)' }}>
+    <section className="best-sellers" id="new-arrivals" style={{ paddingTop: '40px', paddingBottom: '50px', borderTop: '1px solid rgba(201, 169, 110, 0.15)' }}>
       <div className="gold-glow-orb" style={{ bottom: '25%', left: '5%' }} />
       <div className="container">
         <div className="section-header reveal">
