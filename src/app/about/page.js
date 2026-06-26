@@ -32,20 +32,21 @@ export default function AboutPage() {
         {/* Section 1: Image Left, Content Right */}
         <section style={{ paddingBottom: '120px' }}>
           <div className="container">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '80px', alignItems: 'center' }}>
+            <div className="about-grid">
               
-              <div className="reveal" style={{ position: 'relative' }}>
+              <div className="reveal about-grid-image-col" style={{ position: 'relative' }}>
                 <img 
                   src="https://images.unsplash.com/photo-1606722590583-6951b5ea92a3?q=80&w=1000&auto=format&fit=crop" 
                   alt="Raw Stone" 
-                  style={{ width: '100%', height: '650px', objectFit: 'cover' }} 
+                  className="about-image"
+                  style={{ width: '100%', objectFit: 'cover' }} 
                 />
                 <div style={{ position: 'absolute', bottom: '-20px', right: '-20px', background: '#faf9f8', padding: '20px', fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#888' }}>
                   01. The Source
                 </div>
               </div>
 
-              <div className="reveal" style={{ transitionDelay: '0.2s' }}>
+              <div className="reveal about-grid-content-col" style={{ transitionDelay: '0.2s' }}>
                 <div className="section-line" style={{ marginBottom: '32px' }}></div>
                 <h2 className="section-title" style={{ fontSize: '2.2rem', marginBottom: '24px' }}>The Art of Selection</h2>
                 <p style={{ color: '#666', lineHeight: 1.8, marginBottom: '24px', fontSize: '1.05rem' }}>
@@ -61,7 +62,7 @@ export default function AboutPage() {
         </section>
 
         {/* Dark Philosophy Banner */}
-        <section className="reveal" style={{ backgroundColor: '#0a0a0a', padding: '120px 0', color: '#fff', textAlign: 'center', margin: '0 40px 120px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <section className="reveal about-philosophy-banner">
           <div className="gold-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.3 }}></div>
           <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '300', fontStyle: 'italic', marginBottom: '32px', color: 'var(--gold)' }}>
@@ -76,20 +77,21 @@ export default function AboutPage() {
         {/* Section 2: Content Left, Image Right */}
         <section style={{ paddingBottom: '120px' }}>
           <div className="container">
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '80px', alignItems: 'center', flexDirection: 'row-reverse' }}>
+            <div className="about-grid about-grid--reverse">
               
-              <div className="reveal" style={{ flex: '1 1 400px', position: 'relative' }}>
+              <div className="reveal about-grid-image-col" style={{ position: 'relative' }}>
                 <img 
                   src="https://images.unsplash.com/photo-1598587635398-0c3eb1a60cc6?q=80&w=1000&auto=format&fit=crop" 
                   alt="Craftsmanship" 
-                  style={{ width: '100%', height: '650px', objectFit: 'cover' }} 
+                  className="about-image"
+                  style={{ width: '100%', objectFit: 'cover' }} 
                 />
                 <div style={{ position: 'absolute', bottom: '-20px', left: '-20px', background: '#faf9f8', padding: '20px', fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#888' }}>
                   02. The Craft
                 </div>
               </div>
 
-              <div className="reveal" style={{ flex: '1 1 400px', transitionDelay: '0.2s' }}>
+              <div className="reveal about-grid-content-col" style={{ transitionDelay: '0.2s' }}>
                 <div className="section-line" style={{ marginBottom: '32px' }}></div>
                 <h2 className="section-title" style={{ fontSize: '2.2rem', marginBottom: '24px' }}>Mastery in Every Detail</h2>
                 <p style={{ color: '#666', lineHeight: 1.8, marginBottom: '24px', fontSize: '1.05rem' }}>

@@ -195,10 +195,10 @@ export default function CartPage() {
               
               {isCheckingOut ? (
                 /* Checkout Form */
-                <div className="reveal" style={{ display: 'flex', flexDirection: 'column', gap: '30px', padding: '40px', border: '1px solid #eae5df', borderRadius: '4px', background: '#faf9f8' }}>
+                <div className="reveal checkout-form-container">
                   <h2 style={{ fontSize: '1.5rem', fontWeight: '400', fontFamily: 'var(--font-serif)', color: '#1a1a1a', margin: 0, borderBottom: '1px solid rgba(201,169,110,0.25)', paddingBottom: '16px' }}>Atelier Checkout</h2>
                   <form onSubmit={handlePlaceOrder} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                    <div className="checkout-form-grid">
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                         <label style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#666', fontWeight: '500' }}>Full Name *</label>
                         <input type="text" required value={fullName} onChange={e => setFullName(e.target.value)} placeholder="Mark Spencer" style={{ padding: '12px', border: '1px solid #eae5df', outline: 'none', background: '#fff', color: '#1a1a1a' }} />
@@ -242,9 +242,9 @@ export default function CartPage() {
               ) : (
                 /* Cart List */
                 <div className="reveal" style={{ display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '16px', borderBottom: '1px solid rgba(201, 169, 110, 0.25)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#888' }}>
+                  <div className="cart-table-header">
                     <span>Product</span>
-                    <span style={{ display: 'grid', gridTemplateColumns: '100px 100px', gap: '40px', textAlign: 'right' }}>
+                    <span className="cart-table-header-right">
                       <span>Quantity</span>
                       <span>Total</span>
                     </span>
@@ -255,7 +255,7 @@ export default function CartPage() {
                       <div key={`${item.id}-${item.size}`} className="cart-table-item">
                         <img src={item.img} alt={item.name} style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '4px', border: '1px solid rgba(201, 169, 110, 0.15)' }} />
                         
-                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                        <div className="cart-table-item-details">
                           <div>
                             <h3 style={{ fontSize: '1.05rem', fontWeight: '500', color: '#1a1a1a', margin: '0 0 6px' }}>{item.name}</h3>
                             <span style={{ fontSize: '0.85rem', color: '#888' }}>Size: {item.size}</span>
@@ -270,7 +270,7 @@ export default function CartPage() {
                           </button>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '100px 100px', gap: '40px', alignItems: 'center', textAlign: 'right' }}>
+                        <div className="cart-table-item-actions">
                           <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #eae5df', height: '40px', justifyContent: 'space-between' }}>
                             <button onClick={() => updateQty(item.id, item.size, -1)} style={{ width: '28px', background: 'none', border: 'none', cursor: 'pointer', height: '100%' }}>-</button>
                             <span style={{ fontSize: '0.9rem', color: '#1a1a1a', fontWeight: '500' }}>{item.qty}</span>

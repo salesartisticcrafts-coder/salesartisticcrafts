@@ -285,7 +285,6 @@ export function Navbar() {
                         key={s} 
                         href={linkPath} 
                         className="navbar__mobile-sublink" 
-                        style={{ color: 'rgba(255, 255, 255, 0.8)', textDecoration: 'none', fontSize: '0.9rem' }}
                         onClick={() => setMenuOpen(false)}
                       >
                         {s}

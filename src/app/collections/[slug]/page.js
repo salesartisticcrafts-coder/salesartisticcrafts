@@ -208,10 +208,10 @@ export default function CollectionPage({ params }) {
 
         {/* E-Commerce Layout */}
         <div className="container" style={{ paddingBottom: '100px' }}>
-          <div style={{ display: 'flex', gap: '40px', alignItems: 'flex-start' }}>
+          <div className="collections-layout">
             
             {/* Left Sidebar (Filters) */}
-            <aside style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '100px' }} className="shop-sidebar">
+            <aside className="shop-sidebar collections-sidebar">
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingBottom: '20px', borderBottom: '1px solid #eae5df', marginBottom: '24px' }}>
                 <SlidersHorizontal size={18} />
                 <h3 style={{ fontSize: '1rem', fontWeight: '500', margin: 0, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Filters</h3>
@@ -283,10 +283,10 @@ export default function CollectionPage({ params }) {
             </aside>
 
             {/* Right Main Content */}
-            <div style={{ flex: 1 }}>
+            <div className="collections-main">
               
               {/* Toolbar */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '24px', marginBottom: '24px', borderBottom: '1px solid #eae5df' }}>
+              <div className="collections-toolbar">
                 <span style={{ fontSize: '0.9rem', color: '#666' }}>Showing {sortedProducts.length} Products</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <span style={{ fontSize: '0.85rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Sort By</span>
@@ -304,7 +304,7 @@ export default function CollectionPage({ params }) {
               </div>
 
               {/* Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '30px' }}>
+              <div className="collections-grid">
                 {sortedProducts.map((product, i) => {
                   const productSlug = product.name.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-');
                   return (

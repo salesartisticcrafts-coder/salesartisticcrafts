@@ -56,10 +56,10 @@ export default function ContactPage() {
         </header>
 
         <section style={{ padding: '80px 0', backgroundColor: '#fff' }}>
-          <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '60px', alignItems: 'flex-start' }}>
+          <div className="container contact-grid">
             
             {/* Left Side: Contact Info */}
-            <div className="reveal" style={{ position: 'sticky', top: '100px' }}>
+            <div className="reveal contact-info-sidebar">
               <h2 className="section-title" style={{ fontSize: '2.5rem', marginBottom: '24px' }}>Get in Touch</h2>
               <p style={{ color: '#666', lineHeight: 1.6, marginBottom: '40px', maxWidth: '400px' }}>
                 Whether you&apos;re looking for a bespoke marble commission, interested in our slabs, or need help with a current order, our atelier concierge is here to assist.
@@ -139,7 +139,7 @@ export default function ContactPage() {
             </div>
 
             {/* Right Side: Contact Form */}
-            <div className="reveal" style={{ transitionDelay: '0.2s', background: '#faf9f8', padding: '40px', minHeight: '420px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div className="reveal contact-form-wrap" style={{ transitionDelay: '0.2s' }}>
               {submitted ? (
                 <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center' }}>
                   <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(201, 169, 110, 0.1)', color: 'var(--gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', border: '1px solid var(--gold)' }}>◈</div>
@@ -155,7 +155,7 @@ export default function ContactPage() {
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                   <h3 style={{ fontSize: '1.5rem', marginBottom: '8px', fontWeight: '400', color: '#1a1a1a', margin: 0, fontFamily: 'var(--font-serif)' }}>Send an Inquiry</h3>
                   
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
+                  <div className="contact-inputs-row">
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#555' }}>First Name</label>
                       <input type="text" required placeholder="Jane" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} style={{ padding: '16px', border: '1px solid #eae5df', background: '#fff', outline: 'none', fontFamily: 'inherit' }} />

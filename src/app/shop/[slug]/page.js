@@ -127,7 +127,7 @@ export default function ProductDetailPage({ params }) {
               </div>
 
               {/* Quantity and Actions */}
-              <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+              <div className="product-actions-wrap">
                 <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #eae5df', height: '56px' }}>
                   <button onClick={() => setQuantity(q => Math.max(1, q - 1))} style={{ width: '40px', height: '100%', background: 'none', border: 'none', cursor: 'pointer', color: '#666' }}>-</button>
                   <span style={{ width: '40px', textAlign: 'center', fontWeight: '500', color: '#1a1a1a' }}>{quantity}</span>
