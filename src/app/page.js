@@ -37,8 +37,31 @@ export function Navbar() {
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', onScroll);
+    
+    // Restore session from localStorage on mount
+    const storedEmail = localStorage.getItem('userEmail');
+    const storedLoggedIn = localStorage.getItem('loggedIn') === 'true';
+    if (storedLoggedIn && storedEmail) {
+      setUserEmail(storedEmail);
+      setLoggedIn(true);
+    }
+    
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    setLoggedIn(true);
+    localStorage.setItem('loggedIn', 'true');
+    localStorage.setItem('userEmail', userEmail);
+  };
+
+  const handleLogout = () => {
+    setLoggedIn(false);
+    setUserEmail('');
+    localStorage.removeItem('loggedIn');
+    localStorage.removeItem('userEmail');
+  };
 
   const navItems = [
     { label: 'Collections', sub: ['Stone Jewelry', 'Marble Decor', 'Cristallo Quartzite Slabs'] },
@@ -269,12 +292,12 @@ export function Navbar() {
                 <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(201, 169, 110, 0.1)', color: 'var(--gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', border: '1px solid var(--gold)' }}>◈</div>
                 <h3 style={{ fontSize: '1.4rem', fontFamily: 'var(--font-serif)', color: 'var(--charcoal)', margin: 0 }}>Welcome Back</h3>
                 <p style={{ color: '#666', fontSize: '0.9rem', margin: 0 }}>Logged in as: <strong>{userEmail || 'mark@example.com'}</strong></p>
-                <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => { setLoggedIn(false); setUserEmail(''); }}>
+                <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={handleLogout}>
                   <span>Logout</span>
                 </button>
               </div>
             ) : (
-              <form onSubmit={(e) => { e.preventDefault(); setLoggedIn(true); }} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <form onSubmit={handleLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <h3 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-serif)', color: 'var(--charcoal)', marginBottom: '10px', textAlign: 'center' }}>
                   {isLogin ? 'Atelier Login' : 'Create Account'}
                 </h3>
