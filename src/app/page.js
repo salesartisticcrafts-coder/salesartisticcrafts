@@ -1150,334 +1150,112 @@ function CraftsmanshipTimeline() {
   );
 }
 
-/* ─── Custom Design Studio (Atelier Configurator) ─── */
+/* ─── Custom Design Studio Promo Showcase ─── */
 export function CustomDesignStudio() {
   const [activeStep, setActiveStep] = useState(0);
-  const [selectedMarble, setSelectedMarble] = useState('Carrara White');
-  const [engraving, setEngraving] = useState('');
-  const [fontStyle, setFontStyle] = useState('Serif');
-  const [uploadName, setUploadName] = useState('');
-  const [userName, setUserName] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
-  const [quoteRequested, setQuoteRequested] = useState(false);
 
-  const getMarbleTexture = (name) => {
-    switch(name) {
-      case 'Carrara White': return 'https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=600';
-      case 'Nero Marquina': return 'https://images.unsplash.com/photo-1618220136852-87a41ec591ee?q=80&w=600';
-      case 'Calacatta Gold': return 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=600';
-      case 'Turkish Onyx': return 'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?q=80&w=600';
-      case 'Breccia Viola': return 'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?q=80&w=600';
-      case 'Verde Alpi': return 'https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?q=80&w=600';
-      default: return 'https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=600';
+  const steps = [
+    {
+      title: "1. The Concept Sketch",
+      subtitle: "Bespoke Consult",
+      desc: "Share your vision, dimensions, or a simple moodboard. Our Rajasthan-based designer translates your idea into an exact digital blueprint or hand-drawn perspective sketch.",
+      image: "/images/custom.png"
+    },
+    {
+      title: "2. Rare Stone Sourcing",
+      subtitle: "Geological Sourcing",
+      desc: "Choose from our private reserve of rare minerals. From Italian Breccia Viola to Emerald Onyx and Calacatta Gold marble, each slab features distinctive veining formed over eras.",
+      image: "/images/marble_hero.png"
+    },
+    {
+      title: "3. Ancestral Chiseled Carving",
+      subtitle: "Rajasthani Craftsmanship",
+      desc: "Our master carvers with inherited stone-craft lineage chisel your artifact by hand in our local workshop, ensuring a level of organic detail that no machine can match.",
+      image: "/images/founder.png"
+    },
+    {
+      title: "4. Liquid 18K Gold Inlay",
+      subtitle: "Goldsmith Fusing",
+      desc: "Enhance your commission with hand-fused 18-karat gold or sterling silver accents, seamlessly integrated into the natural crystalline fractures of the marble.",
+      image: "/images/jewelry.png"
     }
-  };
-
-  const getFontFamily = (style) => {
-    switch(style) {
-      case 'Serif': return 'var(--font-serif), Georgia, serif';
-      case 'Script': return 'cursive';
-      case 'Modern': return 'var(--font-sans), system-ui, sans-serif';
-      case 'Classic': return 'Times New Roman, Times, serif';
-      default: return 'inherit';
-    }
-  };
-
-  const steps = ['Upload Reference', 'Choose Marble', 'Add Engraving', 'Confirm details'];
-  const marbles = [
-    { name: 'Carrara White', origin: 'Italy', price: 'Standard' },
-    { name: 'Nero Marquina', origin: 'Spain', price: 'Premium' },
-    { name: 'Calacatta Gold', origin: 'Italy', price: 'Exclusive' },
-    { name: 'Turkish Onyx', origin: 'Turkey', price: 'Exclusive' },
-    { name: 'Breccia Viola', origin: 'Italy', price: 'Premium' },
-    { name: 'Verde Alpi', origin: 'Greece', price: 'Standard' }
   ];
-  const fonts = ['Serif', 'Script', 'Modern', 'Classic'];
-
-  const handleFileUpload = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setUploadName(e.target.files[0].name);
-    }
-  };
 
   return (
-    <section className="custom-studio" id="custom">
-      <div className="gold-glow-orb" style={{ top: '45%', left: '40%' }} />
+    <section className="bespoke-promo" id="custom">
       <div className="container">
         <div className="section-header reveal">
-          <div className="section-label">Bespoke Atelier</div>
+          <div className="section-label">Tailored Commissions</div>
           <h2 className="section-title">Design A One-of-a-Kind Piece</h2>
           <div className="gold-line center" />
-          <p className="section-desc">Collaborate with our master artisans to shape a bespoke creation suited to your space or style</p>
+          <p className="section-desc">
+            Collaborate directly with our Rajasthan workshop to sculpt a signature artifact tailored to your exact style.
+          </p>
         </div>
 
-        <div className="custom-studio__configurator-grid reveal">
+        <div className="bespoke-promo-grid reveal">
           
-          {/* Left: Interactive Configurator Panel */}
-          <div className="configurator-panel">
-            <div className="configurator-steps-nav">
-              {steps.map((s, i) => (
-                <button 
-                  key={s} 
-                  className={`configurator-step-btn ${activeStep === i ? 'active' : ''} ${i < activeStep ? 'done' : ''}`}
-                  onClick={() => setActiveStep(i)}
+          {/* Left: Dynamic Visual Showcase */}
+          <div className="bespoke-promo__visual-panel">
+            <div className="bespoke-promo__image-container">
+              {steps.map((step, idx) => (
+                <img 
+                  key={idx} 
+                  src={step.image} 
+                  alt={step.title}
+                  className={`bespoke-promo-img ${activeStep === idx ? 'active' : ''}`}
+                />
+              ))}
+              <div className="bespoke-promo__overlay" />
+              <div className="bespoke-promo__badge">
+                <span className="badge-num">{`0${activeStep + 1}`}</span>
+                <span className="badge-label">{steps[activeStep].subtitle}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Step-by-Step Interactive Details */}
+          <div className="bespoke-promo__details-panel">
+            <h3 className="bespoke-promo__headline">
+              The Artisan Ritual
+            </h3>
+            <p className="bespoke-promo__subheadline">
+              From raw earth block to museum-grade heirloom, every bespoke commission follows a centuries-old workflow.
+            </p>
+
+            <div className="bespoke-promo-steps">
+              {steps.map((step, idx) => (
+                <div 
+                  key={idx}
+                  className={`promo-step-card ${activeStep === idx ? 'active' : ''}`}
+                  onMouseEnter={() => setActiveStep(idx)}
+                  onClick={() => setActiveStep(idx)}
                 >
-                  <span className="step-num">{i < activeStep ? '✓' : `0${i + 1}`}</span>
-                  <span className="step-label">{s}</span>
-                </button>
+                  <div className="promo-step-card__header">
+                    <span className="promo-step-card__num">{`0${idx + 1}`}</span>
+                    <h4 className="promo-step-card__title">{step.title}</h4>
+                  </div>
+                  <div className="promo-step-card__body">
+                    <p className="promo-step-card__desc">{step.desc}</p>
+                  </div>
+                </div>
               ))}
             </div>
 
-            <div className="configurator-content-box">
-              {activeStep === 0 && (
-                <div className="config-slide">
-                  <h3 className="config-slide-title">Upload Design Reference</h3>
-                  <p className="config-slide-desc">Upload a sketch, drawing, or reference image of the jewelry or decor piece you want.</p>
-                  
-                  <label className="config-upload-area">
-                    <input type="file" accept="image/*" className="hidden-input" onChange={handleFileUpload} />
-                    <div className="upload-icon">⊕</div>
-                    <span className="upload-text">{uploadName ? `Uploaded: ${uploadName}` : 'Click to Browse Files'}</span>
-                    <span className="upload-sub">Supports JPG, PNG, PDF up to 10MB</span>
-                  </label>
-                </div>
-              )}
-
-              {activeStep === 1 && (
-                <div className="config-slide">
-                  <h3 className="config-slide-title">Select Rare Stone Variety</h3>
-                  <p className="config-slide-desc">Choose the specific type of marble or onyx to carve your commission from.</p>
-                  
-                  <div className="marble-selector-grid">
-                    {marbles.map(m => (
-                      <button 
-                        key={m.name} 
-                        className={`marble-option-card ${selectedMarble === m.name ? 'active' : ''}`}
-                        onClick={() => setSelectedMarble(m.name)}
-                      >
-                        <div className="marble-option-info">
-                          <span className="marble-name">{m.name}</span>
-                          <span className="marble-origin">{m.origin}</span>
-                        </div>
-                        <span className="marble-tier">{m.price}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {activeStep === 2 && (
-                <div className="config-slide">
-                  <h3 className="config-slide-title">Inscribe Personal Engraving</h3>
-                  <p className="config-slide-desc">Personalize your artifact with initials, a date, or a statement (maximum 40 characters).</p>
-                  
-                  <input 
-                    type="text" 
-                    placeholder="Enter engraving text (e.g. 'ETERNITY')" 
-                    className="config-text-input"
-                    maxLength={40}
-                    value={engraving}
-                    onChange={e => setEngraving(e.target.value)}
-                  />
-
-                  <div className="font-selector-wrap">
-                    <span className="selector-label-text">Select Typography Style:</span>
-                    <div className="font-chips">
-                      {fonts.map(f => (
-                        <button 
-                          key={f} 
-                          className={`font-chip ${fontStyle === f ? 'active' : ''}`}
-                          onClick={() => setFontStyle(f)}
-                        >
-                          {f}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeStep === 3 && (
-                <div className="config-slide">
-                  <h3 className="config-slide-title">Atelier Quote Request</h3>
-                  {quoteRequested ? (
-                    <div className="quote-success-panel">
-                      <div className="success-icon">◈</div>
-                      <h4 className="success-title">Quote Requested Successfully</h4>
-                      <p className="success-desc">Our design consultant will contact you on WhatsApp within 3 hours with a custom sketch and price quote.</p>
-                    </div>
-                  ) : (
-                    <>
-                      <p className="config-slide-desc">Enter your contact details to submit the commission request to our workshop.</p>
-                      <div className="contact-form-inputs">
-                        <input 
-                          type="text" 
-                          placeholder="Your Full Name" 
-                          className="config-text-input" 
-                          value={userName} 
-                          onChange={e => setUserName(e.target.value)}
-                          required
-                        />
-                        <input 
-                          type="tel" 
-                          placeholder="WhatsApp Number (for drawings preview)" 
-                          className="config-text-input" 
-                          value={whatsapp} 
-                          onChange={e => setWhatsapp(e.target.value)}
-                          required
-                        />
-                        <button 
-                          className="btn-primary" 
-                          style={{ width: '100%', justifyContent: 'center', marginTop: 12 }}
-                          onClick={() => {
-                            if (userName && whatsapp) setQuoteRequested(true);
-                          }}
-                        >
-                          <span>Submit Configurator Details</span> <ArrowRight size={16} />
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
+            <div className="bespoke-promo__cta-box">
+              <Link href="/custom-studio" className="btn-primary bespoke-promo__cta-btn">
+                <span>Start Your Bespoke Journey</span>
+                <ArrowRight size={18} />
+              </Link>
+              <span className="bespoke-promo__cta-note">
+                ✦ Sketch consult is complimentary. No upfront fees required.
+              </span>
             </div>
 
-            <div className="configurator-footer-nav">
-              <button 
-                className="btn-ghost" 
-                onClick={() => setActiveStep(prev => Math.max(0, prev - 1))}
-                disabled={activeStep === 0}
-              >
-                ← Back
-              </button>
-              {activeStep < 3 && (
-                <button 
-                  className="btn-primary" 
-                  onClick={() => setActiveStep(prev => Math.min(3, prev + 1))}
-                >
-                  <span>Continue</span> <ChevronRight size={16} />
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Right: Floating Quote Preview Receipt (Live Atelier Invoice Card) */}
-          <div className="quote-preview-receipt">
-            <div className="receipt-border-decor" />
-            <div className="receipt-header">
-              <span className="receipt-brand">ARTISTIC CRAFTS ATELIER</span>
-              <span className="receipt-serial">INV-2025-BESPOKE</span>
-            </div>
-            
-            {/* Live Configurator Preview */}
-            <div style={{ 
-              width: '100%', 
-              height: '140px', 
-              borderRadius: '4px', 
-              position: 'relative', 
-              overflow: 'hidden', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              border: '1px solid rgba(201, 169, 110, 0.2)',
-              backgroundImage: `url(${getMarbleTexture(selectedMarble)})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              boxShadow: 'inset 0 0 20px rgba(0,0,0,0.5)'
-            }}>
-              <div style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.2) 100%)',
-                pointerEvents: 'none'
-              }} />
-              
-              {engraving ? (
-                <div style={{
-                  color: 'var(--gold)',
-                  fontSize: '1.2rem',
-                  letterSpacing: '0.15em',
-                  fontWeight: '600',
-                  textShadow: '1px 1px 0px rgba(0,0,0,0.7), -1px -1px 0px rgba(0,0,0,0.7), 2px 2px 8px rgba(0,0,0,0.5)',
-                  fontFamily: getFontFamily(fontStyle),
-                  padding: '6px 12px',
-                  border: '1px solid rgba(201,169,110,0.4)',
-                  borderRadius: '2px',
-                  backgroundColor: 'rgba(0,0,0,0.2)',
-                  backdropFilter: 'blur(1px)',
-                  textTransform: 'uppercase',
-                  maxWidth: '90%',
-                  textAlign: 'center',
-                  wordBreak: 'break-all'
-                }}>
-                  {engraving}
-                </div>
-              ) : (
-                <span style={{ color: '#fff', fontSize: '0.8rem', letterSpacing: '0.05em', backgroundColor: 'rgba(0,0,0,0.4)', padding: '4px 10px', borderRadius: '2px' }}>
-                  Awaiting Engraving Text
-                </span>
-              )}
-              <div style={{
-                position: 'absolute',
-                bottom: '8px',
-                right: '8px',
-                fontSize: '0.55rem',
-                color: '#fff',
-                backgroundColor: 'rgba(0,0,0,0.7)',
-                padding: '2px 6px',
-                borderRadius: '2px',
-                letterSpacing: '0.05em'
-              }}>
-                LIVE PREVIEW
-              </div>
-            </div>
-
-            <div className="receipt-divider" />
-            
-            <h4 className="receipt-title">Commission Summary</h4>
-            
-            <div className="receipt-items">
-              <div className="receipt-item">
-                <span className="item-label">Design File</span>
-                <span className="item-value">{uploadName ? uploadName : 'No file uploaded'}</span>
-              </div>
-              <div className="receipt-item">
-                <span className="item-label">Stone Selection</span>
-                <span className="item-value">{selectedMarble}</span>
-              </div>
-              <div className="receipt-item">
-                <span className="item-label">Engraving Text</span>
-                <span className="item-value">{engraving ? `"${engraving}"` : 'None'}</span>
-              </div>
-              <div className="receipt-item">
-                <span className="item-label">Font Type</span>
-                <span className="item-value">{fontStyle}</span>
-              </div>
-              <div className="receipt-item">
-                <span className="item-label">Lead Time</span>
-                <span className="item-value">14-21 Business Days</span>
-              </div>
-            </div>
-
-            <div className="receipt-divider" />
-            
-            <div className="receipt-status-panel">
-              <div className="status-bullet" />
-              <div className="status-details">
-                <span className="status-heading">Atelier Status</span>
-                <span className="status-desc">
-                  {quoteRequested ? 'Quote Pending Approval' : 'Awaiting Details Submission'}
-                </span>
-              </div>
-            </div>
-
-            <div className="receipt-footer">
-              <div className="receipt-seal">◈ SIGNATURE COMMISSION</div>
-              <p className="receipt-note">Estimates are non-binding. Final confirmation provided by our Rajasthani atelier craftsman.</p>
-            </div>
           </div>
 
         </div>
+
       </div>
     </section>
   );

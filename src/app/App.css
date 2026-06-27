@@ -4037,4 +4037,225 @@
   }
 }
 
+/* ─── BESPOKE PROMO SHOWCASE ─── */
+.bespoke-promo {
+  padding: 90px 0;
+  background: var(--black-deep);
+  position: relative;
+  overflow: hidden;
+}
+
+.bespoke-promo::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(201, 169, 110, 0.04), transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bespoke-promo-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 80px;
+  align-items: center;
+  margin-top: 60px;
+  position: relative;
+  z-index: 2;
+}
+
+.bespoke-promo__visual-panel {
+  width: 100%;
+}
+
+.bespoke-promo__image-container {
+  position: relative;
+  aspect-ratio: 4/5;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-deep);
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  background: #000;
+}
+
+.bespoke-promo-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: saturate(0.85);
+}
+
+.bespoke-promo-img.active {
+  opacity: 0.85;
+  transform: scale(1);
+}
+
+.bespoke-promo__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(13,13,13,0.7) 0%, rgba(13,13,13,0) 50%, rgba(13,13,13,0.3) 100%);
+  pointer-events: none;
+}
+
+.bespoke-promo__badge {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  z-index: 3;
+}
+
+.bespoke-promo__badge .badge-num {
+  font-family: var(--font-serif);
+  font-size: 2.8rem;
+  line-height: 1;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+.bespoke-promo__badge .badge-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #faf8f5;
+  font-weight: 500;
+}
+
+.bespoke-promo__details-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.bespoke-promo__headline {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  color: var(--cream);
+  font-weight: 300;
+}
+
+.bespoke-promo__subheadline {
+  font-size: 0.95rem;
+  color: var(--warm-grey);
+  line-height: 1.7;
+}
+
+.bespoke-promo-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.promo-step-card {
+  padding: 16px 24px;
+  background: rgba(28, 25, 23, 0.02);
+  border-left: 2px solid rgba(201, 169, 110, 0.15);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 0 8px 8px 0;
+}
+
+.promo-step-card:hover {
+  background: rgba(201, 169, 110, 0.03);
+  border-left-color: var(--gold-light);
+}
+
+.promo-step-card.active {
+  background: rgba(201, 169, 110, 0.06);
+  border-left-color: var(--gold);
+  box-shadow: 0 4px 20px rgba(201,169,110,0.04);
+}
+
+.promo-step-card__header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.promo-step-card__num {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gold);
+  font-family: var(--font-sans);
+}
+
+.promo-step-card__title {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  color: var(--cream);
+  font-weight: 400;
+  transition: color 0.3s ease;
+}
+
+.promo-step-card.active .promo-step-card__title {
+  color: var(--gold-dark);
+}
+
+.promo-step-card__body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+  opacity: 0;
+}
+
+.promo-step-card.active .promo-step-card__body {
+  max-height: 120px;
+  opacity: 1;
+  margin-top: 8px;
+}
+
+.promo-step-card__desc {
+  font-size: 0.85rem;
+  color: var(--warm-grey);
+  line-height: 1.6;
+}
+
+.bespoke-promo__cta-box {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bespoke-promo__cta-btn {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 36px;
+  font-weight: 500;
+}
+
+.bespoke-promo__cta-note {
+  font-size: 0.75rem;
+  color: var(--warm-grey);
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 991px) {
+  .bespoke-promo-grid {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+  
+  .bespoke-promo__image-container {
+    aspect-ratio: 4/3;
+  }
+}
+
+
 

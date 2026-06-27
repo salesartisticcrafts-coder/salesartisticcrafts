@@ -4,21 +4,21 @@ import React from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import '../App.css'; 
-import { Navbar, Footer, useScrollReveal, CustomDesignStudio } from '../page';
+import { Navbar, Footer, useScrollReveal } from '../page';
+import CustomStudioConfigurator from './CustomStudioConfigurator';
 
 export default function CustomStudioPage() {
   useScrollReveal();
-  const title = "Custom Studio";
 
   return (
     <>
       <Navbar />
       
-      <main style={{ backgroundColor: '#0a0a0a', paddingBottom: '80px' }}>
-        <div style={{ height: '80px', backgroundColor: '#fff' }}></div> {/* Spacer for Navbar */}
+      <main style={{ backgroundColor: 'var(--black-deep)', paddingBottom: '80px' }}>
+        <div style={{ height: '120px', backgroundColor: 'var(--black-deep)' }}></div> {/* Spacer for Navbar */}
         
-        {/* The exact interactive component from the Home Page */}
-        <CustomDesignStudio />
+        {/* Dedicated interactive configurator */}
+        <CustomStudioConfigurator />
       </main>
 
       <Footer />
