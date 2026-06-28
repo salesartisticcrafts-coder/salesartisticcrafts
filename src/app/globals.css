@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -7,19 +7,19 @@
 }
 
 :root {
-  --gold: #C9A96E;
-  --gold-light: #E8D5B0;
-  --gold-dark: #8B6914;
-  --cream: #1c1917; /* Soft dark slate-brown */
-  --cream-dark: #2d2825;
-  --ivory: #FAF8F5; /* Soft luxury white/cream */
-  --charcoal: #1c1917;
-  --charcoal-soft: #5C564F;
-  --warm-grey: #6E675F;
-  --marble-white: #FAF8F5;
-  --marble-grey: #eae3d5;
-  --black-deep: #FBF9F6;
-  --font-serif: 'Cinzel', Georgia, serif;
+  --gold: #c59b27;
+  --gold-light: #ebdca8;
+  --gold-dark: #8b6710;
+  --cream: #460900; /* Rich burgundy/wine-red text */
+  --cream-dark: #260c09; /* Deep dark burgundy/charcoal */
+  --ivory: #fcfaf8; /* Soft luxury rose-cream white */
+  --charcoal: #460900;
+  --charcoal-soft: #705a56;
+  --warm-grey: #705a56; /* Rose-toned grey */
+  --marble-white: #f5f0eb;
+  --marble-grey: #eae0d5;
+  --black-deep: #f5f0eb; /* Warm Rose-Cream background */
+  --font-serif: 'EB Garamond', 'Cinzel', Georgia, serif;
   --font-display: 'Playfair Display', serif;
   --font-sans: 'Outfit', sans-serif;
   --transition-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);

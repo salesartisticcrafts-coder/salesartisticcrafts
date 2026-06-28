@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { ChevronDown, ChevronLeft, ChevronRight, ArrowRight, Star, Heart, ShoppingBag, Menu, X, Phone, Mail, MapPin, Share2, User, Search } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, ArrowRight, Star, Heart, ShoppingBag, Menu, X, Phone, Mail, MapPin, Share2, User, Search, ShieldCheck, Truck, Gem, Award, Sparkles, AlertCircle } from 'lucide-react';
+
 
 // Custom social icons as inline SVGs
 const Instagram = ({ size = 16 }) => (
@@ -480,276 +481,130 @@ export function Navbar() {
 }
 
 /* ─── Hero ─── */
+/* ─── Hero ─── */
 function Hero() {
   const [activeSlide, setActiveSlide] = useState(0);
-  const [loaded, setLoaded] = useState(false);
-  const [scrollTop, setScrollTop] = useState(0);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [magnifier, setMagnifier] = useState({ x: 0, y: 0, xPercent: 0, yPercent: 0, show: false });
-  const cardRef = useRef(null);
-  const timerRef = useRef(null);
-
+  
   const slides = [
     {
       label: "Wearable Stone · Luxury Atelier",
-      titleLine1: "Sculpted From",
-      titleItalic1: " Rare Earth.",
-      titleLine2: "Designed For",
-      titleItalic2: " Eternity.",
-      subtitle: "Indulge in handcrafted stone jewelry and timeless objects, carved from Rajasthan and Carrara quarries and finished with 18k gold detailing.",
+      title: "Sculpted From Rare Earth.",
+      subtitle: "Indulge in handcrafted stone jewelry and timeless objects, chiseled from Rajasthan and Carrara quarries and finished with 18k gold detailing.",
       img: "/images/jewelry.png",
-      ctaText: "Shop Jewelry",
-      ctaLink: "#shop",
-      glow: "rgba(224, 224, 224, 0.12)",
-      colorName: "carrara-white",
-      specs: {
-        origin: "Carrara, Italy",
-        veining: "Feathered Grey",
-        density: "2.71 g/cm³",
-        hardness: "3.5 Mohs",
-        densityLevel: 85,
-        hardnessLevel: 35,
-        rarity: "Premium Selection"
-      },
-      coords: "44.0792° N, 10.1167° E",
-      watermark: "C A R R A R A",
-      slabName: "Carrara White",
-      slabOrigin: "Italy"
+      ctaText: "Explore Collection",
+      ctaLink: "#shop"
     },
     {
-      label: "Living In Stone · Bespoke Collection",
-      titleLine1: "Artisan Decor",
-      titleItalic1: " Refined.",
-      titleLine2: "Elegance For",
-      titleItalic2: " Your Space.",
-      subtitle: "Discover minimalist vases, sculptures, and candle holders shaped by master hands to transform your home interiors.",
-      img: "/images/decor.png",
-      ctaText: "Explore Decor",
-      ctaLink: "#collections",
-      glow: "rgba(201, 169, 110, 0.12)",
-      colorName: "artisan-gold",
-      specs: {
-        origin: "Rajasthan, India",
-        veining: "Golden Thread",
-        density: "2.65 g/cm³",
-        hardness: "3.2 Mohs",
-        densityLevel: 75,
-        hardnessLevel: 32,
-        rarity: "Atelier Exclusive"
-      },
-      coords: "26.9124° N, 75.7873° E",
-      watermark: "A T E L I E R",
-      slabName: "Rajasthan Gold",
-      slabOrigin: "India"
+      label: "Rare Reserves · Collector Slabs",
+      title: "Geological Poetry In Slabs.",
+      subtitle: "Italian Breccia Viola, Turkish Onyx, and Emerald Quartzite Slabs selected for exceptional veining structures and private residential commissions.",
+      img: "/images/marble_hero.png",
+      ctaText: "Browse Reserve",
+      ctaLink: "#shop"
     },
     {
-      label: "Bespoke Commissions · Limited Edition",
-      titleLine1: "Rare Marble",
-      titleItalic1: " Masterpieces.",
-      titleLine2: "Customized For",
-      titleItalic2: " You.",
-      subtitle: "Collaborate directly with our Rajasthan workshop to design a one-of-a-kind creation tailored to your exact style.",
-      img: "/images/black_marble.png",
-      ctaText: "Bespoke Atelier",
-      ctaLink: "#custom",
-      glow: "rgba(139, 105, 20, 0.1)",
-      colorName: "nero-marquina",
-      specs: {
-        origin: "Markina, Spain",
-        veining: "Calcite Striations",
-        density: "2.69 g/cm³",
-        hardness: "4.0 Mohs",
-        densityLevel: 80,
-        hardnessLevel: 40,
-        rarity: "Highly Limited"
-      },
-      coords: "43.2683° N, 2.5008° W",
-      watermark: "N E R O  N O I R",
-      slabName: "Nero Marquina",
-      slabOrigin: "Spain"
+      label: "Heritage Stoneware · Home Artifacts",
+      title: "Sculptural Objects For Living.",
+      subtitle: "From chiseled marble trays and pedestals to solid onyx vessels. Elevate your spatial design with Rajasthan stone heritage.",
+      img: "/images/founder.png",
+      ctaText: "Discover Decor",
+      ctaLink: "#shop"
     }
   ];
 
-  const startTimer = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => {
+  useEffect(() => {
+    const timer = setInterval(() => {
       setActiveSlide(prev => (prev + 1) % slides.length);
     }, 6000);
-  };
-
-  useEffect(() => {
-    const t = setTimeout(() => setLoaded(true), 200);
-    const handleScroll = () => {
-      setScrollTop(window.scrollY);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    startTimer();
-
-    return () => {
-      clearTimeout(t);
-      window.removeEventListener('scroll', handleScroll);
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, []);
-
-  const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left - width / 2;
-    const mouseY = e.clientY - rect.top - height / 2;
-    
-    // Calculate tilt angles (max 10 degrees)
-    const tiltX = (mouseY / (height / 2)) * -10;
-    const tiltY = (mouseX / (width / 2)) * 10;
-    setTilt({ x: tiltX, y: tiltY });
-
-    // Calculate loupe position relative to the image
-    const xPercent = ((e.clientX - rect.left) / width) * 100;
-    const yPercent = ((e.clientY - rect.top) / height) * 100;
-    
-    setMagnifier({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-      xPercent,
-      yPercent,
-      show: true
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
-    setMagnifier(prev => ({ ...prev, show: false }));
-  };
-
-  const [particles] = useState(() => Array.from({ length: 15 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 3 + 1,
-    delay: Math.random() * 5,
-    duration: Math.random() * 8 + 6,
-  })));
+    return () => clearInterval(timer);
+  }, [slides.length]);
 
   return (
-    <section
-      className={`hero hero--v3 hero--${slides[activeSlide].colorName}`}
-      id="hero"
-      style={{ '--active-glow': slides[activeSlide].glow }}
-    >
-      {/* ── Animated Gradient Background ── */}
-      <div className="hero__grad-bg" />
-
-      {/* ── Cinematic Backdrop Images ── */}
-      <div className="hero__cinema-wrap">
+    <section className="hero-editorial">
+      <div className="hero-editorial__container">
         {slides.map((s, idx) => (
-          <div key={idx} className={`hero__cinema-slide ${activeSlide === idx ? 'active' : ''}`}>
-            <img src={s.img} alt={s.slabName} className="hero__cinema-img" />
-            <div className="hero__cinema-overlay" />
+          <div 
+            key={idx} 
+            className={`hero-editorial__slide ${activeSlide === idx ? 'active' : ''}`}
+          >
+            {/* Left Column: Typography Block */}
+            <div className="hero-editorial__content-col">
+              <span className="hero-editorial__label">{s.label}</span>
+              <h1 className="hero-editorial__title">{s.title}</h1>
+              <div className="gold-line" />
+              <p className="hero-editorial__subtitle">{s.subtitle}</p>
+              
+              <div className="hero-editorial__actions">
+                <Link href={s.ctaLink} className="btn-primary">
+                  <span>{s.ctaText}</span>
+                  <ArrowRight size={14} />
+                </Link>
+                <Link href="/custom-studio" className="btn-ghost">
+                  Bespoke Commission
+                </Link>
+              </div>
+            </div>
+            
+            {/* Right Column: Lifestyle Picture */}
+            <div className="hero-editorial__image-col">
+              <div className="hero-editorial__image-wrapper">
+                <img src={s.img} alt={s.title} className="hero-editorial__img" />
+              </div>
+            </div>
           </div>
         ))}
-      </div>
-
-      {/* ── Glow Orbs ── */}
-      <div className="hero__orb hero__orb--1" />
-      <div className="hero__orb hero__orb--2" />
-      <div className="hero__orb hero__orb--3" />
-
-      {/* ── Noise Grain Texture ── */}
-      <div className="hero__grain" />
-
-      {/* ── Center Content ── */}
-      <div className="hero__center-stage">
-
-        {/* Label */}
-        <div key={`label-${activeSlide}`} className="hero__badge animate-badge">
-          <span className="hero__badge-dot" />
-          {slides[activeSlide].label}
-          <span className="hero__badge-dot" />
+        
+        {/* Navigation Dot Indicators */}
+        <div className="hero-editorial__dots">
+          {slides.map((_, idx) => (
+            <button
+              key={idx}
+              type="button"
+              className={`hero-editorial__dot ${activeSlide === idx ? 'active' : ''}`}
+              onClick={() => setActiveSlide(idx)}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
         </div>
-
-        {/* Main Title */}
-        <h1 key={`h1-${activeSlide}`} className="hero__mega-title">
-          <span className="hero__mega-line hero__mega-line--1">
-            {slides[activeSlide].titleLine1}
-            <em className="hero__mega-italic">{slides[activeSlide].titleItalic1}</em>
-          </span>
-          <span className="hero__mega-line hero__mega-line--2">
-            {slides[activeSlide].titleLine2}
-            <em className="hero__mega-italic">{slides[activeSlide].titleItalic2}</em>
-          </span>
-        </h1>
-
-        {/* Gold divider */}
-        <div className="hero__gold-rule" />
-
-        {/* Subtitle */}
-        <p key={`sub-${activeSlide}`} className="hero__mega-subtitle">
-          {slides[activeSlide].subtitle}
-        </p>
-
-        {/* CTA Buttons */}
-        <div className="hero__cta-group">
-          <a href={slides[activeSlide].ctaLink} className="btn-primary hero__cta-primary">
-            <span>{slides[activeSlide].ctaText}</span>
-            <ArrowRight size={16} />
-          </a>
-          <a href="#custom" className="btn-ghost hero__cta-ghost">
-            <span>Custom Atelier</span>
-          </a>
-        </div>
-
       </div>
-
-
-
-      {/* ── Dot Navigation ── */}
-      <div className="hero__dot-nav">
-        {slides.map((s, idx) => (
-          <button
-            key={idx}
-            className={`hero__dot ${activeSlide === idx ? 'active' : ''}`}
-            onClick={() => { setActiveSlide(idx); startTimer(); }}
-            aria-label={s.slabName}
-          >
-            {activeSlide === idx && (
-              <svg className="hero__dot-ring" viewBox="0 0 32 32">
-                <circle className="hero__dot-ring-bg" cx="16" cy="16" r="14" />
-                <circle className="hero__dot-ring-fill" cx="16" cy="16" r="14" />
-              </svg>
-            )}
-          </button>
-        ))}
-      </div>
-
-      {/* ── Slide Counter ── */}
-      <div className="hero__slide-counter">
-        <span className="hero__counter-current">0{activeSlide + 1}</span>
-        <span className="hero__counter-sep" />
-        <span className="hero__counter-total">0{slides.length}</span>
-      </div>
-
-      {/* ── Scroll Indicator ── */}
-      <div className="hero__scroll-indicator">
-        <span>Scroll</span>
-        <div className="hero__scroll-line" />
-      </div>
-
-      {/* ── Corner Decorations ── */}
-      <div className="hero__corner hero__corner--tl" />
-      <div className="hero__corner hero__corner--br" />
     </section>
+  );
+}
+
+/* ─── Trust Value Bar ─── */
+function TrustBanner() {
+  const trusts = [
+    { icon: <Gem size={18} className="gold-text" />, title: "Jaipur Atelier", desc: "Ancestral Hand-chiseling" },
+    { icon: <Sparkles size={18} className="gold-text" />, title: "Rare Reserves", desc: "Italian & Indian Slabs" },
+    { icon: <Truck size={18} className="gold-text" />, title: "Insured Shipping", desc: "Secured White-glove Delivery" },
+    { icon: <Award size={18} className="gold-text" />, title: "Heritage Sealed", desc: "Lifetime Authenticity" }
+  ];
+
+  return (
+    <div className="trust-banner">
+      <div className="container">
+        <div className="trust-banner__grid">
+          {trusts.map((t, idx) => (
+            <div key={idx} className="trust-banner__item">
+              <div className="trust-banner__icon-box">{t.icon}</div>
+              <div className="trust-banner__text">
+                <h4 className="trust-banner__title">{t.title}</h4>
+                <p className="trust-banner__desc">{t.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
 /* ─── Featured Collections ─── */
 function FeaturedCollections() {
   const collections = [
-    { title: 'Stone Jewelry', subtitle: 'Wearable Stone', desc: 'Rings, pendants, earrings & bracelets carved from rare stone', img: '/images/jewelry.png', tag: '48 Pieces', class: 'col-left', link: '/collections/stone-jewelry' },
-    { title: 'Marble Decor', subtitle: 'Living in Stone', desc: 'Vases, sculptures & candle holders for discerning interiors', img: '/images/decor.png', tag: '64 Pieces', class: 'col-center', link: '/collections/marble-decor' },
-    { title: 'Cristallo Quartzite Slabs', subtitle: 'Rare & Exclusive', desc: 'Ultra-rare quartzite varieties in highly limited quantities', img: '/images/black_marble.png', tag: '12 Left', class: 'col-right', link: '/collections/cristallo-quartzite-slabs' },
+    { title: 'Stone Jewelry', subtitle: 'Wearable Stone', desc: 'Rings, pendants, earrings & bracelets carved from rare stone.', img: '/images/jewelry.png', tag: 'Limited Collection', class: 'col-left', link: '/collections/stone-jewelry', count: '48 items' },
+    { title: 'Marble Decor', subtitle: 'Living in Stone', desc: 'Vases, sculptures & candle holders for discerning interiors.', img: '/images/decor.png', tag: 'Artisan Workshop', class: 'col-center', link: '/collections/marble-decor', count: '64 items' },
+    { title: 'Cristallo Quartzite Slabs', subtitle: 'Rare & Exclusive', desc: 'Ultra-rare quartzite varieties in highly limited quantities.', img: '/images/black_marble.png', tag: 'Collector Private Reserve', class: 'col-right', link: '/collections/cristallo-quartzite-slabs', count: '12 left' },
   ];
 
   return (
@@ -761,28 +616,26 @@ function FeaturedCollections() {
           <div className="section-label">Curated Collections</div>
           <h2 className="section-title">Where Stone Becomes Art</h2>
           <div className="gold-line center" />
-          <p className="section-desc">Each collection tells a unique story of geological wonder transformed by human artistry</p>
+          <p className="section-desc">Each collection tells a unique story of geological wonder transformed by human artistry.</p>
         </div>
         <div className="collections__grid collections__grid--asymmetrical">
           {collections.map((c, i) => (
             <div key={c.title} className={`collection-card collection-card--${c.class} reveal reveal-delay-${i + 1}`}>
-              <Link href={c.link} className="collection-card__img-wrap">
+              <div className="collection-card__img-wrap">
                 <img src={c.img} alt={c.title} className="collection-card__img" />
                 <div className="collection-card__overlay" />
-                <div className="collection-card__tag">{c.tag}</div>
+                <div className="collection-card__badge-tag">{c.tag}</div>
+                <div className="collection-card__count-tag">{c.count}</div>
                 <div className="collection-card__border" />
-              </Link>
-              <div className="collection-card__body">
-                <div className="collection-card__subtitle">{c.subtitle}</div>
-                <h3 className="collection-card__title">
-                  <Link href={c.link} style={{ textDecoration: 'none', color: 'inherit' }}>
-                    {c.title}
+                
+                <div className="collection-card__floating-content">
+                  <span className="collection-card__subtitle">{c.subtitle}</span>
+                  <h3 className="collection-card__title">{c.title}</h3>
+                  <p className="collection-card__desc">{c.desc}</p>
+                  <Link href={c.link} className="collection-card__cta-btn">
+                    <span>Explore Collection</span> <ArrowRight size={14} />
                   </Link>
-                </h3>
-                <p className="collection-card__desc">{c.desc}</p>
-                <Link href={c.link} className="collection-card__cta">
-                  Explore <ArrowRight size={14} />
-                </Link>
+                </div>
               </div>
             </div>
           ))}
@@ -795,41 +648,53 @@ function FeaturedCollections() {
 /* ─── Shop By Crystals ─── */
 function ShopByCrystals() {
   const crystals = [
-    { name: 'Pyrite', tag: 'wealth & energy', img: '/images/Pyrite.webp' },
-    { name: 'Garnet', tag: 'passion & strength', img: '/images/Garnet_434e07a9-af72-4158-8527-01f7b7cec3ca.webp' },
-    { name: 'Citrine', tag: 'abundance & joy', img: '/images/Citrine_1_001c9a19-d145-474e-b3ed-d8363d92c978.webp' },
-    { name: 'Tiger Eye', tag: 'courage & luck', img: '/images/Tiger_Eye_76ccab7b-fa31-4a0b-a81d-31f198b2f09a (1).webp' },
-    { name: 'Rose Quartz', tag: 'love & harmony', img: '/images/Rose_Quartz_0b3ccc91-1368-48de-a332-599375982e4d (1).webp' },
-    { name: 'Lapis Lazuli', tag: 'wisdom & truth', img: '/images/Lapis_Lazuli_5b5ff163-b2ab-4923-a2dd-1c1598e91687.webp' },
-    { name: 'Amethyst', tag: 'clarity & peace', img: '/images/Amethyst.webp' },
-    { name: 'Selenite', tag: 'purification', img: '/images/Selenite.webp' },
+    { name: 'Pyrite', slug: 'pyrite', tag: 'Wealth & Solar Energy', desc: 'Attracts abundance, shields negativity, and fuels ambition.', img: '/images/Pyrite.webp' },
+    { name: 'Garnet', slug: 'garnet', tag: 'Passion & Vitality', desc: 'Ignites creative fire, restores energy, and stimulates desire.', img: '/images/Garnet_434e07a9-af72-4158-8527-01f7b7cec3ca.webp' },
+    { name: 'Citrine', slug: 'citrine', tag: 'Abundance & Mental Clarity', desc: 'The merchant\'s stone of prosperity, manifestation, and joy.', img: '/images/Citrine_1_001c9a19-d145-474e-b3ed-d8363d92c978.webp' },
+    { name: 'Tiger Eye', slug: 'tigereye', tag: 'Courage & Dynamic Action', desc: 'Enhances focus, builds inner strength, and brings good fortune.', img: '/images/Tiger_Eye_76ccab7b-fa31-4a0b-a81d-31f198b2f09a (1).webp' },
+    { name: 'Rose Quartz', slug: 'rosequartz', tag: 'Unconditional Love & Peace', desc: 'Opens the heart to self-love, deep healing, and relationship harmony.', img: '/images/Rose_Quartz_0b3ccc91-1368-48de-a332-599375982e4d (1).webp' },
+    { name: 'Lapis Lazuli', slug: 'lapislazuli', tag: 'Wisdom & Intellectual Power', desc: 'Connects to inner truth, deep wisdom, and clear self-expression.', img: '/images/Lapis_Lazuli_5b5ff163-b2ab-4923-a2dd-1c1598e91687.webp' },
+    { name: 'Amethyst', slug: 'amethyst', tag: 'Clarity & Divine Connection', desc: 'Calms active minds, purifies energy, and aids spiritual awareness.', img: '/images/Amethyst.webp' },
+    { name: 'Selenite', slug: 'selenite', tag: 'Purification & Light Aura', desc: 'Clears stagnant energy blocks and channels high-frequency light.', img: '/images/Selenite.webp' },
   ];
 
   return (
     <section className="shop-crystals" id="crystals">
       <div className="container">
-        <div className="section-header reveal" style={{ marginBottom: '30px' }}>
-          <div className="section-label">Browse by Material</div>
-          <h2 className="section-title" style={{ color: 'var(--charcoal)' }}>Shop by Crystals</h2>
+        <div className="section-header reveal" style={{ marginBottom: '50px' }}>
+          <div className="section-label">Geological Sourcing</div>
+          <h2 className="section-title" style={{ color: 'var(--charcoal)' }}>Shop by Crystal Energy</h2>
           <div className="gold-line center" />
+          <p className="section-desc">Select an artifact based on the raw mineral crystal fused with its design.</p>
         </div>
         
-        <div className="crystals__scroll-wrap reveal">
-          <div className="crystals__track">
+        <div className="crystals-grid-container reveal">
+          <div className="crystals-luxury-grid">
             {crystals.map((c, i) => (
               <Link
                 key={c.name}
                 href={`/collections/stone-jewelry?material=${encodeURIComponent(c.name)}`}
-                className="crystal-card"
-                style={{ transitionDelay: `${i * 0.08}s` }}
+                className={`crystal-card crystal-card--${c.slug}`}
+                style={{ transitionDelay: `${i * 0.05}s` }}
               >
                 <div className="crystal-img-container">
                   <div className="crystal-halo" />
                   <img src={c.img} alt={c.name} className="crystal-stone-img" />
                 </div>
                 <div className="crystal-pedestal" />
-                <h3 className="crystal-name">{c.name}</h3>
-                <span className="crystal-meta-tag">{c.tag}</span>
+                
+                <div className="crystal-card__content">
+                  <h3 className="crystal-name">{c.name}</h3>
+                  <div className="crystal-meta-tag-pill">
+                    <span className="crystal-meta-tag">{c.tag}</span>
+                  </div>
+                  <p className="crystal-energy-desc">{c.desc}</p>
+                  
+                  <div className="crystal-card__explore">
+                    <span>Discover {c.name} Jewelry</span>
+                    <ArrowRight size={12} className="explore-arrow" />
+                  </div>
+                </div>
               </Link>
             ))}
           </div>
@@ -842,49 +707,23 @@ function ShopByCrystals() {
 /* ─── Brand Story ─── */
 function BrandStory() {
   return (
-    <section className="brand-story" id="story">
-      <div className="brand-story__marble-bg" />
+    <section className="brand-story-editorial" id="story">
       <div className="container">
-        <div className="brand-story__grid">
-          <div className="brand-story__image-overlap reveal">
-            <div className="overlap-frame frame-1">
-              <img src="/images/interior.png" alt="Luxury Marble Interior" className="overlap-img" />
-              <div className="overlap-img-border" />
-            </div>
-            <div className="overlap-frame frame-2">
-              <img src="/images/founder.png" alt="Atelier Craftsmanship" className="overlap-img" />
-              <div className="overlap-img-border" />
-              <div className="overlap-badge">
-                <span className="overlap-badge-year">2019</span>
-                <span className="overlap-badge-text">Est. Atelier</span>
-              </div>
-            </div>
-          </div>
-          <div className="brand-story__content reveal reveal-delay-2">
-            <div className="section-label">Our Story</div>
-            <div className="gold-line" />
-            <h2 className="brand-story__title">
-              Every Piece Begins With A<br />
-              <em className="shimmer-text"> Rare Stone.</em>
-            </h2>
-            <p className="brand-story__text drop-cap">
-              Born in the historic marble quarries of Rajasthan, Artistic Crafts was founded on one uncompromising belief: that the earth&apos;s most extraordinary geological materials deserve to be worn, displayed, and cherished — not hidden in museums.
-            </p>
-            <p className="brand-story__text">
-              Our founder traveled to over 12 countries sourcing the world&apos;s rarest marble varieties — from Italian Calacatta Gold to translucent Turkish Onyx. Each stone is hand-selected for its unique veining, translucency, and individual character before our master artisans begin the meticulous process of hand-carving.
-            </p>
-            <div className="brand-story__pillars">
-              {[['Handcrafted Signature', 'Every piece individually chiseled by hand'], ['Ethically Quarried', 'Responsibility to the earth and our communities'], ['Designed for Eternity', 'Crafted to endure through generations']].map(([t, d]) => (
-                <div key={t} className="brand-story__pillar">
-                  <div className="brand-story__pillar-icon">◈</div>
-                  <div>
-                    <div className="brand-story__pillar-title">{t}</div>
-                    <div className="brand-story__pillar-desc">{d}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <Link href="/about" className="btn-primary"><span>Read Our Full Story</span> <ArrowRight size={16} /></Link>
+        <div className="brand-story-editorial__content reveal">
+          <div className="section-label">The Artistic Crafts Philosophy</div>
+          <h2 className="brand-story-editorial__title">Every Piece Begins With A Rare Earth Stone.</h2>
+          <div className="gold-line center" />
+          <p className="brand-story-editorial__text">
+            Born in the historic marble quarries of Rajasthan, Artistic Crafts was founded on one uncompromising belief: that the earth's most extraordinary geological materials deserve to be worn, displayed, and cherished — not hidden in museums.
+          </p>
+          <p className="brand-story-editorial__text">
+            Our founder traveled to over 12 countries sourcing the world's rarest mineral varieties — from Italian Calacatta Gold to translucent Turkish Onyx. Each stone is hand-selected for its unique veining, translucency, and individual character before our master artisans begin the meticulous process of hand-carving in our Jaipur atelier.
+          </p>
+          
+          <div className="brand-story-editorial__cta">
+            <Link href="/about" className="btn-ghost">
+              Explore Our Heritage
+            </Link>
           </div>
         </div>
       </div>
@@ -893,110 +732,123 @@ function BrandStory() {
 }
 
 /* ─── Best Sellers ─── */
-function BestSellers() {
-  const [wishlist, setWishlist] = useState([]);
-  const products = [
-    { id: 1, name: 'Pink Crystal Beaded Bracelet', price: '₹14,500', img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', tag: 'Best Seller', rating: 5 },
-    { id: 2, name: 'Black & White Marble Bracelet', price: '₹12,800', img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', tag: 'New', rating: 5 },
-    { id: 3, name: 'Boho Marble Stone Bracelet', price: '₹13,200', img: 'https://i.pinimg.com/736x/87/4d/7c/874d7ca0a362d0ddc5246f32ab4bd28d.jpg', tag: 'Trending', rating: 4 },
-    { id: 4, name: 'Rose Quartz Connemara Bracelet', price: '₹11,500', img: 'https://i.pinimg.com/736x/b3/c8/34/b3c83472c84405efdd073a7a1b000fee.jpg', tag: 'Classic', rating: 5 },
-    { id: 5, name: 'Gray & Tan Watercolor Bracelet', price: '₹15,400', img: 'https://i.pinimg.com/736x/50/52/02/5052028ef58a458f0a312ed6a3c4381c.jpg', tag: 'Staff Pick', rating: 5 },
-    { id: 6, name: 'Rainbow Marble Bracelet', price: '₹16,800', img: 'https://i.pinimg.com/736x/b5/42/89/b54289333d78d91ef9e1a32d264ad1e6.jpg', tag: 'Exclusive', rating: 5 },
-  ];
+/* ─── Luxury Products Datasets ─── */
+const jewelryProducts = [
+  { id: 1, name: 'Pink Crystal Beaded Bracelet', price: '₹14,500', img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', tag: 'Best Seller', rating: 5, reviews: 48, stock: 3 },
+  { id: 2, name: 'Black & White Marble Bracelet', price: '₹12,800', img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', tag: 'New', rating: 5, reviews: 32, stock: 2 },
+  { id: 3, name: 'Boho Marble Stone Bracelet', price: '₹13,200', img: 'https://i.pinimg.com/736x/87/4d/7c/874d7ca0a362d0ddc5246f32ab4bd28d.jpg', tag: 'Trending', rating: 4, reviews: 19, stock: 7 },
+  { id: 4, name: 'Rose Quartz Connemara Bracelet', price: '₹11,500', img: 'https://i.pinimg.com/736x/b3/c8/34/b3c83472c84405efdd073a7a1b000fee.jpg', tag: 'Classic', rating: 5, reviews: 26, stock: 5 },
+  { id: 5, name: 'Gray & Tan Watercolor Bracelet', price: '₹15,400', img: 'https://i.pinimg.com/736x/50/52/02/5052028ef58a458f0a312ed6a3c4381c.jpg', tag: 'Staff Pick', rating: 5, reviews: 14, stock: 3 },
+  { id: 6, name: 'Rainbow Marble Bracelet', price: '₹16,800', img: 'https://i.pinimg.com/736x/b5/42/89/b54289333d78d91ef9e1a32d264ad1e6.jpg', tag: 'Exclusive', rating: 5, reviews: 11, stock: 2 },
+];
 
-  useEffect(() => {
-    const loadWishlist = () => {
-      const stored = localStorage.getItem('wishlist');
-      if (stored) {
-        try {
-          setWishlist(JSON.parse(stored));
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    };
-    loadWishlist();
-    window.addEventListener('wishlistUpdated', loadWishlist);
-    return () => window.removeEventListener('wishlistUpdated', loadWishlist);
-  }, []);
+const decorProducts = [
+  { id: 101, name: 'Resin Coaster Set White & Gold', price: '₹12,400', img: 'https://i.pinimg.com/736x/0a/31/b0/0a31b0ce9c2fadd9b9e044540c593801.jpg', tag: 'New Launch', rating: 5, reviews: 18, stock: 3 },
+  { id: 103, name: 'Concrete Resin Art Dish', price: '₹11,000', img: 'https://i.pinimg.com/736x/ec/04/84/ec04843094fd1fc9821d5092d4c0402b.jpg', tag: 'Artisan Accent', rating: 5, reviews: 9, stock: 4 },
+  { id: 104, name: 'Terrazzo Ceramic Holder Set', price: '₹6,800', img: 'https://i.pinimg.com/736x/3f/84/02/3f84023138a190c8b5e06d8cfc4444f8.jpg', tag: 'Modern', rating: 4, reviews: 22, stock: 8 },
+  { id: 201, name: 'Marble Vanity Tray', price: '₹18,500', img: 'https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=800', tag: 'Atelier Spec', rating: 5, reviews: 15, stock: 2 },
+];
 
-  const toggleWishlist = (id) => {
-    setWishlist(prev => {
-      const next = prev.includes(id) ? prev.filter(w => w !== id) : [...prev, id];
-      localStorage.setItem('wishlist', JSON.stringify(next));
-      window.dispatchEvent(new Event('wishlistUpdated'));
-      return next;
-    });
+const slabProducts = [
+  { id: 102, name: 'Cristallo Pink Quartzite Slab', price: '₹1,45,000', img: 'https://i.pinimg.com/736x/92/a7/c5/92a7c5e96bc731477d866887ddab0efe.jpg', tag: 'Ultra Luxury', rating: 5, reviews: 6, stock: 1 },
+  { id: 106, name: 'Cristallo Rose Soft Touch Slab', price: '₹1,65,000', img: 'https://i.pinimg.com/736x/6b/50/ca/6b50cae255f42bdd1cc4ec34038d8594.jpg', tag: 'Exclusive Slab', rating: 5, reviews: 4, stock: 1 },
+  { id: 202, name: 'Emerald Onyx Backlit Slab', price: '₹2,10,000', img: 'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?q=80&w=800', tag: 'Private Reserve', rating: 5, reviews: 3, stock: 1 },
+];
+
+/* ─── Luxury Product Card Component ─── */
+function ProductCard({ product, wishlist, toggleWishlist }) {
+  const [selectedSize, setSelectedSize] = useState('Medium');
+  const [added, setAdded] = useState(false);
+
+  const sizes = ['Small', 'Medium', 'Large'];
+  const isSlab = product.price.includes('1,') || product.price.includes('2,');
+
+  const handleAdd = () => {
+    if (typeof window !== 'undefined' && window.addToCart) {
+      window.addToCart(product, 1, isSlab ? 'Standard' : selectedSize);
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2000);
+    }
   };
 
   return (
-    <section className="best-sellers" id="shop" style={{ paddingBottom: '30px' }}>
-      <div className="gold-glow-orb" style={{ top: '25%', right: '5%' }} />
-      <div className="container">
-        <div className="section-header reveal">
-          <div className="section-label">Most Coveted</div>
-          <h2 className="section-title">Best Sellers</h2>
-          <div className="gold-line center" />
+    <div className="luxury-product-card">
+      <div className="luxury-product-card__img-wrap">
+        <img src={product.img} alt={product.name} className="luxury-product-card__img" />
+        <div className="luxury-product-card__tag">{product.tag}</div>
+        
+        {product.stock <= 3 && (
+          <div className="luxury-product-card__stock-alert">
+            <AlertCircle size={10} /> Only {product.stock} left in Jaipur
+          </div>
+        )}
+
+        <div className="luxury-product-card__actions">
+          <button 
+            type="button"
+            className={`luxury-product-card__wish ${wishlist.includes(product.id) ? 'active' : ''}`}
+            onClick={() => toggleWishlist(product.id)} 
+            aria-label="Add to wishlist"
+          >
+            <Heart size={15} fill={wishlist.includes(product.id) ? 'var(--gold)' : 'none'} />
+          </button>
         </div>
-      </div>
-      <div className="best-sellers__scroll-wrap">
-        <div className="best-sellers__track">
-          {products.map(p => (
-            <div key={p.id} className="product-card">
-              <div className="product-card__img-wrap">
-                <img src={p.img} alt={p.name} className="product-card__img" />
-                <div className="product-card__tag">{p.tag}</div>
-                <div className="product-card__actions">
-                  <button className={`product-card__wish ${wishlist.includes(p.id) ? 'active' : ''}`}
-                    onClick={() => toggleWishlist(p.id)} aria-label="Add to wishlist">
-                    <Heart size={16} fill={wishlist.includes(p.id) ? '#C9A96E' : 'none'} />
-                  </button>
-                  <button 
-                    className="product-card__add" 
-                    aria-label="Add to cart"
-                    onClick={() => {
-                      if (typeof window !== 'undefined' && window.addToCart) {
-                        window.addToCart(p);
-                      }
-                    }}
+
+        {/* Dynamic Action Drawer Overlay (Reveals on Hover) */}
+        <div className="luxury-product-card__drawer">
+          {!isSlab && (
+            <div className="luxury-product-card__sizes">
+              <span className="sizes-title">Select Size:</span>
+              <div className="sizes-chips">
+                {sizes.map(s => (
+                  <button
+                    key={s}
+                    type="button"
+                    className={`size-chip ${selectedSize === s ? 'active' : ''}`}
+                    onClick={() => setSelectedSize(s)}
                   >
-                    <ShoppingBag size={16} />
-                    <span>Quick Add</span>
+                    {s[0]}
                   </button>
-                </div>
-                <div className="product-card__360">360°</div>
-              </div>
-              <div className="product-card__info">
-                <div className="product-card__stars">
-                  {Array.from({ length: p.rating }).map((_, i) => (
-                    <Star key={i} size={10} fill="#C9A96E" stroke="none" />
-                  ))}
-                </div>
-                <h4 className="product-card__name">{p.name}</h4>
-                <div className="product-card__price">{p.price}</div>
+                ))}
               </div>
             </div>
-          ))}
+          )}
+          <button 
+            type="button"
+            className={`luxury-product-card__add-btn ${added ? 'added' : ''}`}
+            onClick={handleAdd}
+          >
+            <ShoppingBag size={14} />
+            <span>{added ? 'Added to Cart' : 'Quick Add'}</span>
+          </button>
+        </div>
+
+        <div className="luxury-product-card__360">360°</div>
+      </div>
+      
+      <div className="luxury-product-card__info">
+        <div className="luxury-product-card__rating-row">
+          <div className="luxury-product-card__stars">
+            {Array.from({ length: product.rating }).map((_, i) => (
+              <Star key={i} size={11} fill="var(--gold)" stroke="none" />
+            ))}
+          </div>
+          <span className="luxury-product-card__reviews-count">({product.reviews} reviews)</span>
+        </div>
+        <h4 className="luxury-product-card__name">{product.name}</h4>
+        <div className="luxury-product-card__price-row">
+          <span className="luxury-product-card__price">{product.price}</span>
+          {!isSlab && <span className="luxury-product-card__size-indicator">Size: {selectedSize}</span>}
         </div>
       </div>
-      <div className="best-sellers__cta reveal">
-        <Link href="/collections/stone-jewelry" className="btn-primary"><span>View All Products</span> <ArrowRight size={16} /></Link>
-      </div>
-    </section>
+    </div>
   );
 }
 
-/* ─── New Arrivals ─── */
-function NewArrivals() {
+/* ─── Atelier Registry (Unified Tabbed Catalog) ─── */
+function AtelierRegistry() {
+  const [activeTab, setActiveTab] = useState('jewelry');
   const [wishlist, setWishlist] = useState([]);
-  const products = [
-    { id: 101, name: 'Resin Coaster Set White & Gold', price: '₹12,400', img: 'https://i.pinimg.com/736x/0a/31/b0/0a31b0ce9c2fadd9b9e044540c593801.jpg', tag: 'New', rating: 5 },
-    { id: 102, name: 'Cristallo Pink Quartzite Slab', price: '₹1,45,000', img: 'https://i.pinimg.com/736x/92/a7/c5/92a7c5e96bc731477d866887ddab0efe.jpg', tag: 'Luxury', rating: 5 },
-    { id: 103, name: 'Concrete Resin Art Dish', price: '₹11,000', img: 'https://i.pinimg.com/736x/ec/04/84/ec04843094fd1fc9821d5092d4c0402b.jpg', tag: 'Artisan', rating: 5 },
-    { id: 104, name: 'Terrazzo Ceramic Holder Set', price: '₹6,800', img: 'https://i.pinimg.com/736x/3f/84/02/3f84023138a190c8b5e06d8cfc4444f8.jpg', tag: 'Modern', rating: 4 },
-    { id: 105, name: 'Gray & Tan Watercolor Bracelet', price: '₹15,400', img: 'https://i.pinimg.com/736x/50/52/02/5052028ef58a458f0a312ed6a3c4381c.jpg', tag: 'Popular', rating: 5 },
-    { id: 106, name: 'Cristallo Rose Soft Touch Slab', price: '₹1,65,000', img: 'https://i.pinimg.com/736x/6b/50/ca/6b50cae255f42bdd1cc4ec34038d8594.jpg', tag: 'Exclusive', rating: 5 },
-  ];
 
   useEffect(() => {
     const loadWishlist = () => {
@@ -1023,58 +875,60 @@ function NewArrivals() {
     });
   };
 
+  const tabs = [
+    { id: 'jewelry', label: 'Bespoke Jewelry', products: jewelryProducts },
+    { id: 'decor', label: 'Artisan Decor', products: decorProducts },
+    { id: 'slabs', label: 'Rare Quartzite Slabs', products: slabProducts }
+  ];
+
+  const currentTab = tabs.find(t => t.id === activeTab);
+
   return (
-    <section className="best-sellers" id="new-arrivals" style={{ paddingTop: '40px', paddingBottom: '50px', borderTop: '1px solid rgba(201, 169, 110, 0.15)' }}>
-      <div className="gold-glow-orb" style={{ bottom: '25%', left: '5%' }} />
+    <section className="atelier-registry" id="shop">
+      <div className="gold-glow-orb" style={{ top: '25%', right: '5%' }} />
       <div className="container">
         <div className="section-header reveal">
-          <div className="section-label">Latest Concept Launches</div>
-          <h2 className="section-title">New Arrivals</h2>
+          <div className="section-label">Atelier Registry</div>
+          <h2 className="section-title">Shop Exclusive Pieces</h2>
           <div className="gold-line center" />
+          <p className="section-desc">Hand-carved artifacts from our Jaipur workshop. Limited quantities available.</p>
         </div>
-      </div>
-      <div className="best-sellers__scroll-wrap">
-        <div className="best-sellers__track">
-          {products.map(p => (
-            <div key={p.id} className="product-card">
-              <div className="product-card__img-wrap">
-                <img src={p.img} alt={p.name} className="product-card__img" />
-                <div className="product-card__tag">{p.tag}</div>
-                <div className="product-card__actions">
-                  <button className={`product-card__wish ${wishlist.includes(p.id) ? 'active' : ''}`}
-                    onClick={() => toggleWishlist(p.id)} aria-label="Add to wishlist">
-                    <Heart size={16} fill={wishlist.includes(p.id) ? '#C9A96E' : 'none'} />
-                  </button>
-                  <button 
-                    className="product-card__add" 
-                    aria-label="Add to cart"
-                    onClick={() => {
-                      if (typeof window !== 'undefined' && window.addToCart) {
-                        window.addToCart(p);
-                      }
-                    }}
-                  >
-                    <ShoppingBag size={16} />
-                    <span>Quick Add</span>
-                  </button>
-                </div>
-                <div className="product-card__360">360°</div>
-              </div>
-              <div className="product-card__info">
-                <div className="product-card__stars">
-                  {Array.from({ length: p.rating }).map((_, i) => (
-                    <Star key={i} size={10} fill="#C9A96E" stroke="none" />
-                  ))}
-                </div>
-                <h4 className="product-card__name">{p.name}</h4>
-                <div className="product-card__price">{p.price}</div>
-              </div>
-            </div>
+
+        {/* Elegant Tab Selector Bar */}
+        <div className="atelier-registry__tabs-bar">
+          {tabs.map(t => (
+            <button
+              key={t.id}
+              type="button"
+              className={`atelier-registry__tab-btn ${activeTab === t.id ? 'active' : ''}`}
+              onClick={() => setActiveTab(t.id)}
+            >
+              {t.label}
+              <span className="tab-btn__count">({t.products.length})</span>
+            </button>
           ))}
         </div>
-      </div>
-      <div className="best-sellers__cta reveal">
-        <Link href="/collections/stone-jewelry" className="btn-primary"><span>Explore All Collections</span> <ArrowRight size={16} /></Link>
+
+        {/* Tab Content Catalog Grid */}
+        <div className="atelier-registry__grid-wrap">
+          <div className="atelier-registry__grid animate-fade-in" key={activeTab}>
+            {currentTab.products.map(p => (
+              <ProductCard
+                key={p.id}
+                product={p}
+                wishlist={wishlist}
+                toggleWishlist={toggleWishlist}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="atelier-registry__cta reveal">
+          <Link href="/collections/stone-jewelry" className="btn-primary">
+            <span>Explore Full Catalog</span> <ArrowRight size={16} />
+          </Link>
+        </div>
+
       </div>
     </section>
   );
@@ -1304,48 +1158,39 @@ function InspirationGallery() {
 
 /* ─── Testimonials ─── */
 function Testimonials() {
-  const [active, setActive] = useState(0);
   const testimonials = [
-    { name: 'Priya Sharma', title: 'Interior Designer, Mumbai', text: 'The Calacatta marble vase I commissioned for my client\'s penthouse is now the centerpiece of the entire space. The craftsmanship is absolutely unparalleled — it stopped three international guests in their tracks.', stars: 5, img: '/images/founder.png' },
-    { name: 'Arjun Mehta', title: 'CEO, Delhi', text: 'I gifted my wife the Carrara Signet Ring for our anniversary. She still gets asked about it everywhere she goes. Artistic Crafts has created something genuinely extraordinary — jewelry that tells a geological story.', stars: 5, img: '/images/founder.png' },
-    { name: 'Sofia Laurent', title: 'Luxury Hotel Director, Goa', text: 'We ordered a custom marble sculpture for our hotel lobby. The attention to detail, the communication throughout the process, and the final result exceeded every expectation. Worth every rupee.', stars: 5, img: '/images/founder.png' },
+    { name: 'Priya Sharma', title: 'Interior Designer, Mumbai', text: 'The Calacatta marble vase I commissioned for my client\'s penthouse is now the centerpiece of the entire space. The craftsmanship is absolutely unparalleled — it stopped three international guests in their tracks.' },
+    { name: 'Arjun Mehta', title: 'CEO, Delhi', text: 'I gifted my wife the Carrara Signet Ring for our anniversary. She still gets asked about it everywhere she goes. Artistic Crafts has created something genuinely extraordinary — jewelry that tells a geological story.' },
+    { name: 'Sofia Laurent', title: 'Luxury Hotel Director, Goa', text: 'We ordered a custom marble sculpture for our hotel lobby. The attention to detail, the communication throughout the process, and the final result exceeded every expectation. Worth every rupee.' }
   ];
+  const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const t = setInterval(() => setActive(a => (a + 1) % testimonials.length), 5000);
-    return () => clearInterval(t);
-  }, []);
+    const timer = setInterval(() => {
+      setActive(prev => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [testimonials.length]);
 
   return (
-    <section className="testimonials" id="testimonials">
-      <div className="testimonials__marble-accent" />
+    <section className="testimonials-editorial">
       <div className="container">
-        <div className="section-header reveal">
+        <div className="testimonials-editorial__wrapper reveal">
           <div className="section-label">Client Stories</div>
-          <h2 className="section-title">Voices of Discerning Taste</h2>
-          <div className="gold-line center" />
-        </div>
-        <div className="testimonials__grid">
-          {testimonials.map((t, i) => (
-            <div key={i} className="testimonial-card" style={{ transitionDelay: `${i * 0.15}s` }}>
-              <div className="testimonial-card__stars">
-                {Array.from({ length: t.stars }).map((_, j) => (
-                  <Star key={j} size={16} fill="#C9A96E" stroke="none" />
-                ))}
+          <span className="quote-mark">“</span>
+          
+          <div className="testimonials-editorial__slide-box">
+            {testimonials.map((t, idx) => (
+              <div 
+                key={idx} 
+                className={`testimonials-editorial__slide ${active === idx ? 'active' : ''}`}
+              >
+                <p className="testimonials-editorial__text">{t.text}</p>
+                <h4 className="testimonials-editorial__author">{t.name}</h4>
+                <span className="testimonials-editorial__title">{t.title}</span>
               </div>
-              <div className="testimonial-card__quote">&ldquo;</div>
-              <p className="testimonial-card__text">{t.text}</p>
-              <div className="testimonial-card__author">
-                <div className="testimonial-card__author-img">
-                  <img src={t.img} alt={t.name} />
-                </div>
-                <div>
-                  <div className="testimonial-card__name">{t.name}</div>
-                  <div className="testimonial-card__role">{t.title}</div>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -1534,16 +1379,14 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        <TrustBanner />
         <FeaturedCollections />
         <ShopByCrystals />
-        <BestSellers />
-        <NewArrivals />
-        <CraftsmanshipTimeline />
+        <AtelierRegistry />
+        <BrandStory />
         <CustomDesignStudio />
-        <InspirationGallery />
         <Testimonials />
         <InstagramGallery />
-
       </main>
       <Footer />
     </>
