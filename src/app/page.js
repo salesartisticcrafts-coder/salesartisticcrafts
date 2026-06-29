@@ -481,7 +481,6 @@ export function Navbar() {
 }
 
 /* ─── Hero ─── */
-/* ─── Hero ─── */
 function Hero() {
   const [activeSlide, setActiveSlide] = useState(0);
   
@@ -490,7 +489,7 @@ function Hero() {
       label: "Wearable Stone · Luxury Atelier",
       title: "Sculpted From Rare Earth.",
       subtitle: "Indulge in handcrafted stone jewelry and timeless objects, chiseled from Rajasthan and Carrara quarries and finished with 18k gold detailing.",
-      img: "/images/jewelry.png",
+      img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1200",
       ctaText: "Explore Collection",
       ctaLink: "#shop"
     },
@@ -498,7 +497,7 @@ function Hero() {
       label: "Rare Reserves · Collector Slabs",
       title: "Geological Poetry In Slabs.",
       subtitle: "Italian Breccia Viola, Turkish Onyx, and Emerald Quartzite Slabs selected for exceptional veining structures and private residential commissions.",
-      img: "/images/marble_hero.png",
+      img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1200",
       ctaText: "Browse Reserve",
       ctaLink: "#shop"
     },
@@ -506,7 +505,7 @@ function Hero() {
       label: "Heritage Stoneware · Home Artifacts",
       title: "Sculptural Objects For Living.",
       subtitle: "From chiseled marble trays and pedestals to solid onyx vessels. Elevate your spatial design with Rajasthan stone heritage.",
-      img: "/images/founder.png",
+      img: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?q=80&w=1200",
       ctaText: "Discover Decor",
       ctaLink: "#shop"
     }
@@ -520,52 +519,56 @@ function Hero() {
   }, [slides.length]);
 
   return (
-    <section className="hero-editorial">
-      <div className="hero-editorial__container">
+    <section className="hero-cinema">
+      {/* Background Images Layer */}
+      <div className="hero-cinema__slides">
         {slides.map((s, idx) => (
           <div 
             key={idx} 
-            className={`hero-editorial__slide ${activeSlide === idx ? 'active' : ''}`}
+            className={`hero-cinema__slide-img ${activeSlide === idx ? 'active' : ''}`}
+            style={{ backgroundImage: `url(${s.img})` }}
           >
-            {/* Left Column: Typography Block */}
-            <div className="hero-editorial__content-col">
-              <span className="hero-editorial__label">{s.label}</span>
-              <h1 className="hero-editorial__title">{s.title}</h1>
-              <div className="gold-line" />
-              <p className="hero-editorial__subtitle">{s.subtitle}</p>
-              
-              <div className="hero-editorial__actions">
-                <Link href={s.ctaLink} className="btn-primary">
-                  <span>{s.ctaText}</span>
-                  <ArrowRight size={14} />
-                </Link>
-                <Link href="/custom-studio" className="btn-ghost">
-                  Bespoke Commission
-                </Link>
-              </div>
-            </div>
+            <div className="hero-cinema__overlay" />
+          </div>
+        ))}
+      </div>
+
+      {/* Content Container */}
+      <div className="container hero-cinema__container">
+        {slides.map((s, idx) => (
+          <div 
+            key={idx} 
+            className={`hero-cinema__slide-content ${activeSlide === idx ? 'active' : ''}`}
+          >
+            <span className="hero-cinema__label">{s.label}</span>
+            <h1 className="hero-cinema__title">{s.title}</h1>
+            <div className="gold-line center" />
+            <p className="hero-cinema__subtitle">{s.subtitle}</p>
             
-            {/* Right Column: Lifestyle Picture */}
-            <div className="hero-editorial__image-col">
-              <div className="hero-editorial__image-wrapper">
-                <img src={s.img} alt={s.title} className="hero-editorial__img" />
-              </div>
+            <div className="hero-cinema__actions">
+              <Link href={s.ctaLink} className="btn-primary">
+                <span>{s.ctaText}</span>
+                <ArrowRight size={14} />
+              </Link>
+              <Link href="/custom-studio" className="btn-ghost-white">
+                Bespoke Commission
+              </Link>
             </div>
           </div>
         ))}
-        
-        {/* Navigation Dot Indicators */}
-        <div className="hero-editorial__dots">
-          {slides.map((_, idx) => (
-            <button
-              key={idx}
-              type="button"
-              className={`hero-editorial__dot ${activeSlide === idx ? 'active' : ''}`}
-              onClick={() => setActiveSlide(idx)}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
-          ))}
-        </div>
+      </div>
+
+      {/* Dots navigation */}
+      <div className="hero-cinema__dots">
+        {slides.map((_, idx) => (
+          <button
+            key={idx}
+            type="button"
+            className={`hero-cinema__dot ${activeSlide === idx ? 'active' : ''}`}
+            onClick={() => setActiveSlide(idx)}
+            aria-label={`Go to slide ${idx + 1}`}
+          />
+        ))}
       </div>
     </section>
   );
@@ -658,46 +661,140 @@ function ShopByCrystals() {
     { name: 'Selenite', slug: 'selenite', tag: 'Purification & Light Aura', desc: 'Clears stagnant energy blocks and channels high-frequency light.', img: '/images/Selenite.webp' },
   ];
 
+  const tripleCrystals = [...crystals, ...crystals, ...crystals];
+  const scrollRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
+
+  // Initialize scroll position to the middle third on mount
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (container) {
+      container.scrollLeft = container.scrollWidth / 3;
+    }
+  }, []);
+
+  // requestAnimationFrame Auto Scroll Loop
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    let animationFrameId;
+    const scrollSpeed = 0.55; // Pixels per frame
+
+    const autoScroll = () => {
+      if (!isPaused && container) {
+        container.scrollLeft += scrollSpeed;
+      }
+      animationFrameId = requestAnimationFrame(autoScroll);
+    };
+
+    animationFrameId = requestAnimationFrame(autoScroll);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isPaused]);
+
+  // Click & drag and Mouse Wheel scrolling handlers
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    // 1. Wheel translation: Translate vertical scroll to horizontal scroll
+    const onWheelEvent = (e) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        container.scrollLeft += e.deltaY;
+      }
+    };
+    container.addEventListener('wheel', onWheelEvent, { passive: false });
+
+    // 2. Drag to Scroll translation
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    const onMouseDown = (e) => {
+      isDown = true;
+      startX = e.pageX - container.offsetLeft;
+      scrollLeft = container.scrollLeft;
+      setIsPaused(true);
+    };
+
+    const onMouseLeaveOrUp = () => {
+      isDown = false;
+      setIsPaused(false);
+    };
+
+    const onMouseMove = (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - container.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      container.scrollLeft = scrollLeft - walk;
+    };
+
+    container.addEventListener('mousedown', onMouseDown);
+    container.addEventListener('mouseleave', onMouseLeaveOrUp);
+    container.addEventListener('mouseup', onMouseLeaveOrUp);
+    container.addEventListener('mousemove', onMouseMove);
+
+    return () => {
+      container.removeEventListener('wheel', onWheelEvent);
+      container.removeEventListener('mousedown', onMouseDown);
+      container.removeEventListener('mouseleave', onMouseLeaveOrUp);
+      container.removeEventListener('mouseup', onMouseLeaveOrUp);
+      container.removeEventListener('mousemove', onMouseMove);
+    };
+  }, []);
+
+  // Snapped scroll boundaries reset handler for seamless infinite scroll
+  const handleScroll = () => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = container;
+    const oneThird = scrollWidth / 3;
+
+    // Snapped boundary loops
+    if (scrollLeft <= 5) {
+      container.scrollLeft = oneThird + scrollLeft;
+    } else if (scrollLeft >= oneThird * 2 - clientWidth - 5) {
+      container.scrollLeft = scrollLeft - oneThird;
+    }
+  };
+
   return (
     <section className="shop-crystals" id="crystals">
       <div className="container">
-        <div className="section-header reveal" style={{ marginBottom: '50px' }}>
+        <div className="section-header reveal" style={{ marginBottom: '15px' }}>
           <div className="section-label">Geological Sourcing</div>
           <h2 className="section-title" style={{ color: 'var(--charcoal)' }}>Shop by Crystal Energy</h2>
           <div className="gold-line center" />
           <p className="section-desc">Select an artifact based on the raw mineral crystal fused with its design.</p>
         </div>
-        
-        <div className="crystals-grid-container reveal">
-          <div className="crystals-luxury-grid">
-            {crystals.map((c, i) => (
-              <Link
-                key={c.name}
-                href={`/collections/stone-jewelry?material=${encodeURIComponent(c.name)}`}
-                className={`crystal-card crystal-card--${c.slug}`}
-                style={{ transitionDelay: `${i * 0.05}s` }}
-              >
-                <div className="crystal-img-container">
-                  <div className="crystal-halo" />
-                  <img src={c.img} alt={c.name} className="crystal-stone-img" />
-                </div>
-                <div className="crystal-pedestal" />
-                
-                <div className="crystal-card__content">
-                  <h3 className="crystal-name">{c.name}</h3>
-                  <div className="crystal-meta-tag-pill">
-                    <span className="crystal-meta-tag">{c.tag}</span>
-                  </div>
-                  <p className="crystal-energy-desc">{c.desc}</p>
-                  
-                  <div className="crystal-card__explore">
-                    <span>Discover {c.name} Jewelry</span>
-                    <ArrowRight size={12} className="explore-arrow" />
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+      </div>
+      
+      <div 
+        className="crystals-marquee-wrapper reveal"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        <div 
+          className="crystals-marquee-track" 
+          ref={scrollRef}
+          onScroll={handleScroll}
+        >
+          {tripleCrystals.map((c, i) => (
+            <Link
+              key={`${c.name}-${i}`}
+              href={`/collections/stone-jewelry?material=${encodeURIComponent(c.name)}`}
+              className={`crystal-card crystal-card--${c.slug}`}
+            >
+              <div className="crystal-img-container">
+                <div className="crystal-halo" />
+                <img src={c.img} alt={c.name} className="crystal-stone-img" />
+              </div>
+              <div className="crystal-pedestal" />
+            </Link>
+          ))}
         </div>
       </div>
     </section>
@@ -912,7 +1009,7 @@ function AtelierRegistry() {
         {/* Tab Content Catalog Grid */}
         <div className="atelier-registry__grid-wrap">
           <div className="atelier-registry__grid animate-fade-in" key={activeTab}>
-            {currentTab.products.map(p => (
+            {currentTab.products.slice(0, 4).map(p => (
               <ProductCard
                 key={p.id}
                 product={p}
@@ -1159,38 +1256,35 @@ function InspirationGallery() {
 /* ─── Testimonials ─── */
 function Testimonials() {
   const testimonials = [
-    { name: 'Priya Sharma', title: 'Interior Designer, Mumbai', text: 'The Calacatta marble vase I commissioned for my client\'s penthouse is now the centerpiece of the entire space. The craftsmanship is absolutely unparalleled — it stopped three international guests in their tracks.' },
-    { name: 'Arjun Mehta', title: 'CEO, Delhi', text: 'I gifted my wife the Carrara Signet Ring for our anniversary. She still gets asked about it everywhere she goes. Artistic Crafts has created something genuinely extraordinary — jewelry that tells a geological story.' },
-    { name: 'Sofia Laurent', title: 'Luxury Hotel Director, Goa', text: 'We ordered a custom marble sculpture for our hotel lobby. The attention to detail, the communication throughout the process, and the final result exceeded every expectation. Worth every rupee.' }
+    { name: 'Priya Sharma', title: 'Interior Designer, Mumbai', text: 'The Calacatta marble vase I commissioned for my client\'s penthouse is now the centerpiece of the entire space. The craftsmanship is absolutely unparalleled — it stopped three international guests in their tracks.', stars: 5 },
+    { name: 'Arjun Mehta', title: 'CEO, Delhi', text: 'I gifted my wife the Carrara Signet Ring for our anniversary. She still gets asked about it everywhere she goes. Artistic Crafts has created something genuinely extraordinary — jewelry that tells a geological story.', stars: 5 },
+    { name: 'Sofia Laurent', title: 'Luxury Hotel Director, Goa', text: 'We ordered a custom marble sculpture for our hotel lobby. The attention to detail, the communication throughout the process, and the final result exceeded every expectation. Worth every rupee.', stars: 5 }
   ];
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActive(prev => (prev + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [testimonials.length]);
 
   return (
-    <section className="testimonials-editorial">
+    <section className="testimonials-editorial" id="testimonials">
       <div className="container">
-        <div className="testimonials-editorial__wrapper reveal">
+        <div className="section-header reveal">
           <div className="section-label">Client Stories</div>
-          <span className="quote-mark">“</span>
-          
-          <div className="testimonials-editorial__slide-box">
-            {testimonials.map((t, idx) => (
-              <div 
-                key={idx} 
-                className={`testimonials-editorial__slide ${active === idx ? 'active' : ''}`}
-              >
-                <p className="testimonials-editorial__text">{t.text}</p>
-                <h4 className="testimonials-editorial__author">{t.name}</h4>
-                <span className="testimonials-editorial__title">{t.title}</span>
+          <h2 className="section-title">Voices of Discerning Taste</h2>
+          <div className="gold-line center" />
+        </div>
+        <div className="testimonials-editorial__grid">
+          {testimonials.map((t, i) => (
+            <div key={i} className="testimonial-card-editorial">
+              <div className="testimonial-card-editorial__stars">
+                {Array.from({ length: t.stars }).map((_, j) => (
+                  <Star key={j} size={14} fill="var(--gold)" stroke="none" />
+                ))}
               </div>
-            ))}
-          </div>
+              <div className="testimonial-card-editorial__quote">“</div>
+              <p className="testimonial-card-editorial__text">{t.text}</p>
+              <div className="testimonial-card-editorial__author">
+                <h4 className="testimonial-card-editorial__name">{t.name}</h4>
+                <span className="testimonial-card-editorial__role">{t.title}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -1209,6 +1303,18 @@ function InstagramGallery() {
     { img: '/images/marble_hero.png', likes: '5.6K', caption: 'Stone is forever ◈' },
   ];
 
+  const scrollRef = useRef(null);
+
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const scrollAmount = 300;
+      scrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <section className="instagram" id="instagram">
       <div className="container">
@@ -1218,18 +1324,40 @@ function InstagramGallery() {
           <div className="gold-line center" />
           <p className="section-desc">Step into our visual diary — where marble meets light, and craft becomes art</p>
         </div>
-        <div className="instagram__grid">
-          {posts.map((p, i) => (
-            <div key={i} className={`instagram-post reveal reveal-delay-${(i % 4) + 1}`}>
-              <img src={p.img} alt={p.caption} className="instagram-post__img" />
-              <div className="instagram-post__overlay">
-                <div className="instagram-post__overlay-icon"><Instagram size={22} /></div>
-                <div className="instagram-post__likes">♥ {p.likes}</div>
-                <p className="instagram-post__caption">{p.caption}</p>
+
+        <div className="instagram-carousel-container reveal">
+          <button 
+            type="button" 
+            className="carousel-nav-btn carousel-nav-btn--left" 
+            onClick={() => scroll('left')}
+            aria-label="Scroll left"
+          >
+            <ChevronLeft size={20} />
+          </button>
+
+          <div className="instagram__grid" ref={scrollRef}>
+            {posts.map((p, i) => (
+              <div key={i} className="instagram-post">
+                <img src={p.img} alt={p.caption} className="instagram-post__img" />
+                <div className="instagram-post__overlay">
+                  <div className="instagram-post__overlay-icon"><Instagram size={22} /></div>
+                  <div className="instagram-post__likes">♥ {p.likes}</div>
+                  <p className="instagram-post__caption">{p.caption}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          <button 
+            type="button" 
+            className="carousel-nav-btn carousel-nav-btn--right" 
+            onClick={() => scroll('right')}
+            aria-label="Scroll right"
+          >
+            <ChevronRight size={20} />
+          </button>
         </div>
+
         <div className="instagram__cta reveal">
           <a href="#" className="btn-ghost" style={{ color: 'var(--charcoal)', borderColor: 'var(--gold)' }}>
             <Instagram size={16} />
@@ -1271,6 +1399,17 @@ export function Footer() {
               </div>
             </div>
 
+            {/* Quick Links */}
+            <div className="footer__col">
+              <h4 className="footer__col-title">Quick Links</h4>
+              <Link href="/" className="footer__link">Home</Link>
+              <Link href="/collections/stone-jewelry" className="footer__link">Stone Jewelry</Link>
+              <Link href="/collections/home-decor" className="footer__link">Luxury Home Decor</Link>
+              <Link href="/custom-studio" className="footer__link">Custom Studio</Link>
+              <Link href="/wishlist" className="footer__link">My Wishlist</Link>
+              <Link href="/admin" className="footer__link" style={{ color: 'var(--gold)', fontWeight: 500 }}>◈ Merchant Portal</Link>
+            </div>
+
             {/* About */}
             <div className="footer__col">
               <h4 className="footer__col-title">About</h4>
@@ -1280,6 +1419,7 @@ export function Footer() {
               <Link href="/about" className="footer__link">Workshop</Link>
               <Link href="/contact" className="footer__link">Careers</Link>
             </div>
+
             {/* Contact */}
             <div className="footer__col">
               <h4 className="footer__col-title">Contact</h4>
@@ -1316,12 +1456,25 @@ export function Footer() {
       </div>
       <div className="footer__bottom">
         <div className="container">
-          <div className="footer__bottom-inner">
-            <p className="footer__copy">© 2025 ARTISTIC CRAFTS Luxury Atelier. All rights reserved.</p>
-            <div className="footer__legal">
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
-              <a href="#">Returns & Exchanges</a>
+          <div className="footer__bottom-inner" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', flexWrap: 'wrap', gap: '15px' }}>
+              <p className="footer__copy" style={{ margin: 0 }}>© 2025 ARTISTIC CRAFTS Luxury Atelier. All rights reserved.</p>
+              <div className="footer__legal">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Returns & Exchanges</a>
+              </div>
+            </div>
+            
+            <div className="footer__trust-badges" style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap', borderTop: '1px solid rgba(201, 169, 110, 0.1)', paddingTop: '15px' }}>
+              <span style={{ fontSize: '0.68rem', color: 'rgba(28, 25, 23, 0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>Secured Gateways:</span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--charcoal)', border: '1px solid rgba(28, 25, 23, 0.15)', padding: '3px 8px', borderRadius: '2px', fontWeight: 500, letterSpacing: '0.05em' }}>UPI PAY</span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--charcoal)', border: '1px solid rgba(28, 25, 23, 0.15)', padding: '3px 8px', borderRadius: '2px', fontWeight: 500, letterSpacing: '0.05em' }}>RAZORPAY</span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--charcoal)', border: '1px solid rgba(28, 25, 23, 0.15)', padding: '3px 8px', borderRadius: '2px', fontWeight: 500, letterSpacing: '0.05em' }}>VISA / MASTERCARD</span>
+              
+              <span style={{ fontSize: '0.68rem', color: 'rgba(28, 25, 23, 0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600, marginLeft: '15px' }}>Logistics Partners:</span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--gold)', border: '1px solid rgba(201, 169, 110, 0.3)', padding: '3px 8px', borderRadius: '2px', fontWeight: 600, letterSpacing: '0.05em' }}>DELHIVERY EXPRESS</span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--gold)', border: '1px solid rgba(201, 169, 110, 0.3)', padding: '3px 8px', borderRadius: '2px', fontWeight: 600, letterSpacing: '0.05em' }}>BLUE DART AIR</span>
             </div>
           </div>
         </div>
@@ -1383,7 +1536,6 @@ export default function Home() {
         <FeaturedCollections />
         <ShopByCrystals />
         <AtelierRegistry />
-        <BrandStory />
         <CustomDesignStudio />
         <Testimonials />
         <InstagramGallery />

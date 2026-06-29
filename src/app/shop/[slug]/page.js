@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ChevronRight, Star, ShoppingBag, ShieldCheck, Truck, RefreshCw } from 'lucide-react';
+import { ChevronRight, Star, ShoppingBag, ShieldCheck, Truck, RefreshCw, Sparkles } from 'lucide-react';
 import '../../App.css'; 
 import { Navbar, Footer, useScrollReveal } from '../../page';
+import ExpressCheckoutDrawer from '../../components/ExpressCheckoutDrawer';
 
 export default function ProductDetailPage({ params }) {
   const { slug } = React.use(params);
@@ -26,6 +27,8 @@ export default function ProductDetailPage({ params }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState('Medium');
   const [activeTab, setActiveTab] = useState('desc');
+  const [isOneClickOpen, setIsOneClickOpen] = useState(false);
+  const [orderSuccess, setOrderSuccess] = useState(null);
 
   const handleAddToCart = () => {
     if (typeof window !== 'undefined' && window.addToCart) {
@@ -138,6 +141,11 @@ export default function ProductDetailPage({ params }) {
                   <ShoppingBag size={16} />
                   <span>Add To Bag</span>
                 </button>
+
+                <button className="btn-primary" style={{ flex: 1, height: '56px', justifyContent: 'center', background: 'var(--gold)', borderColor: 'var(--gold)', color: '#0d0d0d' }} onClick={() => setIsOneClickOpen(true)}>
+                  <Sparkles size={16} fill="none" />
+                  <span>1-Click Buy</span>
+                </button>
               </div>
 
               {/* Atelier Guarantees */}
@@ -203,6 +211,70 @@ export default function ProductDetailPage({ params }) {
       </main>
 
       <Footer />
+
+      <ExpressCheckoutDrawer
+        isOpen={isOneClickOpen}
+        onClose={() => setIsOneClickOpen(false)}
+        product={{
+          name: product.name,
+          price: product.price,
+          img: product.img,
+          size: selectedSize
+        }}
+        subtotal={parseInt(product.price.replace(/[^\d]/g, '')) * quantity}
+        discountAmount={0}
+        gst={parseInt(product.price.replace(/[^\d]/g, '')) * quantity * 0.18}
+        onSuccess={(newOrder) => {
+          setOrderSuccess(newOrder);
+        }}
+      />
+
+      {orderSuccess && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(28,25,23,0.7)',
+          backdropFilter: 'blur(5px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 99999,
+          padding: '20px'
+        }}>
+          <div className="reveal" style={{ maxWidth: '600px', width: '100%', textAlign: 'center', padding: '40px 30px', border: '1px solid rgba(201,169,110,0.3)', borderRadius: '4px', background: '#faf9f8', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}>
+            <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(46, 204, 113, 0.1)', color: '#2ecc71', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', margin: '0 auto 20px', border: '1px solid #2ecc71' }}>✓</div>
+            <h2 style={{ fontSize: '1.6rem', fontWeight: '400', fontFamily: 'var(--font-serif)', color: '#1a1a1a', marginBottom: '8px' }}>1-Click Order Placed!</h2>
+            <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '24px' }}>Your premium order has been confirmed. Payout settlement to HDFC Atelier Bank account has been processed.</p>
+            
+            <div style={{ textAlign: 'left', background: '#fff', border: '1px solid #eae5df', padding: '20px', borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px', fontSize: '0.85rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #f4f1ee', paddingBottom: '8px' }}>
+                <span style={{ color: '#888' }}>Order ID</span>
+                <strong style={{ color: '#1a1a1a' }}>{orderSuccess.orderId}</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#888' }}>Logistics Partner</span>
+                <span style={{ color: '#1a1a1a', fontWeight: '500' }}>{orderSuccess.deliveryPartner}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#888' }}>AWB Tracking ID</span>
+                <span style={{ color: 'var(--gold)', fontWeight: '600' }}>
+                  {orderSuccess.trackingNumber}
+                  <span style={{ fontSize: '0.75rem', marginLeft: '6px', cursor: 'pointer', textDecoration: 'underline' }} onClick={() => alert(`Consignment status for AWB: ${orderSuccess.trackingNumber}\nStatus: Booked and awaiting dispatch\nCourier: ${orderSuccess.deliveryPartner}`)}>
+                    (Track)
+                  </span>
+                </span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #f4f1ee', paddingTop: '8px' }}>
+                <span style={{ color: 'var(--gold)', fontWeight: 600 }}>Total Paid</span>
+                <strong style={{ color: '#1a1a1a' }}>₹{orderSuccess.amount.toLocaleString('en-IN')}</strong>
+              </div>
+            </div>
+            <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => setOrderSuccess(null)}>
+              <span>Continue Shopping</span>
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

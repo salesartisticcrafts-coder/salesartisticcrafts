@@ -41,7 +41,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px 60px;
-  background: rgba(245, 240, 235, 0.75); /* Sleek translucent frosted glass */
+  background: rgba(251, 249, 246, 0.75); /* Sleek translucent frosted glass */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(201, 169, 110, 0.12);
@@ -52,7 +52,7 @@
 }
 .navbar--scrolled .navbar__main {
   padding: 14px 60px;
-  background: rgba(245, 240, 235, 0.9); /* Slightly darker on scroll */
+  background: rgba(251, 249, 246, 0.9); /* Slightly darker on scroll */
   border-bottom-color: rgba(201, 169, 110, 0.25);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
@@ -778,9 +778,9 @@
 .hero__theater-bg-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(245, 240, 235, 0.45) 0%, var(--black-deep) 80%),
+  background: radial-gradient(circle at center, rgba(251, 249, 246, 0.45) 0%, var(--black-deep) 80%),
               linear-gradient(to top, var(--black-deep) 0%, transparent 40%),
-              linear-gradient(to bottom, rgba(245, 240, 235, 0.4) 0%, transparent 25%);
+              linear-gradient(to bottom, rgba(251, 249, 246, 0.4) 0%, transparent 25%);
   z-index: 2;
 }
 
@@ -1024,7 +1024,7 @@
   letter-spacing: 0.15em;
   font-weight: 600;
   color: var(--gold);
-  background: rgba(245, 240, 235, 0.9);
+  background: rgba(251, 249, 246, 0.9);
   padding: 2px 6px;
   border-radius: 2px;
   border: 0.5px solid rgba(201, 169, 110, 0.3);
@@ -1925,7 +1925,7 @@
   position: absolute;
   top: 16px;
   right: 16px;
-  background: rgba(245, 240, 235, 0.75);
+  background: rgba(251, 249, 246, 0.75);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -2041,7 +2041,7 @@
   position: absolute;
   bottom: 30px;
   left: 30px;
-  background: rgba(245, 240, 235, 0.9);
+  background: rgba(251, 249, 246, 0.9);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   border: 1px solid rgba(201, 169, 110, 0.3);
@@ -3021,16 +3021,33 @@
   padding: 35px 0;
   background: var(--ivory);
 }
+.instagram-carousel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
 .instagram__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4px;
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 24px;
+  width: 100%;
+  padding: 20px 5px 30px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.instagram__grid::-webkit-scrollbar {
+  display: none;
 }
 .instagram-post {
   position: relative;
-  aspect-ratio: 1;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   cursor: pointer;
+  width: calc(25% - 18px);
+  min-width: 260px;
+  flex-shrink: 0;
 }
 .instagram-post__img {
   width: 100%;
@@ -3042,7 +3059,7 @@
 .instagram-post__overlay {
   position: absolute;
   inset: 0;
-  background: rgba(245, 240, 235, 0.85);
+  background: rgba(251, 249, 246, 0.85);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3154,7 +3171,7 @@
 }
 .footer__grid {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1.2fr;
+  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
   gap: 60px;
 }
 .footer__logo {
@@ -3635,93 +3652,79 @@
 /* ─── Shop By Crystals ─── */
 .shop-crystals {
   background: var(--ivory);
-  padding: 90px 0;
+  padding: 35px 0;
   position: relative;
   overflow: hidden;
   border-top: 1px solid rgba(201, 169, 110, 0.15);
   border-bottom: 1px solid rgba(201, 169, 110, 0.15);
 }
 
-.crystals-grid-container {
+.crystals-marquee-wrapper {
+  overflow: hidden;
+  width: 100%;
   position: relative;
+  padding: 10px 0 25px;
   z-index: 2;
-  margin-top: 50px;
 }
 
-.crystals-luxury-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 30px;
-  justify-content: center;
+.crystals-marquee-wrapper::before,
+.crystals-marquee-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 150px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.crystals-marquee-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, var(--ivory) 0%, transparent 100%);
+}
+
+.crystals-marquee-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, var(--ivory) 0%, transparent 100%);
+}
+
+.crystals-marquee-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: auto;
+  gap: 40px;
+  width: 100%;
+  padding: 10px 5px 25px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.crystals-marquee-track::-webkit-scrollbar {
+  display: none;
 }
 
 .crystal-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(201, 169, 110, 0.15);
-  border-radius: 12px;
-  padding: 35px 24px;
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-decoration: none;
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+  box-shadow: none;
   position: relative;
-  overflow: hidden;
-  height: 100%;
 }
 
 .crystal-card:hover {
   transform: translateY(-10px);
-  background: #ffffff;
 }
 
-/* Color-coded Metaphysical Aura Glows */
-.crystal-card--pyrite:hover {
-  box-shadow: 0 20px 40px rgba(201, 169, 110, 0.18);
-  border-color: var(--gold);
-}
 
-.crystal-card--garnet:hover {
-  box-shadow: 0 20px 40px rgba(186, 12, 47, 0.12);
-  border-color: #BA0C2F;
-}
-
-.crystal-card--citrine:hover {
-  box-shadow: 0 20px 40px rgba(245, 191, 56, 0.15);
-  border-color: #F5BF38;
-}
-
-.crystal-card--tigereye:hover {
-  box-shadow: 0 20px 40px rgba(193, 137, 72, 0.14);
-  border-color: #C18948;
-}
-
-.crystal-card--rosequartz:hover {
-  box-shadow: 0 20px 40px rgba(247, 194, 203, 0.18);
-  border-color: #F7C2CB;
-}
-
-.crystal-card--lapislazuli:hover {
-  box-shadow: 0 20px 40px rgba(0, 36, 156, 0.14);
-  border-color: #00249C;
-}
-
-.crystal-card--amethyst:hover {
-  box-shadow: 0 20px 40px rgba(153, 102, 204, 0.15);
-  border-color: #9966CC;
-}
-
-.crystal-card--selenite:hover {
-  box-shadow: 0 20px 40px rgba(220, 220, 220, 0.25);
-  border-color: #ccc;
-}
 
 .crystal-img-container {
-  width: 120px;
-  height: 120px;
+  width: 180px;
+  height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3729,8 +3732,8 @@
 }
 
 .crystal-stone-img {
-  width: 100px;
-  height: 100px;
+  width: 155px;
+  height: 155px;
   object-fit: contain;
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.08));
@@ -3742,8 +3745,8 @@
 }
 
 .crystal-pedestal {
-  width: 100px;
-  height: 12px;
+  width: 140px;
+  height: 14px;
   background: radial-gradient(ellipse at center, rgba(201, 169, 110, 0.25) 0%, transparent 70%);
   border-radius: 50%;
   margin-top: -6px;
@@ -4147,7 +4150,7 @@
 
 /* ─── BESPOKE PROMO SHOWCASE ─── */
 .bespoke-promo {
-  padding: 90px 0;
+  padding: 40px 0;
   background: var(--black-deep);
   position: relative;
   overflow: hidden;
@@ -4626,7 +4629,7 @@
 
 /* ─── ATELIER CATALOG REGISTRY ─── */
 .atelier-registry {
-  padding: 90px 0;
+  padding: 40px 0;
   background: var(--black-deep);
   position: relative;
   overflow: hidden;
@@ -4691,8 +4694,8 @@
 
 .atelier-registry__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
   animation: fadeIn 0.6s ease;
 }
 
@@ -4715,15 +4718,6 @@
     gap: 30px;
     max-width: 400px;
     margin: 0 auto;
-  }
-  .atelier-registry__tabs-bar {
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    border-bottom: none;
-  }
-  .atelier-registry__tab-btn::after {
-    display: none;
   }
 }
 
@@ -5045,24 +5039,33 @@
   }
 }
 
-/* 3. Crystals swipable horizontal track on mobile */
+/* 3. Crystals infinite loop marquee track on mobile */
 @media (max-width: 768px) {
-  .crystals-luxury-grid {
-    display: flex !important;
-    flex-direction: row;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    gap: 16px;
-    padding: 10px 4px 20px;
-    justify-content: flex-start;
+  .crystals-marquee-wrapper {
+    padding: 10px 0 15px;
   }
-  .crystals-luxury-grid::-webkit-scrollbar {
-    display: none;
+  .crystals-marquee-wrapper::before,
+  .crystals-marquee-wrapper::after {
+    width: 60px;
+  }
+  .crystals-marquee-track {
+    gap: 16px;
   }
   .crystal-card {
-    width: 220px !important;
     flex-shrink: 0;
+    padding: 0 !important;
+  }
+  .crystal-card .crystal-img-container {
+    width: 110px !important;
+    height: 110px !important;
+  }
+  .crystal-card .crystal-stone-img {
+    width: 90px !important;
+    height: 90px !important;
+  }
+  .crystal-card .crystal-pedestal {
+    width: 85px !important;
+    height: 10px !important;
   }
 }
 
@@ -5344,84 +5347,356 @@
 
 /* ─── TESTIMONIALS EDITORIAL ─── */
 .testimonials-editorial {
-  padding: 100px 0;
+  padding: 40px 0;
   background: var(--black-deep);
-  text-align: center;
   position: relative;
   overflow: hidden;
 }
 
-.testimonials-editorial__wrapper {
-  max-width: 850px;
-  margin: 0 auto;
-  padding: 0 20px;
+.testimonials-editorial__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.testimonial-card-editorial {
+  background: var(--ivory);
+  border: 1px solid rgba(201, 169, 110, 0.15);
+  padding: 40px 30px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  text-align: left;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+  transition: transform 0.4s ease;
 }
 
-.testimonials-editorial .quote-mark {
+.testimonial-card-editorial:hover {
+  transform: translateY(-5px);
+}
+
+.testimonial-card-editorial__stars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.testimonial-card-editorial__quote {
   font-family: var(--font-serif);
-  font-size: 6rem;
+  font-size: 3.5rem;
   color: var(--gold);
   line-height: 1;
-  height: 50px;
-  margin-top: 20px;
+  height: 30px;
+  margin-bottom: 8px;
 }
 
-.testimonials-editorial__slide-box {
-  position: relative;
-  width: 100%;
-  min-height: 200px;
-  margin-top: 20px;
-}
-
-.testimonials-editorial__slide {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.6s ease, visibility 0.6s ease;
-}
-
-.testimonials-editorial__slide.active {
-  opacity: 1;
-  visibility: visible;
-  position: relative;
-}
-
-.testimonials-editorial__text {
-  font-family: var(--font-serif);
-  font-size: 1.45rem;
-  line-height: 1.6;
-  color: var(--cream);
-  font-style: italic;
-  font-weight: 300;
+.testimonial-card-editorial__text {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--warm-grey);
   margin-bottom: 24px;
+  flex-grow: 1;
 }
 
-.testimonials-editorial__author {
+.testimonial-card-editorial__author {
+  margin-top: auto;
+  border-top: 1px solid rgba(201, 169, 110, 0.15);
+  padding-top: 16px;
+  width: 100%;
+}
+
+.testimonial-card-editorial__name {
   font-size: 0.85rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--cream);
   font-weight: 600;
+  color: var(--cream);
   margin-bottom: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
-.testimonials-editorial__title {
+.testimonial-card-editorial__role {
   font-size: 0.75rem;
-  letter-spacing: 0.05em;
   color: var(--warm-grey);
 }
 
+@media (max-width: 991px) {
+  .testimonials-editorial__grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+/* ─── CINEMATIC FULL-BLEED HERO ─── */
+.hero-cinema {
+  position: relative;
+  height: 90vh;
+  min-height: 650px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #1c1917;
+  text-align: center;
+}
+
+.hero-cinema__slides {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.hero-cinema__slide-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 8s ease,
+              visibility 1.2s;
+  transform: scale(1);
+}
+
+.hero-cinema__slide-img.active {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1.05);
+  z-index: 2;
+}
+
+.hero-cinema__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(28, 25, 23, 0.5) 0%,
+    rgba(28, 25, 23, 0.3) 50%,
+    rgba(28, 25, 23, 0.7) 100%
+  );
+}
+
+.hero-cinema__container {
+  position: relative;
+  z-index: 3;
+  max-width: 850px;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-cinema__slide-content {
+  display: none;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.hero-cinema__slide-content.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-cinema__label {
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  font-weight: 600;
+  margin-bottom: 24px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.hero-cinema__title {
+  font-family: var(--font-serif);
+  font-size: 3.6rem;
+  line-height: 1.2;
+  color: #fff;
+  font-weight: 300;
+  margin: 0 0 20px 0;
+  letter-spacing: 0.02em;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.hero-cinema__subtitle {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 20px 0 40px 0;
+  max-width: 680px;
+  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
+}
+
+.hero-cinema__actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.btn-ghost-white {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #fff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.3s var(--transition-smooth);
+}
+
+.btn-ghost-white:hover {
+  background: #fff;
+  color: #1c1917;
+  border-color: #fff;
+}
+
+.hero-cinema__dots {
+  position: absolute;
+  bottom: 40px;
+  display: flex;
+  gap: 12px;
+  z-index: 10;
+  justify-content: center;
+  width: 100%;
+}
+
+.hero-cinema__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.hero-cinema__dot.active {
+  background: #fff;
+  transform: scale(1.3);
+}
+
 @media (max-width: 768px) {
+  .hero-cinema {
+    height: 85vh;
+  }
+  .hero-cinema__title {
+    font-size: 2.4rem;
+  }
+  .hero-cinema__subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+  }
+  .hero-cinema__actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 280px;
+    gap: 12px;
+  }
+  .btn-ghost-white,
+  .hero-cinema__actions .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ─── CRYSTALS CAROUSEL SYSTEM ─── */
+.crystals-carousel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--ivory);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  color: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.carousel-nav-btn:hover {
+  background: var(--gold);
+  color: #fff;
+  border-color: var(--gold);
+}
+
+.carousel-nav-btn--left {
+  left: -22px;
+}
+
+.carousel-nav-btn--right {
+  right: -22px;
+}
+
+@media (max-width: 1200px) {
+  .carousel-nav-btn--left {
+    left: -10px;
+  }
+  .carousel-nav-btn--right {
+    right: -10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-nav-btn {
+    display: none !important; /* Hide navigation buttons on mobile touch devices */
+  }
+  .crystals-luxury-grid {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .shop-crystals,
+  .bespoke-promo,
+  .atelier-registry,
   .testimonials-editorial {
-    padding: 70px 0;
+    padding: 40px 0 !important;
   }
-  .testimonials-editorial__text {
-    font-size: 1.15rem;
-  }
+}
+
+.crystal-name-only {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  color: var(--cream);
+  margin-top: 24px;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  text-align: center;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.crystal-card:hover .crystal-name-only {
+  color: var(--gold);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 
