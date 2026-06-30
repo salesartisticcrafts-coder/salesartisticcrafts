@@ -6,6 +6,7 @@ import { ChevronRight, Trash2, ShieldCheck, ArrowRight, Sparkles } from 'lucide-
 import '../App.css'; 
 import { Navbar, Footer, useScrollReveal } from '../page';
 import ExpressCheckoutDrawer from '../components/ExpressCheckoutDrawer';
+import { loadRazorpayScript } from '../utils/razorpay';
 
 export default function CartPage() {
   useScrollReveal();
@@ -32,6 +33,10 @@ export default function CartPage() {
   const [cardExpiry, setCardExpiry] = useState('');
   const [cardCvv, setCardCvv] = useState('');
   const [cardName, setCardName] = useState('');
+
+  // Razorpay sandbox simulation states
+  const [showSandboxModal, setShowSandboxModal] = useState(false);
+  const [sandboxOrderData, setSandboxOrderData] = useState(null);
 
   useEffect(() => {
     const loadCart = () => {
@@ -133,40 +138,163 @@ export default function CartPage() {
   const gst = (subtotal - discountAmount) * 0.18; // 18% GST in India
   const total = subtotal - discountAmount + shipping + gst;
 
-  const simulatePaymentSuccess = () => {
-    setPaymentStep(3);
-    setProcessingMessage('Securely communicating with SSL Encrypted Gateway...');
+  const processCartOrderCompletion = (gatewayDetails) => {
+    const orderId = gatewayDetails.razorpay_order_id || 'AC-2026-' + Math.floor(10000 + Math.random() * 90000);
+    const awbNumber = (selectedDelivery === 'BlueDart' ? 'BD-' : selectedDelivery === 'DHL' ? 'DHL-' : 'DEL-') + Math.floor(10000000 + Math.random() * 90000000);
     
-    setTimeout(() => {
-      setProcessingMessage(`Registering consignment Airway Bill with ${selectedDelivery === 'BlueDart' ? 'Blue Dart' : selectedDelivery === 'DHL' ? 'DHL' : 'Delhivery'}...`);
+    setOrderSuccess({
+      orderId,
+      name: fullName,
+      email: emailAddress,
+      phone: phoneNumber,
+      address: shippingAddress,
+      payment: `Razorpay (${paymentMethod})` + (gatewayDetails.isSandbox ? ' [Mock Sandbox]' : ''),
+      amount: total,
+      deliveryPartner: selectedDelivery === 'BlueDart' ? 'Blue Dart Premium Air' : selectedDelivery === 'DHL' ? 'DHL International' : 'Delhivery Express',
+      trackingNumber: awbNumber
+    });
+    
+    setCartItems([]);
+    localStorage.removeItem('cartItems');
+    window.dispatchEvent(new Event('cartUpdated'));
+    setShowPaymentModal(false);
+    setIsCheckingOut(false);
+  };
+
+  const handleCartSandboxSuccess = async () => {
+    setShowSandboxModal(false);
+    setPaymentStep(3);
+    setProcessingMessage('Simulating Razorpay verification on server...');
+
+    try {
+      const verifyRes = await fetch('/api/razorpay/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          razorpay_order_id: sandboxOrderData.id,
+          razorpay_payment_id: 'pay_mock_' + Math.random().toString(36).substring(2, 10),
+          razorpay_signature: 'sig_mock_verified'
+        })
+      });
       
-      setTimeout(() => {
-        setProcessingMessage('Payment Authorized. Generating Invoice...');
-        
+      const verifyData = await verifyRes.json();
+      if (verifyData.verified) {
+        setProcessingMessage('Payment verified! Finalizing order...');
         setTimeout(() => {
-          const orderId = 'AC-2026-' + Math.floor(10000 + Math.random() * 90000);
-          const awbNumber = (selectedDelivery === 'BlueDart' ? 'BD-' : selectedDelivery === 'DHL' ? 'DHL-' : 'DEL-') + Math.floor(10000000 + Math.random() * 90000000);
-          
-          setOrderSuccess({
-            orderId,
-            name: fullName,
-            email: emailAddress,
-            phone: phoneNumber,
-            address: shippingAddress,
-            payment: paymentMethod,
-            amount: total,
-            deliveryPartner: selectedDelivery === 'BlueDart' ? 'Blue Dart Premium Air' : selectedDelivery === 'DHL' ? 'DHL International' : 'Delhivery Express',
-            trackingNumber: awbNumber
+          processCartOrderCompletion({
+            razorpay_order_id: sandboxOrderData.id,
+            razorpay_payment_id: 'pay_mock_' + Math.random().toString(36).substring(2, 10),
+            isSandbox: true
           });
-          
-          setCartItems([]);
-          localStorage.removeItem('cartItems');
-          window.dispatchEvent(new Event('cartUpdated'));
-          setShowPaymentModal(false);
-          setIsCheckingOut(false);
-        }, 1500);
-      }, 1500);
-    }, 1500);
+        }, 1000);
+      } else {
+        alert('Sandbox signature verification failed.');
+        setPaymentStep(1);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Sandbox payment failed.');
+      setPaymentStep(1);
+    }
+  };
+
+  const handleProceedToRazorpayPayment = async () => {
+    setPaymentStep(3);
+    setProcessingMessage('Contacting Razorpay Secure Gateway...');
+
+    try {
+      const res = await fetch('/api/razorpay/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: Math.round(total * 100), // in paise
+          receipt: 'rcpt_cart_' + Date.now()
+        })
+      });
+      
+      if (!res.ok) {
+        throw new Error('Failed to create order.');
+      }
+
+      const orderData = await res.json();
+      
+      if (orderData.isSandbox) {
+        // Show simulation modal
+        setSandboxOrderData(orderData);
+        setShowSandboxModal(true);
+        return;
+      }
+
+      // Real Razorpay
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        alert('Razorpay SDK failed to load.');
+        setPaymentStep(1);
+        return;
+      }
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "ARTISTIC CRAFTS",
+        description: "Transaction for Cart Checkout",
+        order_id: orderData.id,
+        handler: async function (response) {
+          setPaymentStep(3);
+          setProcessingMessage('Verifying payment signature securely...');
+          try {
+            const verifyRes = await fetch('/api/razorpay/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              })
+            });
+            const verifyData = await verifyRes.json();
+            if (verifyData.verified) {
+              setProcessingMessage('Payment Authorized! Confirming order details...');
+              setTimeout(() => {
+                processCartOrderCompletion({
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  isSandbox: false
+                });
+              }, 1000);
+            } else {
+              alert('Payment verification failed.');
+              setPaymentStep(1);
+            }
+          } catch (err) {
+            console.error(err);
+            alert('Error verifying payment.');
+            setPaymentStep(1);
+          }
+        },
+        prefill: {
+          name: fullName,
+          email: emailAddress,
+          contact: phoneNumber
+        },
+        theme: {
+          color: "#C9A96E"
+        },
+        modal: {
+          ondismiss: function () {
+            setPaymentStep(1);
+          }
+        }
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      console.error(err);
+      alert('Razorpay checkout failed to initiate.');
+      setPaymentStep(1);
+    }
   };
 
   const handlePlaceOrder = (e) => {
@@ -485,67 +613,9 @@ export default function CartPage() {
                     <span style={{ fontSize: '0.8rem', color: 'var(--gold)' }}>Global (3-5 Days) — +₹600</span>
                   </label>
                 </div>
-                <button type="button" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => setPaymentStep(2)}>
+                <button type="button" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={handleProceedToRazorpayPayment}>
                   <span>Proceed to Payment (₹{total.toLocaleString('en-IN')})</span>
                 </button>
-              </div>
-            )}
-
-            {paymentStep === 2 && (
-              <div>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', color: '#1a1a1a', marginBottom: '20px', borderBottom: '1px solid rgba(201,169,110,0.15)', paddingBottom: '10px' }}>
-                  Secure Payment Gateway
-                </h3>
-                
-                {paymentMethod === 'UPI' ? (
-                  <div style={{ textAlign: 'center', padding: '10px 0' }}>
-                    <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '16px' }}>Scan the QR code below using any UPI App (GPay, PhonePe, Paytm, BHIM) to pay:</p>
-                    <div style={{ background: '#fff', border: '1px solid #eae5df', width: '160px', height: '160px', margin: '0 auto 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px', borderRadius: '4px' }}>
-                      <div style={{ width: '100%', height: '100%', background: 'repeating-conic-gradient(from 45deg, #1c1917 0% 25%, transparent 0% 50%) 50% / 15px 15px', border: '4px solid #1c1917', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span style={{ background: '#fff', padding: '4px 8px', fontSize: '0.65rem', fontWeight: 600, border: '1px solid #1c1917' }}>ARTISTIC UPI</span>
-                      </div>
-                    </div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--gold)', fontWeight: 600, marginBottom: '8px' }}>
-                      UPI ID: artisticcrafts@yesbank
-                    </div>
-                    <div style={{ fontSize: '0.8rem', color: '#888', marginBottom: '20px' }}>
-                      Amount: <strong>₹{total.toLocaleString('en-IN')}</strong>
-                    </div>
-                    <button type="button" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={simulatePaymentSuccess}>
-                      <span>Simulate UPI Payment Scan Success</span>
-                    </button>
-                  </div>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      <label style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: '#666' }}>Card Number</label>
-                      <input type="text" required value={cardNumber} onChange={e => setCardNumber(e.target.value.replace(/\s?/g, '').replace(/(\d{4})/g, '$1 ').trim())} maxLength={19} placeholder="4111 2222 3333 4444" style={{ padding: '10px', border: '1px solid #eae5df', background: '#fff', color: '#1a1a1a', outline: 'none' }} />
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        <label style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: '#666' }}>Expiry Date</label>
-                        <input type="text" required value={cardExpiry} onChange={e => setCardExpiry(e.target.value)} placeholder="MM/YY" maxLength={5} style={{ padding: '10px', border: '1px solid #eae5df', background: '#fff', color: '#1a1a1a', outline: 'none' }} />
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        <label style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: '#666' }}>CVV</label>
-                        <input type="password" required value={cardCvv} onChange={e => setCardCvv(e.target.value)} placeholder="•••" maxLength={3} style={{ padding: '10px', border: '1px solid #eae5df', background: '#fff', color: '#1a1a1a', outline: 'none' }} />
-                      </div>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      <label style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: '#666' }}>Cardholder Name</label>
-                      <input type="text" required value={cardName} onChange={e => setCardName(e.target.value)} placeholder="Mark Spencer" style={{ padding: '10px', border: '1px solid #eae5df', background: '#fff', color: '#1a1a1a', outline: 'none' }} />
-                    </div>
-                    <button type="button" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '10px' }} onClick={simulatePaymentSuccess}>
-                      <span>Securely Pay ₹{total.toLocaleString('en-IN')}</span>
-                    </button>
-                  </div>
-                )}
-                
-                <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                  <button type="button" onClick={() => setPaymentStep(1)} style={{ background: 'none', border: 'none', color: '#888', textDecoration: 'underline', fontSize: '0.8rem', cursor: 'pointer' }}>
-                    Go Back to Shipping Partner
-                  </button>
-                </div>
               </div>
             )}
 
@@ -571,6 +641,68 @@ export default function CartPage() {
           setOrderSuccess(newOrder);
         }}
       />
+
+      {showSandboxModal && sandboxOrderData && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(28,25,23,0.85)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 999999,
+          padding: '20px'
+        }}>
+          <div style={{
+            background: '#FAF8F5',
+            border: '2px solid var(--gold)',
+            borderRadius: '8px',
+            width: '100%',
+            maxWidth: '440px',
+            padding: '30px',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+            textAlign: 'center',
+            fontFamily: 'inherit'
+          }}>
+            <div style={{ display: 'inline-flex', background: 'rgba(201, 169, 110, 0.1)', color: 'var(--gold)', borderRadius: '50%', padding: '12px', marginBottom: '16px' }}>
+              <Sparkles size={24} />
+            </div>
+            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', color: '#1a1a1a', margin: '0 0 10px' }}>Razorpay Sandbox</h3>
+            <p style={{ fontSize: '0.85rem', color: '#666', lineHeight: 1.5, marginBottom: '20px' }}>
+              No active Razorpay API keys detected in your `.env.local`. Running in secure developer simulation mode.
+            </p>
+            
+            <div style={{ background: '#fff', border: '1px solid #eae5df', padding: '16px', borderRadius: '4px', textAlign: 'left', marginBottom: '24px', fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#888' }}>Order ID</span>
+                <span style={{ color: '#1a1a1a', fontWeight: 600 }}>{sandboxOrderData.id}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#888' }}>Client</span>
+                <span style={{ color: '#1a1a1a', fontWeight: 500 }}>{fullName}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#888' }}>Amount</span>
+                <span style={{ color: 'var(--gold)', fontWeight: 700 }}>₹{total.toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <button onClick={handleCartSandboxSuccess} style={{ width: '100%', padding: '14px', background: 'var(--gold)', border: '1px solid var(--gold)', color: '#0d0d0d', fontWeight: 600, cursor: 'pointer', borderRadius: '4px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                Simulate Payment Success
+              </button>
+              <button onClick={() => { setShowSandboxModal(false); setPaymentStep(1); }} style={{ width: '100%', padding: '12px', background: 'transparent', border: '1px solid #eae5df', color: '#666', cursor: 'pointer', borderRadius: '4px', fontSize: '0.85rem' }}>
+                Cancel Payment
+              </button>
+            </div>
+            
+            <div style={{ marginTop: '20px', fontSize: '0.7rem', color: '#999' }}>
+              * To run the real checkout, define your Razorpay API keys in `.env.local`
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

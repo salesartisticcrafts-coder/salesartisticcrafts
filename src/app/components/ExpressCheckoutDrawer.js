@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Truck, CreditCard, QrCode, Sparkles } from 'lucide-react';
+import { loadRazorpayScript } from '../utils/razorpay';
 
 export default function ExpressCheckoutDrawer({
   isOpen,
@@ -30,6 +31,10 @@ export default function ExpressCheckoutDrawer({
   // Workflow states
   const [step, setStep] = useState(1); // 1: Express Review / Edit Profile, 2: Processing Payment
   const [processingMessage, setProcessingMessage] = useState('');
+  
+  // Razorpay simulation states
+  const [showSandboxModal, setShowSandboxModal] = useState(false);
+  const [sandboxOrderData, setSandboxOrderData] = useState(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -66,7 +71,72 @@ export default function ExpressCheckoutDrawer({
   const shippingPrice = getDeliveryPrice();
   const totalAmount = subtotal - discountAmount + shippingPrice + gst;
 
-  const handleQuickPurchase = (e) => {
+  const processOrderCompletion = (gatewayDetails) => {
+    const orderId = gatewayDetails.razorpay_order_id || 'AC-RZP-' + Math.floor(10000 + Math.random() * 90000);
+    const awbNumber = (selectedDelivery === 'BlueDart' ? 'BD-' : selectedDelivery === 'DHL' ? 'DHL-' : 'DEL-') + Math.floor(10000000 + Math.random() * 90000000);
+    
+    // Register order to shared localStorage list of admin orders
+    const existingOrders = JSON.parse(localStorage.getItem('atelier_orders') || '[]');
+    const newOrder = {
+      orderId,
+      clientName: fullName,
+      email: emailAddress,
+      phone: phoneNumber,
+      address: shippingAddress,
+      payment: `Razorpay (${paymentMethod})` + (gatewayDetails.isSandbox ? ' [Mock Sandbox]' : ''),
+      amount: totalAmount,
+      deliveryPartner: selectedDelivery === 'BlueDart' ? 'Blue Dart Premium Air' : selectedDelivery === 'DHL' ? 'DHL International' : 'Delhivery Express',
+      trackingNumber: awbNumber,
+      date: new Date().toLocaleString(),
+      isOneClick: true,
+      razorpay_payment_id: gatewayDetails.razorpay_payment_id,
+      razorpay_order_id: gatewayDetails.razorpay_order_id
+    };
+    existingOrders.unshift(newOrder);
+    localStorage.setItem('atelier_orders', JSON.stringify(existingOrders));
+
+    onSuccess(newOrder);
+    onClose();
+  };
+
+  const handleSandboxSuccess = async () => {
+    setShowSandboxModal(false);
+    setStep(2);
+    setProcessingMessage('Simulating Razorpay verification on server...');
+
+    try {
+      const verifyRes = await fetch('/api/razorpay/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          razorpay_order_id: sandboxOrderData.id,
+          razorpay_payment_id: 'pay_mock_' + Math.random().toString(36).substring(2, 10),
+          razorpay_signature: 'sig_mock_verified'
+        })
+      });
+      
+      const verifyData = await verifyRes.json();
+      if (verifyData.verified) {
+        setProcessingMessage('Payment verified! Finalizing order...');
+        setTimeout(() => {
+          processOrderCompletion({
+            razorpay_order_id: sandboxOrderData.id,
+            razorpay_payment_id: 'pay_mock_' + Math.random().toString(36).substring(2, 10),
+            isSandbox: true
+          });
+        }, 1000);
+      } else {
+        alert('Sandbox signature verification failed.');
+        setStep(1);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Sandbox payment failed.');
+      setStep(1);
+    }
+  };
+
+  const handleQuickPurchase = async (e) => {
     e.preventDefault();
 
     if (!fullName || !shippingAddress || !phoneNumber) {
@@ -82,41 +152,101 @@ export default function ExpressCheckoutDrawer({
     localStorage.setItem('paymentMethod', paymentMethod);
 
     setStep(2);
-    setProcessingMessage('1-Click Payment Routing via Secured Gateway...');
+    setProcessingMessage('Contacting Razorpay Secure Gateway...');
 
-    setTimeout(() => {
-      setProcessingMessage(`Registering consignment Airway Bill with ${selectedDelivery === 'BlueDart' ? 'Blue Dart Air' : selectedDelivery === 'DHL' ? 'DHL International' : 'Delhivery Express'}...`);
+    try {
+      const res = await fetch('/api/razorpay/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: Math.round(totalAmount * 100), // in paise
+          receipt: 'rcpt_1click_' + Date.now()
+        })
+      });
+      
+      if (!res.ok) {
+        throw new Error('Failed to generate order.');
+      }
+      
+      const orderData = await res.json();
+      
+      if (orderData.isSandbox) {
+        // Show simulated Razorpay overlay
+        setSandboxOrderData(orderData);
+        setShowSandboxModal(true);
+        return;
+      }
 
-      setTimeout(() => {
-        setProcessingMessage('Synchronizing payout settlement to Atelier Merchant HDFC Bank account...');
+      // Real integration
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        alert('Razorpay SDK failed to load. Are you offline?');
+        setStep(1);
+        return;
+      }
 
-        setTimeout(() => {
-          const orderId = 'AC-1CLICK-' + Math.floor(10000 + Math.random() * 90000);
-          const awbNumber = (selectedDelivery === 'BlueDart' ? 'BD-' : selectedDelivery === 'DHL' ? 'DHL-' : 'DEL-') + Math.floor(10000000 + Math.random() * 90000000);
-          
-          // Register order to shared localStorage list of admin orders
-          const existingOrders = JSON.parse(localStorage.getItem('atelier_orders') || '[]');
-          const newOrder = {
-            orderId,
-            clientName: fullName,
-            email: emailAddress,
-            phone: phoneNumber,
-            address: shippingAddress,
-            payment: paymentMethod === 'UPI' ? 'UPI (1-Click)' : 'Credit Card (1-Click)',
-            amount: totalAmount,
-            deliveryPartner: selectedDelivery === 'BlueDart' ? 'Blue Dart Premium Air' : selectedDelivery === 'DHL' ? 'DHL International' : 'Delhivery Express',
-            trackingNumber: awbNumber,
-            date: new Date().toLocaleString(),
-            isOneClick: true
-          };
-          existingOrders.unshift(newOrder);
-          localStorage.setItem('atelier_orders', JSON.stringify(existingOrders));
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "ARTISTIC CRAFTS",
+        description: "Express 1-Click Checkout",
+        order_id: orderData.id,
+        handler: async function (response) {
+          setStep(2);
+          setProcessingMessage('Verifying transaction security...');
+          try {
+            const verifyRes = await fetch('/api/razorpay/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              })
+            });
+            const verifyData = await verifyRes.json();
+            if (verifyData.verified) {
+              setProcessingMessage('Payment Authorized! Finalizing order...');
+              setTimeout(() => {
+                processOrderCompletion({
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  isSandbox: false
+                });
+              }, 1000);
+            } else {
+              alert('Payment verification failed.');
+              setStep(1);
+            }
+          } catch (err) {
+            console.error(err);
+            alert('Error verifying payment.');
+            setStep(1);
+          }
+        },
+        prefill: {
+          name: fullName,
+          email: emailAddress,
+          contact: phoneNumber
+        },
+        theme: {
+          color: "#C9A96E"
+        },
+        modal: {
+          ondismiss: function () {
+            setStep(1);
+          }
+        }
+      };
 
-          onSuccess(newOrder);
-          onClose();
-        }, 1500);
-      }, 1500);
-    }, 1500);
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      console.error(err);
+      alert('Razorpay transaction failed to initiate.');
+      setStep(1);
+    }
   };
 
   return (
@@ -299,6 +429,68 @@ export default function ExpressCheckoutDrawer({
           </div>
         )}
       </div>
+
+      {showSandboxModal && sandboxOrderData && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(28,25,23,0.85)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 999999,
+          padding: '20px'
+        }}>
+          <div style={{
+            background: '#FAF8F5',
+            border: '2px solid var(--gold)',
+            borderRadius: '8px',
+            width: '100%',
+            maxWidth: '440px',
+            padding: '30px',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+            textAlign: 'center',
+            fontFamily: 'inherit'
+          }}>
+            <div style={{ display: 'inline-flex', background: 'rgba(201, 169, 110, 0.1)', color: 'var(--gold)', borderRadius: '50%', padding: '12px', marginBottom: '16px' }}>
+              <Sparkles size={24} />
+            </div>
+            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', color: '#1a1a1a', margin: '0 0 10px' }}>Razorpay Sandbox</h3>
+            <p style={{ fontSize: '0.85rem', color: '#666', lineHeight: 1.5, marginBottom: '20px' }}>
+              No active Razorpay API keys detected in your `.env.local`. Running in secure developer simulation mode.
+            </p>
+            
+            <div style={{ background: '#fff', border: '1px solid #eae5df', padding: '16px', borderRadius: '4px', textAlign: 'left', marginBottom: '24px', fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#888' }}>Order ID</span>
+                <span style={{ color: '#1a1a1a', fontWeight: 600 }}>{sandboxOrderData.id}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#888' }}>Client</span>
+                <span style={{ color: '#1a1a1a', fontWeight: 500 }}>{fullName}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#888' }}>Amount</span>
+                <span style={{ color: 'var(--gold)', fontWeight: 700 }}>₹{totalAmount.toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <button onClick={handleSandboxSuccess} style={{ width: '100%', padding: '14px', background: 'var(--gold)', border: '1px solid var(--gold)', color: '#0d0d0d', fontWeight: 600, cursor: 'pointer', borderRadius: '4px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                Simulate Payment Success
+              </button>
+              <button onClick={() => { setShowSandboxModal(false); setStep(1); }} style={{ width: '100%', padding: '12px', background: 'transparent', border: '1px solid #eae5df', color: '#666', cursor: 'pointer', borderRadius: '4px', fontSize: '0.85rem' }}>
+                Cancel Payment
+              </button>
+            </div>
+            
+            <div style={{ marginTop: '20px', fontSize: '0.7rem', color: '#999' }}>
+              * To run the real checkout, define your Razorpay API keys in `.env.local`
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
