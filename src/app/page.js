@@ -826,7 +826,94 @@ function BrandStory() {
 }
 
 /* ─── Best Sellers ─── */
+function BestSellers() {
+  const [wishlist, setWishlist] = useState([]);
+  const scrollRef = useRef(null);
 
+  useEffect(() => {
+    const loadWishlist = () => {
+      const stored = localStorage.getItem('wishlist');
+      if (stored) {
+        try {
+          setWishlist(JSON.parse(stored));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+    loadWishlist();
+    window.addEventListener('wishlistUpdated', loadWishlist);
+    return () => window.removeEventListener('wishlistUpdated', loadWishlist);
+  }, []);
+
+  const toggleWishlist = (id) => {
+    setWishlist(prev => {
+      const next = prev.includes(id) ? prev.filter(w => w !== id) : [...prev, id];
+      localStorage.setItem('wishlist', JSON.stringify(next));
+      window.dispatchEvent(new Event('wishlistUpdated'));
+      return next;
+    });
+  };
+
+  // Filter products that represent best sellers/highly popular items
+  const bestSellersList = allProducts.filter(p =>
+    ['Best Seller', 'Trending', 'Staff Pick', 'Exclusive', 'Artisan Accent'].includes(p.tag)
+  );
+
+  const scroll = (direction) => {
+    const container = scrollRef.current;
+    if (container) {
+      const cardWidth = 310; // width of product card + gap
+      const scrollAmount = direction === 'left' ? -cardWidth : cardWidth;
+      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <section className="best-sellers" id="bestsellers">
+      <div className="gold-glow-orb" style={{ top: '20%', left: '5%' }} />
+      <div className="container">
+        <div className="section-header reveal">
+          <div className="section-label">Patron Favorites</div>
+          <h2 className="section-title">Our Best Sellers</h2>
+          <div className="gold-line center" />
+          <p className="section-desc">Acclaimed masterworks that capture the timeless beauty of natural stone.</p>
+        </div>
+
+        <div className="best-sellers__carousel-wrapper reveal">
+          <button 
+            type="button" 
+            className="best-sellers__nav-btn best-sellers__nav-btn--left" 
+            onClick={() => scroll('left')}
+            aria-label="Previous items"
+          >
+            <ChevronLeft size={20} />
+          </button>
+          <button 
+            type="button" 
+            className="best-sellers__nav-btn best-sellers__nav-btn--right" 
+            onClick={() => scroll('right')}
+            aria-label="Next items"
+          >
+            <ChevronRight size={20} />
+          </button>
+
+          <div className="best-sellers__track" ref={scrollRef}>
+            {bestSellersList.map(p => (
+              <div key={p.id} className="best-sellers__card-holder">
+                <ProductCard
+                  product={p}
+                  wishlist={wishlist}
+                  toggleWishlist={toggleWishlist}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 /* ─── Luxury Product Card Component ─── */
 function ProductCard({ product, wishlist, toggleWishlist }) {
@@ -1512,6 +1599,7 @@ export default function Home() {
         <FeaturedCollections />
         <ShopByCrystals />
         <AtelierRegistry />
+        <BestSellers />
         <CustomDesignStudio />
         <Testimonials />
         <InstagramGallery />

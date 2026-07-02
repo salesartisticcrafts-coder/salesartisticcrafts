@@ -5700,5 +5700,104 @@
 }
 
 
+/* ─── BEST SELLERS CAROUSEL ─── */
+.best-sellers {
+  padding: 80px 0;
+  background: var(--black-deep);
+  position: relative;
+  overflow: hidden;
+}
+
+.best-sellers__nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 169, 110, 0.25);
+  background: rgba(28, 25, 23, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--gold-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+}
+
+.best-sellers__nav-btn--left {
+  left: -24px;
+}
+
+.best-sellers__nav-btn--right {
+  right: -24px;
+}
+
+.best-sellers__nav-btn:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--charcoal);
+  transform: translateY(-50%) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201, 169, 110, 0.3);
+}
+
+.best-sellers__nav-btn:active {
+  transform: translateY(-50%) translateY(0);
+}
+
+.best-sellers__carousel-wrapper {
+  position: relative;
+}
+
+.best-sellers__track {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 30px;
+  width: 100%;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding: 10px 0 30px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.best-sellers__track::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.best-sellers__card-holder {
+  flex: 0 0 calc(25% - 22.5px); /* Exactly 4 items visible in 1 row on desktop */
+  min-width: 0;
+  scroll-snap-align: start;
+  transition: transform 0.4s ease;
+}
+
+/* Responsive states for Carousel cards */
+@media (max-width: 991px) {
+  .best-sellers {
+    padding: 60px 0;
+  }
+  .best-sellers__card-holder {
+    flex: 0 0 calc(50% - 15px); /* 2 items on tablets */
+  }
+  .best-sellers__nav-btn {
+    display: none !important; /* Hide navigation buttons on mobile touch devices */
+  }
+}
+
+@media (max-width: 576px) {
+  .best-sellers__card-holder {
+    flex: 0 0 85%; /* Peek next card on mobile */
+  }
+}
+
+
+
 
 
