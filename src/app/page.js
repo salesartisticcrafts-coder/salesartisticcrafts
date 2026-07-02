@@ -21,6 +21,8 @@ const Twitter = ({ size = 16 }) => (
   </svg>
 );
 import './App.css';
+import { jewelryProducts, decorProducts, slabProducts, allProducts } from './utils/products';
+
 
 /* ─── Navbar ─── */
 export function Navbar() {
@@ -62,9 +64,9 @@ export function Navbar() {
       } else if (!initialized) {
         // Default placeholder cart items (only run if first time visiting)
         const defaultCart = [
-          { id: 1, name: 'Pink Crystal Beaded Bracelet', price: 14500, img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', size: 'Medium', qty: 1 },
-          { id: 2, name: 'Black & White Marble Bracelet', price: 12800, img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', size: 'Medium', qty: 1 },
-          { id: 3, name: 'Marble Vase', price: 14000, img: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?q=80&w=800', size: 'Standard', qty: 1 }
+          { id: 3, name: 'Rose Quartz Bracelet', price: 599, img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', size: 'Medium', qty: 1 },
+          { id: 1, name: 'Black Obsidian Bracelet (8mm)', price: 499, img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', size: 'Medium', qty: 1 },
+          { id: 101, name: 'Marble Tea Coaster Set (6 pcs)', price: 1299, img: 'https://i.pinimg.com/736x/7b/26/39/7b263947af5bd40437e1d77abf879878.jpg', size: 'Standard', qty: 1 }
         ];
         setCartItems(defaultCart);
         localStorage.setItem('cartItems', JSON.stringify(defaultCart));
@@ -407,12 +409,7 @@ export function Navbar() {
           </div>
           <div className="search-overlay__results">
             {searchQuery.trim().length > 0 ? (
-              [
-                { name: 'Pink Crystal Beaded Bracelet', category: 'stone-jewelry', img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg' },
-                { name: 'Black & White Marble Bracelet', category: 'stone-jewelry', img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg' },
-                { name: 'Hand-crafted Coasters Set', category: 'marble-decor', img: 'https://i.pinimg.com/736x/7b/26/39/7b263947af5bd40437e1d77abf879878.jpg' },
-                { name: 'Cristallo Pink Quartzite Slab', category: 'cristallo-quartzite-slabs', img: 'https://i.pinimg.com/736x/92/a7/c5/92a7c5e96bc731477d866887ddab0efe.jpg' }
-              ]
+              allProducts
                 .filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
                 .map((item, idx) => {
                   const productSlug = item.name.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-');
@@ -829,28 +826,7 @@ function BrandStory() {
 }
 
 /* ─── Best Sellers ─── */
-/* ─── Luxury Products Datasets ─── */
-const jewelryProducts = [
-  { id: 1, name: 'Pink Crystal Beaded Bracelet', price: '₹14,500', img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', tag: 'Best Seller', rating: 5, reviews: 48, stock: 3 },
-  { id: 2, name: 'Black & White Marble Bracelet', price: '₹12,800', img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', tag: 'New', rating: 5, reviews: 32, stock: 2 },
-  { id: 3, name: 'Boho Marble Stone Bracelet', price: '₹13,200', img: 'https://i.pinimg.com/736x/87/4d/7c/874d7ca0a362d0ddc5246f32ab4bd28d.jpg', tag: 'Trending', rating: 4, reviews: 19, stock: 7 },
-  { id: 4, name: 'Rose Quartz Connemara Bracelet', price: '₹11,500', img: 'https://i.pinimg.com/736x/b3/c8/34/b3c83472c84405efdd073a7a1b000fee.jpg', tag: 'Classic', rating: 5, reviews: 26, stock: 5 },
-  { id: 5, name: 'Gray & Tan Watercolor Bracelet', price: '₹15,400', img: 'https://i.pinimg.com/736x/50/52/02/5052028ef58a458f0a312ed6a3c4381c.jpg', tag: 'Staff Pick', rating: 5, reviews: 14, stock: 3 },
-  { id: 6, name: 'Rainbow Marble Bracelet', price: '₹16,800', img: 'https://i.pinimg.com/736x/b5/42/89/b54289333d78d91ef9e1a32d264ad1e6.jpg', tag: 'Exclusive', rating: 5, reviews: 11, stock: 2 },
-];
 
-const decorProducts = [
-  { id: 101, name: 'Resin Coaster Set White & Gold', price: '₹12,400', img: 'https://i.pinimg.com/736x/0a/31/b0/0a31b0ce9c2fadd9b9e044540c593801.jpg', tag: 'New Launch', rating: 5, reviews: 18, stock: 3 },
-  { id: 103, name: 'Concrete Resin Art Dish', price: '₹11,000', img: 'https://i.pinimg.com/736x/ec/04/84/ec04843094fd1fc9821d5092d4c0402b.jpg', tag: 'Artisan Accent', rating: 5, reviews: 9, stock: 4 },
-  { id: 104, name: 'Terrazzo Ceramic Holder Set', price: '₹6,800', img: 'https://i.pinimg.com/736x/3f/84/02/3f84023138a190c8b5e06d8cfc4444f8.jpg', tag: 'Modern', rating: 4, reviews: 22, stock: 8 },
-  { id: 201, name: 'Marble Vanity Tray', price: '₹18,500', img: 'https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=800', tag: 'Atelier Spec', rating: 5, reviews: 15, stock: 2 },
-];
-
-const slabProducts = [
-  { id: 102, name: 'Cristallo Pink Quartzite Slab', price: '₹1,45,000', img: 'https://i.pinimg.com/736x/92/a7/c5/92a7c5e96bc731477d866887ddab0efe.jpg', tag: 'Ultra Luxury', rating: 5, reviews: 6, stock: 1 },
-  { id: 106, name: 'Cristallo Rose Soft Touch Slab', price: '₹1,65,000', img: 'https://i.pinimg.com/736x/6b/50/ca/6b50cae255f42bdd1cc4ec34038d8594.jpg', tag: 'Exclusive Slab', rating: 5, reviews: 4, stock: 1 },
-  { id: 202, name: 'Emerald Onyx Backlit Slab', price: '₹2,10,000', img: 'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?q=80&w=800', tag: 'Private Reserve', rating: 5, reviews: 3, stock: 1 },
-];
 
 /* ─── Luxury Product Card Component ─── */
 function ProductCard({ product, wishlist, toggleWishlist }) {

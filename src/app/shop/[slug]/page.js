@@ -6,21 +6,11 @@ import { ChevronRight, Star, ShoppingBag, ShieldCheck, Truck, RefreshCw, Sparkle
 import '../../App.css'; 
 import { Navbar, Footer, useScrollReveal } from '../../page';
 import ExpressCheckoutDrawer from '../../components/ExpressCheckoutDrawer';
+import { allProducts } from '../../utils/products';
 
 export default function ProductDetailPage({ params }) {
   const { slug } = React.use(params);
   useScrollReveal();
-
-  const allProducts = [
-    { name: 'Pink Crystal Beaded Bracelet', price: '₹14,500', img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', tag: 'Best Seller', rating: 5, material: 'Pink Crystal', desc: 'Handcrafted with natural pink crystal beads and finished with a custom 18k gold vermeil accent. Perfect for everyday elegance.' },
-    { name: 'Black & White Marble Bracelet', price: '₹12,800', img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', tag: 'New', rating: 5, material: 'Nero Marquina & Carrara Marble', desc: 'Contrasting black Nero Marquina and white Carrara marble beads. A striking statement of geological harmony.' },
-    { name: 'Boho Marble Stone Bracelet', price: '₹13,200', img: 'https://i.pinimg.com/736x/87/4d/7c/874d7ca0a362d0ddc5246f32ab4bd28d.jpg', tag: 'Trending', rating: 4, material: 'Mixed Agate Stone', desc: 'Individually selected agate and jasper stone beads chiseled by hand. Earthy tones with a rustic luxury finish.' },
-    { name: 'Rose Quartz Connemara Bracelet', price: '₹11,500', img: 'https://i.pinimg.com/736x/b3/c8/34/b3c83472c84405efdd073a7a1b000fee.jpg', tag: 'Classic', rating: 5, material: 'Rose Quartz', desc: 'Delicate rose quartz paired with green Connemara marble highlights. Soft pastel aesthetics combined with historic strength.' },
-    { name: 'Gray & Tan Watercolor Bracelet', price: '₹15,400', img: 'https://i.pinimg.com/736x/50/52/02/5052028ef58a458f0a312ed6a3c4381c.jpg', tag: 'Staff Pick', rating: 5, material: 'Watercolor Jasper', desc: 'Rare watercolor jasper stone beads exhibiting natural grey and tan landscape patterns. No two beads are identical.' },
-    { name: 'Rainbow Marble Bracelet', price: '₹16,800', img: 'https://i.pinimg.com/736x/b5/42/89/b54289333d78d91ef9e1a32d264ad1e6.jpg', tag: 'Exclusive', rating: 5, material: 'Rainbow Fluorite Slabs', desc: 'Translucent rainbow fluorite beads shifting from deep purple to soft green. Reflects light beautifully.' },
-    { name: 'Hand-crafted Coasters Set', price: '₹8,500', img: 'https://i.pinimg.com/736x/7b/26/39/7b263947af5bd40437e1d77abf879878.jpg', tag: 'Best Seller', rating: 5, material: 'White Onyx', desc: 'Set of 4 polished white onyx coasters with hand-applied gold leaf borders. A striking luxury addition to any table setting.' },
-    { name: 'Cristallo Pink Quartzite Slab', price: '₹1,45,000', img: 'https://i.pinimg.com/736x/92/a7/c5/92a7c5e96bc731477d866887ddab0efe.jpg', tag: 'Exclusive', rating: 5, material: 'Pink Quartzite', desc: 'Premium 2cm polished quartzite slab with dramatic crystal quartz veins. Translucent when back-lit, ideal for signature wall panels.' }
-  ];
 
   const product = allProducts.find(p => p.name.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-') === slug) || allProducts[0];
 

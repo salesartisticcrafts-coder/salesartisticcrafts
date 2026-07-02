@@ -52,9 +52,9 @@ export default function CartPage() {
         }
       } else if (!initialized) {
         const defaultCart = [
-          { id: 1, name: 'Pink Crystal Beaded Bracelet', price: 14500, img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', size: 'Medium', qty: 1 },
-          { id: 2, name: 'Black & White Marble Bracelet', price: 12800, img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', size: 'Medium', qty: 1 },
-          { id: 3, name: 'Marble Vase', price: 14000, img: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?q=80&w=800', size: 'Standard', qty: 1 }
+          { id: 3, name: 'Rose Quartz Bracelet', price: 599, img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', size: 'Medium', qty: 1 },
+          { id: 1, name: 'Black Obsidian Bracelet (8mm)', price: 499, img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', size: 'Medium', qty: 1 },
+          { id: 101, name: 'Marble Tea Coaster Set (6 pcs)', price: 1299, img: 'https://i.pinimg.com/736x/7b/26/39/7b263947af5bd40437e1d77abf879878.jpg', size: 'Standard', qty: 1 }
         ];
         setCartItems(defaultCart);
         localStorage.setItem('cartItems', JSON.stringify(defaultCart));

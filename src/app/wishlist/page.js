@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ChevronRight, Heart, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import '../App.css'; 
 import { Navbar, Footer, useScrollReveal } from '../page';
+import { allProducts } from '../utils/products';
 
 export default function WishlistPage() {
   useScrollReveal();
@@ -12,16 +13,10 @@ export default function WishlistPage() {
   const [wishlist, setWishlist] = useState([]);
 
   // All catalog products across the site with consistent IDs
-  const allCatalogProducts = [
-    { id: 1, name: 'Pink Crystal Beaded Bracelet', price: 14500, img: 'https://i.pinimg.com/736x/c6/b9/9e/c6b99ef41938e6186d097d554b44c921.jpg', tag: 'Best Seller', material: 'Pink Crystal' },
-    { id: 2, name: 'Black & White Marble Bracelet', price: 12800, img: 'https://i.pinimg.com/736x/af/08/54/af08547deca93880bc23eb302ef60527.jpg', tag: 'New', material: 'Marble' },
-    { id: 3, name: 'Boho Marble Stone Bracelet', price: 13200, img: 'https://i.pinimg.com/736x/87/4d/7c/874d7ca0a362d0ddc5246f32ab4bd28d.jpg', tag: 'Trending', material: 'Stone' },
-    { id: 4, name: 'Rose Quartz Connemara Bracelet', price: 11500, img: 'https://i.pinimg.com/736x/b3/c8/34/b3c83472c84405efdd073a7a1b000fee.jpg', tag: 'Classic', material: 'Rose Quartz' },
-    { id: 5, name: 'Gray & Tan Watercolor Bracelet', price: 15400, img: 'https://i.pinimg.com/736x/50/52/02/5052028ef58a458f0a312ed6a3c4381c.jpg', tag: 'Staff Pick', material: 'Watercolor Stone' },
-    { id: 6, name: 'Rainbow Marble Bracelet', price: 16800, img: 'https://i.pinimg.com/736x/b5/42/89/b54289333d78d91ef9e1a32d264ad1e6.jpg', tag: 'Exclusive', material: 'Rainbow Marble' },
-    { id: 7, name: 'Hand-crafted Coasters Set', price: 8500, img: 'https://i.pinimg.com/736x/7b/26/39/7b263947af5bd40437e1d77abf879878.jpg', tag: 'Best Seller', material: 'White Onyx Stone' },
-    { id: 8, name: 'Cristallo Pink Quartzite Slab', price: 145000, img: 'https://i.pinimg.com/736x/92/a7/c5/92a7c5e96bc731477d866887ddab0efe.jpg', tag: 'Exclusive', material: 'Pink Quartzite' }
-  ];
+  const allCatalogProducts = allProducts.map(p => ({
+    ...p,
+    price: typeof p.price === 'string' ? parseInt(p.price.replace(/[^\d]/g, ''), 10) : p.price
+  }));
 
   useEffect(() => {
     const loadWishlist = () => {
